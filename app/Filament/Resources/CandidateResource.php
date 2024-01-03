@@ -6,6 +6,7 @@ use App\Filament\Resources\CandidateResource\Pages;
 use App\Models\Candidate;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Placeholder;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -43,6 +44,14 @@ class CandidateResource extends Resource
             Placeholder::make('updated_at')
                 ->label('Last Modified Date')
                 ->content(fn(?Candidate $record): string => $record?->updated_at?->diffForHumans() ?? '-'),
+
+            SpatieMediaLibraryFileUpload::make('resume')
+                ->label('Resume')
+                ->acceptedFileTypes(['application/pdf']),
+
+            SpatieMediaLibraryFileUpload::make('documents')
+                ->label('Other Documents')
+                ->acceptedFileTypes(['application/pdf'])
         ]);
     }
 
