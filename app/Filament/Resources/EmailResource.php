@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\EmailResource\Pages;
 use App\Models\Email;
+use Filament\Forms\Components\MarkdownEditor;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\TextInput;
@@ -11,6 +12,7 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Mail\Markdown;
 
 class EmailResource extends Resource
 {
@@ -32,6 +34,7 @@ class EmailResource extends Resource
                 ->required(),
 
             RichEditor::make('body')
+                ->columnSpanFull()
                 ->required(),
 
             Placeholder::make('created_at')

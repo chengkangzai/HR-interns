@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,5 +15,10 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
+    $candidate = App\Models\Candidate::find(1);
+    $email = App\Models\Email::find(1);
+
+    Mail::to($candidate->email)->send(new \App\Mail\DefaultMail($candidate,$email));
+
     return view('welcome');
 });
