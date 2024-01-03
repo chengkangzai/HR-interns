@@ -37,13 +37,13 @@ class CandidateResource extends Resource
 
                 TextInput::make('phone_number')
                     ->required(),
-            ]),
+            ])->columns(2),
 
             Section::make([
                 DatePicker::make('from'),
 
                 DatePicker::make('to'),
-            ]),
+            ])->columns(2),
 
             Section::make([
                 SpatieMediaLibraryFileUpload::make('resume')
@@ -53,7 +53,7 @@ class CandidateResource extends Resource
                 SpatieMediaLibraryFileUpload::make('documents')
                     ->label('Other Documents')
                     ->acceptedFileTypes(['application/pdf']),
-            ]),
+            ])->columns(2),
 
 
             Placeholder::make('created_at')
