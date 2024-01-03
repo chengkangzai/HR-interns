@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\EmailResource\Pages;
 use App\Models\Email;
 use Filament\Forms\Components\Placeholder;
+use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -25,7 +26,7 @@ class EmailResource extends Resource
             TextInput::make('title')
                 ->required(),
 
-            TextInput::make('body')
+            RichEditor::make('body')
                 ->required(),
 
             Placeholder::make('created_at')
