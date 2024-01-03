@@ -6,6 +6,7 @@ use App\Filament\Resources\CandidateResource\Pages;
 use App\Models\Candidate;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Placeholder;
+use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\TextInput;
@@ -55,6 +56,8 @@ class CandidateResource extends Resource
                     ->acceptedFileTypes(['application/pdf']),
             ])->columns(2),
 
+            RichEditor::make('notes')
+                ->columnSpanFull(),
 
             Placeholder::make('created_at')
                 ->label('Created Date')

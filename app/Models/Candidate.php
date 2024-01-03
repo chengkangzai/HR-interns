@@ -22,6 +22,7 @@ class Candidate extends Model implements HasMedia
         'phone_number',
         'from',
         'to',
+        'notes',
     ];
 
     protected $casts = [
