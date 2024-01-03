@@ -6,6 +6,7 @@ use App\Filament\Resources\CandidateResource\Pages;
 use App\Models\Candidate;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Placeholder;
+use Filament\Forms\Components\Section;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
@@ -26,18 +27,34 @@ class CandidateResource extends Resource
     public static function form(Form $form): Form
     {
         return $form->schema([
-            TextInput::make('name')
-                ->required(),
+            Section::make([
 
-            TextInput::make('email')
-                ->required(),
+                TextInput::make('name')
+                    ->required(),
 
-            TextInput::make('phone_number')
-                ->required(),
+                TextInput::make('email')
+                    ->required(),
 
-            DatePicker::make('from'),
+                TextInput::make('phone_number')
+                    ->required(),
+            ]),
 
-            DatePicker::make('to'),
+            Section::make([
+                DatePicker::make('from'),
+
+                DatePicker::make('to'),
+            ]),
+
+            Section::make([
+                SpatieMediaLibraryFileUpload::make('resume')
+                    ->label('Resume')
+                    ->acceptedFileTypes(['application/pdf']),
+
+                SpatieMediaLibraryFileUpload::make('documents')
+                    ->label('Other Documents')
+                    ->acceptedFileTypes(['application/pdf']),
+            ]),
+
 
             Placeholder::make('created_at')
                 ->label('Created Date')
@@ -47,13 +64,6 @@ class CandidateResource extends Resource
                 ->label('Last Modified Date')
                 ->content(fn(?Candidate $record): string => $record?->updated_at?->diffForHumans() ?? '-'),
 
-            SpatieMediaLibraryFileUpload::make('resume')
-                ->label('Resume')
-                ->acceptedFileTypes(['application/pdf']),
-
-            SpatieMediaLibraryFileUpload::make('documents')
-                ->label('Other Documents')
-                ->acceptedFileTypes(['application/pdf'])
         ]);
     }
 
