@@ -20,6 +20,8 @@ class EmailResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'title';
 
+    protected static ?string $navigationIcon = 'heroicon-o-mail-open';
+
     public static function form(Form $form): Form
     {
         return $form->schema([
