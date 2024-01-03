@@ -38,6 +38,9 @@ class DefaultMail extends Mailable implements ShouldQueue
         return new Envelope(
             from: config('mail.from.address'),
             to: [$this->candidate->email],
+            cc: [
+                'eddiechong@pixalink.io',
+            ],
             subject: $this->email->title
         );
     }
@@ -45,7 +48,7 @@ class DefaultMail extends Mailable implements ShouldQueue
     public function content(): Content
     {
         $replaceTemplateValue = [
-            '{{CUSTOMER_NAME}}' => $this->candidate->customer?->name ?? 'customer',
+            '{{NAME}}' => $this->candidate?->name ??'Participant',
         ];
 
         $message = Str::replace(array_keys($replaceTemplateValue), array_values($replaceTemplateValue), $this->email->body);

@@ -3,17 +3,29 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\CandidateResource\Pages;
+use App\Mail\DefaultMail;
 use App\Models\Candidate;
+use App\Models\Email;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
+use Filament\Forms\Set;
 use Filament\Resources\Resource;
+use Filament\Support\Enums\FontFamily;
+use Filament\Tables\Actions\BulkAction;
+use Filament\Tables\Actions\DeleteAction;
+use Filament\Tables\Actions\DeleteBulkAction;
+use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Mail;
+use Ysfkaya\FilamentPhoneInput\Forms\PhoneInput;
 
 class CandidateResource extends Resource
 {
@@ -34,10 +46,14 @@ class CandidateResource extends Resource
                     ->required(),
 
                 TextInput::make('email')
+                    ->reactive()
+                    ->afterStateUpdated(function (string $state, Set $set) {
+                        $set('email', str($state)->remove(' ')->remove('`'));
+                    })
                     ->required(),
 
-                TextInput::make('phone_number')
-                    ->required(),
+                PhoneInput::make('phone_number')
+                    ->required()
             ])->columns(2),
 
             Section::make([
@@ -72,23 +88,43 @@ class CandidateResource extends Resource
 
     public static function table(Table $table): Table
     {
-        return $table->columns([
-            TextColumn::make('name')
-                ->searchable()
-                ->sortable(),
+        return $table
+            ->columns([
+                TextColumn::make('name')
+                    ->searchable()
+                    ->sortable(),
 
-            TextColumn::make('email')
-                ->searchable()
-                ->sortable(),
+                TextColumn::make('email')
+                    ->searchable()
+                    ->sortable(),
 
-            TextColumn::make('phone_number'),
+                TextColumn::make('phone_number')
+                    ->fontFamily(FontFamily::Mono),
 
-            TextColumn::make('from')
-                ->date(),
+                TextColumn::make('from')
+                    ->date(),
 
-            TextColumn::make('to')
-                ->date(),
-        ]);
+                TextColumn::make('to')
+                    ->date(),
+            ])
+            ->actions([
+                EditAction::make(),
+                DeleteAction::make()
+            ])
+            ->bulkActions([
+                DeleteBulkAction::make(),
+                BulkAction::make('send_email')
+                    ->form([
+                        Select::make('email')
+                            ->options(fn() => Email::pluck('title', 'id'))
+                    ])
+                    ->action(function (Collection $records, array $data) {
+                        $email = Email::find($data['email']);
+                        $records->each(function (Candidate $record) use ($email) {
+                            Mail::to($record->email)->send(new DefaultMail($record, $email));
+                        });
+                    })
+            ]);
     }
 
     public static function getPages(): array

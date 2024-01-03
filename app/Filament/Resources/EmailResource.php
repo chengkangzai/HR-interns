@@ -20,7 +20,7 @@ class EmailResource extends Resource
 
     protected static ?string $slug = 'emails';
 
-    protected static ?string $recordTitleAttribute = 'title';
+    protected static ?string $recordTitleAttribute = 'name';
 
     protected static ?string $navigationIcon = 'heroicon-o-envelope-open';
 

@@ -12,7 +12,7 @@ return new class extends Migration {
             $table->string('name');
             $table->string('email');
             $table->string('phone_number');
-            $table->longText('notes');
+            $table->longText('notes')->nullable();
             $table->dateTime('from')->nullable();
             $table->dateTime('to')->nullable();
             $table->softDeletes();
