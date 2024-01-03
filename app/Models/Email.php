@@ -11,6 +11,7 @@ class Email extends Model
     use SoftDeletes, HasFactory;
 
     protected $fillable = [
+        'name',
         'title',
         'body',
     ];

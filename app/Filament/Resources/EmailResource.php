@@ -25,6 +25,9 @@ class EmailResource extends Resource
     public static function form(Form $form): Form
     {
         return $form->schema([
+            TextInput::make('name')
+                ->required(),
+
             TextInput::make('title')
                 ->required(),
 
