@@ -116,7 +116,7 @@ class CandidateResource extends Resource
                 BulkAction::make('send_email')
                     ->form([
                         Select::make('email')
-                            ->options(fn() => Email::pluck('title', 'id'))
+                            ->options(fn() => Email::pluck('name', 'id'))
                     ])
                     ->action(function (Collection $records, array $data) {
                         $email = Email::find($data['email']);
