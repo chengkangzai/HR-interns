@@ -29,7 +29,7 @@ class EditCandidate extends EditRecord
                 ->label('Send')
                 ->form([
                     Select::make('mail')
-                        ->options(Email::pluck('title', 'id'))
+                        ->options(Email::pluck('name', 'id'))
                 ])
                 ->action(function (array $data) {
                     Mail::to($this->record->email)->send(new DefaultMail($this->record, Email::find($data['mail'])));
