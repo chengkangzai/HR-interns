@@ -2,10 +2,12 @@
 
 namespace App\Filament\Resources;
 
+use App\Enums\CandidateStatus;
 use App\Filament\Resources\CandidateResource\Pages;
 use App\Mail\DefaultMail;
 use App\Models\Candidate;
 use App\Models\Email;
+use Filament\Tables\Actions\Action;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\RichEditor;
@@ -16,6 +18,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Forms\Set;
 use Filament\Resources\Resource;
+use Filament\Support\Colors\Color;
 use Filament\Support\Enums\FontFamily;
 use Filament\Tables\Actions\BulkAction;
 use Filament\Tables\Actions\DeleteAction;
@@ -106,8 +109,18 @@ class CandidateResource extends Resource
 
                 TextColumn::make('to')
                     ->date(),
+
+                TextColumn::make('status')
+                    ->badge()
             ])
             ->actions([
+                Action::make('status')
+                    ->icon('heroicon-s-check-circle')
+                    ->form([
+                        Select::make('status')
+                            ->options(CandidateStatus::class)
+                    ])
+                    ->action(fn(Candidate $record, array $data) => $record->update($data)),
                 EditAction::make(),
                 DeleteAction::make()
             ])

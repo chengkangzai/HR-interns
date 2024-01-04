@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\CandidateStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -23,10 +24,12 @@ class Candidate extends Model implements HasMedia
         'from',
         'to',
         'notes',
+        'status',
     ];
 
     protected $casts = [
         'from' => 'datetime',
         'to' => 'datetime',
+        'status' => CandidateStatus::class
     ];
 }
