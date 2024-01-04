@@ -25,6 +25,7 @@ use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Actions\DeleteBulkAction;
 use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Mail;
@@ -123,6 +124,11 @@ class CandidateResource extends Resource
 
                 TextColumn::make('status')
                     ->badge()
+            ])
+            ->filters([
+                SelectFilter::make('status')
+                    ->options(CandidateStatus::class)
+                    ->label('Status')
             ])
             ->actions([
                 Action::make('status')
