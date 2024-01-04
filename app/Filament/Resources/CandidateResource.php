@@ -57,7 +57,11 @@ class CandidateResource extends Resource
                     ->required(),
 
                 PhoneInput::make('phone_number')
-                    ->required()
+                    ->required(),
+
+                Select::make('status')
+                    ->options(CandidateStatus::class)
+                    ->required(),
             ])->columns(2),
 
             Section::make([
