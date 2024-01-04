@@ -107,6 +107,7 @@ class CandidateResource extends Resource
                     ->fontFamily(FontFamily::Mono),
 
                 TextColumn::make('range')
+                    ->label('From - To')
                     ->getStateUsing(fn(Candidate $record) => isset($record->from, $record->to)
                         ? $record->from->format('d/m/Y') . ' - ' . $record->to->format('d/m/Y')
                         :'N/A'
