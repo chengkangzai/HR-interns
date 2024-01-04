@@ -7,7 +7,6 @@ use App\Filament\Resources\CandidateResource\Pages;
 use App\Mail\DefaultMail;
 use App\Models\Candidate;
 use App\Models\Email;
-use Filament\Tables\Actions\Action;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\RichEditor;
@@ -20,6 +19,7 @@ use Filament\Forms\Set;
 use Filament\Resources\Resource;
 use Filament\Support\Colors\Color;
 use Filament\Support\Enums\FontFamily;
+use Filament\Tables\Actions\Action;
 use Filament\Tables\Actions\BulkAction;
 use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Actions\DeleteBulkAction;
@@ -98,10 +98,12 @@ class CandidateResource extends Resource
                     ->sortable(),
 
                 TextColumn::make('email')
+                    ->toggleable(isToggledHiddenByDefault: true)
                     ->searchable()
                     ->sortable(),
 
                 TextColumn::make('phone_number')
+                    ->toggleable(isToggledHiddenByDefault: true)
                     ->fontFamily(FontFamily::Mono),
 
                 TextColumn::make('from')
@@ -115,6 +117,7 @@ class CandidateResource extends Resource
             ])
             ->actions([
                 Action::make('status')
+                    ->color(Color::Blue)
                     ->icon('heroicon-s-check-circle')
                     ->form([
                         Select::make('status')
