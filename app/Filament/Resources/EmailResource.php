@@ -50,11 +50,17 @@ class EmailResource extends Resource
     public static function table(Table $table): Table
     {
         return $table->columns([
-            TextColumn::make('title')
+            TextColumn::make('name')
                 ->searchable()
                 ->sortable(),
 
-            TextColumn::make('body'),
+            TextColumn::make('title')
+                ->searchable()
+                ->limit(50)
+                ->sortable(),
+
+            TextColumn::make('body')
+                ->limit(50),
         ]);
     }
 
