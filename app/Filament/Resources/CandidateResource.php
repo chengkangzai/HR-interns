@@ -184,6 +184,7 @@ class CandidateResource extends Resource
         return [
             'index' => Pages\ListCandidates::route('/'),
             'create' => Pages\CreateCandidate::route('/create'),
+            'view' => Pages\ViewCandidate::route('/{record}/'),
             'edit' => Pages\EditCandidate::route('/{record}/edit'),
         ];
     }
