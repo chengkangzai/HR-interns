@@ -73,11 +73,18 @@ class CandidateResource extends Resource
             Section::make([
                 SpatieMediaLibraryFileUpload::make('resume')
                     ->label('Resume')
+                    ->openable()
+                    ->downloadable()
+                    ->previewable()
                     ->acceptedFileTypes(['application/pdf']),
 
                 SpatieMediaLibraryFileUpload::make('documents')
                     ->label('Other Documents')
-                    ->acceptedFileTypes(['application/pdf']),
+                    ->openable()
+                    ->downloadable()
+                    ->previewable()
+                    ->collection('other_documents')
+                    ->multiple(),
             ])->columns(2),
 
             RichEditor::make('notes')
@@ -115,7 +122,7 @@ class CandidateResource extends Resource
                     ->label('From - To')
                     ->getStateUsing(fn(Candidate $record) => isset($record->from, $record->to)
                         ? $record->from->format('d/m/Y') . ' - ' . $record->to->format('d/m/Y')
-                        :'N/A'
+                        : 'N/A'
                     ),
 
                 TextColumn::make('from')
@@ -157,6 +164,18 @@ class CandidateResource extends Resource
                         $email = Email::find($data['email']);
                         $records->each(function (Candidate $record) use ($email) {
                             Mail::to($record->email)->send(new DefaultMail($record, $email));
+                        });
+                    }),
+                BulkAction::make('change_status')
+                    ->form([
+                        Select::make('status')
+                            ->options(CandidateStatus::class)
+                    ])
+                    ->action(function (Collection $records, array $data) {
+                        $records->each(function (Candidate $record) use ($data) {
+                            $record->update([
+                                'status' => $data['status']
+                            ]);
                         });
                     })
             ]);
