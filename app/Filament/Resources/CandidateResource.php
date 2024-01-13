@@ -172,11 +172,9 @@ class CandidateResource extends Resource
                             ->options(CandidateStatus::class)
                     ])
                     ->action(function (Collection $records, array $data) {
-                        $records->each(function (Candidate $record) use ($data) {
-                            $record->update([
-                                'status' => $data['status']
-                            ]);
-                        });
+                        $records->each(fn(Candidate $record) => $record->update([
+                            'status' => $data['status']
+                        ]));
                     })
             ]);
     }
