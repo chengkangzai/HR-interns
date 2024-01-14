@@ -53,13 +53,14 @@ class CandidateResource extends Resource
                     ->required(),
 
                 TextInput::make('email')
-                    ->reactive()
+                    ->live(onBlur: true)
                     ->afterStateUpdated(function (string $state, Set $set) {
                         $set('email', str($state)->remove(' ')->remove('`'));
                     })
                     ->required(),
 
                 PhoneInput::make('phone_number')
+                    ->formatOnDisplay(true)
                     ->required(),
             ]),
 
