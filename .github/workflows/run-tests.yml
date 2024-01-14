@@ -1,0 +1,52 @@
+on: push
+name: CI
+jobs:
+  phpunit:
+    runs-on: ubuntu-latest
+    container:
+      image: kirschbaumdevelopment/laravel-test-runner:8.1
+
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: password
+          MYSQL_DATABASE: test_db
+        ports:
+          - 33306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Install Imagick
+        run: |
+          apt-get update
+
+      - name: Install composer dependencies
+        run: |
+          composer install --no-scripts
+
+      - name: Build Vite assets
+        run: |
+          npm install
+          npm run build
+
+      - name: Setup .env file
+        run: |
+          cp .env.ci .env
+
+      - name: Prepare Laravel Application
+        run: |
+          php artisan key:generate
+          php artisan --version
+
+      - name: Migrate database
+        run: |
+          mysql --version
+          php artisan migrate
+
+      - name: Execute tests
+        run: composer test
