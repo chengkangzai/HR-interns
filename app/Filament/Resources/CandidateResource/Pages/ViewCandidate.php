@@ -7,6 +7,7 @@ use App\Mail\DefaultMail;
 use App\Models\Candidate;
 use App\Models\Email;
 use Filament\Actions\Action;
+use Filament\Actions\EditAction;
 use Filament\Forms\Components\Select;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ViewRecord;
@@ -22,6 +23,7 @@ class ViewCandidate extends ViewRecord
     protected function getActions(): array
     {
         return [
+            EditAction::make(),
             Action::make('send')
                 ->icon('heroicon-o-paper-airplane')
                 ->label('Send')

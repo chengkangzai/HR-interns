@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\PositionResource\Pages;
 
 use App\Filament\Resources\PositionResource;
+use Filament\Actions\EditAction;
 use Filament\Resources\Pages\ViewRecord;
 
 class ViewPosition extends ViewRecord
@@ -12,7 +13,7 @@ class ViewPosition extends ViewRecord
     protected function getActions(): array
     {
         return [
-            //
+            EditAction::make(),
         ];
     }
 }
