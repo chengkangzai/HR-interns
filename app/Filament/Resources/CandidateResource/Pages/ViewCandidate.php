@@ -7,10 +7,8 @@ use App\Mail\DefaultMail;
 use App\Models\Candidate;
 use App\Models\Email;
 use Filament\Actions\Action;
-use Filament\Actions\DeleteAction;
 use Filament\Forms\Components\Select;
 use Filament\Notifications\Notification;
-use Filament\Resources\Pages\EditRecord;
 use Filament\Resources\Pages\ViewRecord;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Mail;
@@ -29,7 +27,7 @@ class ViewCandidate extends ViewRecord
                 ->label('Send')
                 ->form([
                     Select::make('mail')
-                        ->options(Email::pluck('name', 'id'))
+                        ->options(Email::pluck('name', 'id')),
                 ])
                 ->action(function (array $data) {
                     Mail::to($this->record->email)->send(new DefaultMail($this->record, Email::find($data['mail'])));
@@ -39,7 +37,7 @@ class ViewCandidate extends ViewRecord
                         ->body('The email has been sent to the candidate.')
                         ->success()
                         ->send();
-                })
+                }),
         ];
     }
 }

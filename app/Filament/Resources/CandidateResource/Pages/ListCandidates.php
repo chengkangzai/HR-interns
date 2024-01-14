@@ -29,23 +29,23 @@ class ListCandidates extends ListRecords
             'pending' => Tab::make('Pending')
                 ->badgeColor(CandidateStatus::PENDING->getColor())
                 ->badge(Candidate::where('status', CandidateStatus::PENDING)->count())
-                ->query(fn(Builder $query) => $query->where('status', CandidateStatus::PENDING)),
+                ->query(fn (Builder $query) => $query->where('status', CandidateStatus::PENDING)),
             'technical_test' => Tab::make('Technical Test')
                 ->badgeColor(CandidateStatus::TECHNICAL_TEST->getColor())
                 ->badge(Candidate::where('status', CandidateStatus::TECHNICAL_TEST)->count())
-                ->query(fn(Builder $query) => $query->where('status', CandidateStatus::TECHNICAL_TEST)),
+                ->query(fn (Builder $query) => $query->where('status', CandidateStatus::TECHNICAL_TEST)),
             'interview' => Tab::make('Interview')
                 ->badgeColor(CandidateStatus::INTERVIEW->getColor())
                 ->badge(Candidate::where('status', CandidateStatus::INTERVIEW)->count())
-                ->query(fn(Builder $query) => $query->where('status', CandidateStatus::INTERVIEW)),
+                ->query(fn (Builder $query) => $query->where('status', CandidateStatus::INTERVIEW)),
             'expired' => Tab::make('Expired')
                 ->badgeColor(CandidateStatus::EXPIRED->getColor())
                 ->badge(Candidate::where('status', CandidateStatus::EXPIRED)->count())
-                ->query(fn(Builder $query) => $query->where('status', CandidateStatus::EXPIRED)),
+                ->query(fn (Builder $query) => $query->where('status', CandidateStatus::EXPIRED)),
             'withdrawn' => Tab::make('Withdrawn')
                 ->badgeColor(CandidateStatus::WITHDRAWN->getColor())
                 ->badge(Candidate::where('status', CandidateStatus::WITHDRAWN)->count())
-                ->query(fn(Builder $query) => $query->where('status', CandidateStatus::WITHDRAWN)),
+                ->query(fn (Builder $query) => $query->where('status', CandidateStatus::WITHDRAWN)),
         ];
     }
 }

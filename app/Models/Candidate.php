@@ -13,10 +13,9 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 
 class Candidate extends Model implements HasMedia
 {
+    use HasFactory, SoftDeletes;
     use InteractsWithMedia;
     use Notifiable;
-
-    use SoftDeletes, HasFactory;
 
     protected $fillable = [
         'name',
@@ -26,13 +25,13 @@ class Candidate extends Model implements HasMedia
         'to',
         'notes',
         'status',
-        'job_id'
+        'job_id',
     ];
 
     protected $casts = [
         'from' => 'datetime',
         'to' => 'datetime',
-        'status' => CandidateStatus::class
+        'status' => CandidateStatus::class,
     ];
 
     public function job(): BelongsTo

@@ -4,7 +4,6 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\EmailResource\Pages;
 use App\Models\Email;
-use Filament\Forms\Components\MarkdownEditor;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\TextInput;
@@ -12,7 +11,6 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use Illuminate\Mail\Markdown;
 
 class EmailResource extends Resource
 {
@@ -39,11 +37,11 @@ class EmailResource extends Resource
 
             Placeholder::make('created_at')
                 ->label('Created Date')
-                ->content(fn(?Email $record): string => $record?->created_at?->diffForHumans() ?? '-'),
+                ->content(fn (?Email $record): string => $record?->created_at?->diffForHumans() ?? '-'),
 
             Placeholder::make('updated_at')
                 ->label('Last Modified Date')
-                ->content(fn(?Email $record): string => $record?->updated_at?->diffForHumans() ?? '-'),
+                ->content(fn (?Email $record): string => $record?->updated_at?->diffForHumans() ?? '-'),
         ]);
     }
 

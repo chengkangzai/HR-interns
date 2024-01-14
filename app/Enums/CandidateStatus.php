@@ -6,7 +6,7 @@ use Filament\Support\Colors\Color;
 use Filament\Support\Contracts\HasColor;
 use Filament\Support\Contracts\HasLabel;
 
-enum CandidateStatus: string implements HasLabel,HasColor
+enum CandidateStatus: string implements HasColor, HasLabel
 {
     case PENDING = 'pending';
     case TECHNICAL_TEST = 'technical_test';

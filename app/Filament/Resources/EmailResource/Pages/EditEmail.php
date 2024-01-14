@@ -48,8 +48,7 @@ class EditEmail extends EditRecord
                         ->title('Email Sent')
                         ->body('Email sent successfully.')
                         ->send();
-                })
-            ,
+                }),
             DeleteAction::make(),
         ];
     }

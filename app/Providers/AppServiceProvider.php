@@ -28,16 +28,16 @@ class AppServiceProvider extends ServiceProvider
 
     private function setupFilamentDefault(): void
     {
-        Section::configureUsing(fn(Section $section) => $section->columns(2)->compact(true));
+        Section::configureUsing(fn (Section $section) => $section->columns(2)->compact(true));
 
-        SpatieMediaLibraryFileUpload::configureUsing(fn(SpatieMediaLibraryFileUpload $fileUpload) => $fileUpload
+        SpatieMediaLibraryFileUpload::configureUsing(fn (SpatieMediaLibraryFileUpload $fileUpload) => $fileUpload
             ->openable()
             ->downloadable()
             ->previewable()
         );
 
-        DatePicker::configureUsing(fn(DatePicker $datePicker) => $datePicker->native(false));
+        DatePicker::configureUsing(fn (DatePicker $datePicker) => $datePicker->native(false));
 
-        DateTimePicker::configureUsing(fn(DateTimePicker $dateTimePicker) => $dateTimePicker->native(false));
+        DateTimePicker::configureUsing(fn (DateTimePicker $dateTimePicker) => $dateTimePicker->native(false));
     }
 }

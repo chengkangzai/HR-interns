@@ -38,11 +38,11 @@ class JobResource extends Resource
 
             Placeholder::make('created_at')
                 ->label('Created Date')
-                ->content(fn(?Job $record): string => $record?->created_at?->diffForHumans() ?? '-'),
+                ->content(fn (?Job $record): string => $record?->created_at?->diffForHumans() ?? '-'),
 
             Placeholder::make('updated_at')
                 ->label('Last Modified Date')
-                ->content(fn(?Job $record): string => $record?->updated_at?->diffForHumans() ?? '-'),
+                ->content(fn (?Job $record): string => $record?->updated_at?->diffForHumans() ?? '-'),
         ]);
     }
 
@@ -61,7 +61,7 @@ class JobResource extends Resource
             ->actions([
                 ViewAction::make(),
                 EditAction::make(),
-                DeleteAction::make()
+                DeleteAction::make(),
             ]);
     }
 

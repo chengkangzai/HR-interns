@@ -4,7 +4,6 @@ namespace App\Mail;
 
 use App\Models\Candidate;
 use App\Models\Email;
-use Filament\Support\Markdown;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -13,7 +12,6 @@ use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
-use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class DefaultMail extends Mailable implements ShouldQueue
 {
@@ -23,11 +21,10 @@ class DefaultMail extends Mailable implements ShouldQueue
     public string $mailable;
 
     public function __construct(
-        public Candidate   $candidate,
-        public Email       $email,
-        public ?Collection $medias =null,
-    )
-    {
+        public Candidate $candidate,
+        public Email $email,
+        public ?Collection $medias = null,
+    ) {
         $this->mailable = self::class;
     }
 
@@ -46,7 +43,7 @@ class DefaultMail extends Mailable implements ShouldQueue
     public function content(): Content
     {
         $replaceTemplateValue = [
-            '{{NAME}}' => $this->candidate?->name ??'Participant',
+            '{{NAME}}' => $this->candidate?->name ?? 'Participant',
         ];
 
         $message = Str::replace(array_keys($replaceTemplateValue), array_values($replaceTemplateValue), $this->email->body);
@@ -54,7 +51,7 @@ class DefaultMail extends Mailable implements ShouldQueue
         return new Content(
             markdown: 'emails.default',
             with: [
-                'message' => $message
+                'message' => $message,
             ]
         );
     }

@@ -6,7 +6,6 @@ use App\Enums\CandidateStatus;
 use App\Enums\JobStatus;
 use App\Filament\Resources\CandidateResource\Pages;
 use App\Jobs\SendEmailJob;
-use App\Mail\DefaultMail;
 use App\Models\Candidate;
 use App\Models\Email;
 use Filament\Forms\Components\DatePicker;
@@ -31,7 +30,6 @@ use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Mail;
 use Ysfkaya\FilamentPhoneInput\Forms\PhoneInput;
 
 class CandidateResource extends Resource
@@ -64,8 +62,8 @@ class CandidateResource extends Resource
 
             Section::make([
                 Select::make('job_id')
-                    ->suffixAction(fn(string $context, ?Candidate $record) => $context == 'create' || is_null($record->job) ? null : JobResource::getUrl('view', ['record' => $record->job]))
-                    ->relationship('job', 'title', fn(Builder $query) => $query->where('status', JobStatus::OPEN))
+                    ->suffixAction(fn (string $context, ?Candidate $record) => $context == 'create' || is_null($record->job) ? null : JobResource::getUrl('view', ['record' => $record->job]))
+                    ->relationship('job', 'title', fn (Builder $query) => $query->where('status', JobStatus::OPEN))
                     ->createOptionForm([
                         TextInput::make('title')
                             ->required(),
@@ -99,11 +97,11 @@ class CandidateResource extends Resource
 
             Placeholder::make('created_at')
                 ->label('Created Date')
-                ->content(fn(?Candidate $record): string => $record?->created_at?->diffForHumans() ?? '-'),
+                ->content(fn (?Candidate $record): string => $record?->created_at?->diffForHumans() ?? '-'),
 
             Placeholder::make('updated_at')
                 ->label('Last Modified Date')
-                ->content(fn(?Candidate $record): string => $record?->updated_at?->diffForHumans() ?? '-'),
+                ->content(fn (?Candidate $record): string => $record?->updated_at?->diffForHumans() ?? '-'),
 
         ]);
     }
@@ -127,8 +125,8 @@ class CandidateResource extends Resource
 
                 TextColumn::make('range')
                     ->label('From - To')
-                    ->getStateUsing(fn(Candidate $record) => isset($record->from, $record->to)
-                        ? $record->from->format('d/m/Y') . ' - ' . $record->to->format('d/m/Y')
+                    ->getStateUsing(fn (Candidate $record) => isset($record->from, $record->to)
+                        ? $record->from->format('d/m/Y').' - '.$record->to->format('d/m/Y')
                         : 'N/A'
                     ),
 
@@ -141,12 +139,12 @@ class CandidateResource extends Resource
                     ->date(),
 
                 TextColumn::make('status')
-                    ->badge()
+                    ->badge(),
             ])
             ->filters([
                 SelectFilter::make('status')
                     ->options(CandidateStatus::class)
-                    ->label('Status')
+                    ->label('Status'),
             ])
             ->actions([
                 Action::make('status')
@@ -154,18 +152,18 @@ class CandidateResource extends Resource
                     ->icon('heroicon-s-check-circle')
                     ->form([
                         Select::make('status')
-                            ->options(CandidateStatus::class)
+                            ->options(CandidateStatus::class),
                     ])
-                    ->action(fn(Candidate $record, array $data) => $record->update($data)),
+                    ->action(fn (Candidate $record, array $data) => $record->update($data)),
                 EditAction::make(),
-                DeleteAction::make()
+                DeleteAction::make(),
             ])
             ->bulkActions([
                 DeleteBulkAction::make(),
                 BulkAction::make('send_email')
                     ->form([
                         Select::make('email')
-                            ->options(fn() => Email::pluck('name', 'id'))
+                            ->options(fn () => Email::pluck('name', 'id')),
                     ])
                     ->action(function (Collection $records, array $data) {
                         $email = Email::find($data['email']);
@@ -176,13 +174,13 @@ class CandidateResource extends Resource
                 BulkAction::make('change_status')
                     ->form([
                         Select::make('status')
-                            ->options(CandidateStatus::class)
+                            ->options(CandidateStatus::class),
                     ])
                     ->action(function (Collection $records, array $data) {
-                        $records->each(fn(Candidate $record) => $record->update([
-                            'status' => $data['status']
+                        $records->each(fn (Candidate $record) => $record->update([
+                            'status' => $data['status'],
                         ]));
-                    })
+                    }),
             ]);
     }
 
