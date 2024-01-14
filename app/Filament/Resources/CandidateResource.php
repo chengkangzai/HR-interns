@@ -174,6 +174,7 @@ class CandidateResource extends Resource
 
                 SelectFilter::make('position_id')
                     ->searchable()
+                    ->preload()
                     ->relationship('position', 'title')
                     ->label('Position'),
             ])
