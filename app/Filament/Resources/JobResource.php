@@ -55,7 +55,8 @@ class JobResource extends Resource
 
             TextColumn::make('description'),
 
-            TextColumn::make('status'),
+            TextColumn::make('status')
+                ->badge(),
         ])
             ->actions([
                 ViewAction::make(),
