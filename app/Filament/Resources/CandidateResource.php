@@ -98,6 +98,12 @@ class CandidateResource extends Resource
             Section::make([
                 SpatieMediaLibraryFileUpload::make('resume')
                     ->label('Resume')
+                    ->collection('resumes')
+                    ->acceptedFileTypes(['application/pdf']),
+
+                SpatieMediaLibraryFileUpload::make('offer_letter')
+                    ->label('Offer Letter')
+                    ->collection('offer_letters')
                     ->acceptedFileTypes(['application/pdf']),
 
                 SpatieMediaLibraryFileUpload::make('documents')
