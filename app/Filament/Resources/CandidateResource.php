@@ -144,6 +144,9 @@ class CandidateResource extends Resource
                         : 'N/A'
                     ),
 
+                TextColumn::make('position.title')
+                    ->url(fn (Candidate $record) => PositionResource::getUrl('view', ['record' => $record->position_id])),
+
                 TextColumn::make('from')
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->date(),
@@ -159,6 +162,11 @@ class CandidateResource extends Resource
                 SelectFilter::make('status')
                     ->options(CandidateStatus::class)
                     ->label('Status'),
+
+                SelectFilter::make('position_id')
+                    ->searchable()
+                    ->relationship('position', 'title')
+                    ->label('Position'),
             ])
             ->actions([
                 Action::make('status')
