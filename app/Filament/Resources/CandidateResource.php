@@ -129,11 +129,15 @@ class CandidateResource extends Resource
                     ->sortable(),
 
                 TextColumn::make('email')
+                    ->openUrlInNewTab()
+                    ->url(fn (Candidate $record) => 'mailto:'.$record->email)
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->searchable()
                     ->sortable(),
 
                 TextColumn::make('phone_number')
+                    ->openUrlInNewTab()
+                    ->url(fn (Candidate $record) => 'https://wa.me/'.str_replace(['+', ' ', '(', ')', '-'], '', $record->phone_number))
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->fontFamily(FontFamily::Mono),
 
