@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Position extends Model
 {
-    use SoftDeletes, HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $fillable = [
         'title',
@@ -21,7 +21,6 @@ class Position extends Model
     protected $casts = [
         'status' => PositionStatus::class,
     ];
-
 
     public function candidates(): HasMany
     {

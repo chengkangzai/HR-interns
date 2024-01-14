@@ -14,9 +14,9 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 class Candidate extends Model implements HasMedia
 {
     use HasFactory;
-use SoftDeletes;
     use InteractsWithMedia;
     use Notifiable;
+    use SoftDeletes;
 
     protected $fillable = [
         'name',

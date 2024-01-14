@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\Job;
 use App\Models\Position;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
