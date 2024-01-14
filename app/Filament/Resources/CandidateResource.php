@@ -48,6 +48,8 @@ class CandidateResource extends Resource
         return $form->schema([
             Section::make([
                 TextInput::make('name')
+                    ->live()
+                    ->afterStateUpdated(fn(string $state, Set $set) => $set('name', str($state)->title()->__toString()))
                     ->required(),
 
                 TextInput::make('email')
