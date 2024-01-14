@@ -3,6 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Enums\CandidateStatus;
+use App\Enums\JobStatus;
 use App\Filament\Resources\CandidateResource\Pages;
 use App\Mail\DefaultMail;
 use App\Models\Candidate;
@@ -45,7 +46,6 @@ class CandidateResource extends Resource
     {
         return $form->schema([
             Section::make([
-
                 TextInput::make('name')
                     ->required(),
 
@@ -57,6 +57,13 @@ class CandidateResource extends Resource
                     ->required(),
 
                 PhoneInput::make('phone_number')
+                    ->required(),
+            ])->columns(2),
+
+            Section::make([
+                Select::make('job_id')
+                    ->suffixAction(fn(string $context, ?Candidate $record) => $context == 'create' || is_null($record->job) ? null : JobResource::getUrl('view', ['record' => $record->job]))
+                    ->relationship('job', 'title', fn($query) => $query->where('status', JobStatus::OPEN))
                     ->required(),
 
                 Select::make('status')

@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Enums\CandidateStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 use Spatie\MediaLibrary\HasMedia;
@@ -25,6 +26,7 @@ class Candidate extends Model implements HasMedia
         'to',
         'notes',
         'status',
+        'job_id'
     ];
 
     protected $casts = [
@@ -32,4 +34,9 @@ class Candidate extends Model implements HasMedia
         'to' => 'datetime',
         'status' => CandidateStatus::class
     ];
+
+    public function job(): BelongsTo
+    {
+        return $this->belongsTo(Job::class);
+    }
 }
