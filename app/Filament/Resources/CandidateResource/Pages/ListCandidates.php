@@ -38,10 +38,6 @@ class ListCandidates extends ListRecords
                 ->badgeColor(CandidateStatus::INTERVIEW->getColor())
                 ->badge(Candidate::where('status', CandidateStatus::INTERVIEW)->count())
                 ->query(fn (Builder $query) => $query->where('status', CandidateStatus::INTERVIEW)),
-            'expired' => Tab::make('Expired')
-                ->badgeColor(CandidateStatus::EXPIRED->getColor())
-                ->badge(Candidate::where('status', CandidateStatus::EXPIRED)->count())
-                ->query(fn (Builder $query) => $query->where('status', CandidateStatus::EXPIRED)),
             'withdrawn' => Tab::make('Withdrawn')
                 ->badgeColor(CandidateStatus::WITHDRAWN->getColor())
                 ->badge(Candidate::where('status', CandidateStatus::WITHDRAWN)->count())
@@ -50,6 +46,10 @@ class ListCandidates extends ListRecords
                 ->badgeColor(CandidateStatus::HIRED->getColor())
                 ->badge(Candidate::where('status', CandidateStatus::HIRED)->count())
                 ->query(fn (Builder $query) => $query->where('status', CandidateStatus::HIRED)),
+            'offer_accepted' => Tab::make('Offer Accepted')
+                ->badgeColor(CandidateStatus::OFFER_ACCEPTED->getColor())
+                ->badge(Candidate::where('status', CandidateStatus::OFFER_ACCEPTED)->count())
+                ->query(fn (Builder $query) => $query->where('status', CandidateStatus::OFFER_ACCEPTED)),
             'completed' => Tab::make('Completed')
                 ->badgeColor(CandidateStatus::COMPLETED->getColor())
                 ->badge(Candidate::where('status', CandidateStatus::COMPLETED)->count())

@@ -8,13 +8,13 @@ use Filament\Support\Contracts\HasLabel;
 
 enum CandidateStatus: string implements HasColor, HasLabel
 {
-    case PENDING = 'pending';
-    case TECHNICAL_TEST = 'technical_test';
-    case INTERVIEW = 'interview';
-    case EXPIRED = 'expired';
-    case WITHDRAWN = 'withdrawn';
-    case HIRED = 'hired';
-    case COMPLETED = 'completed';
+    case PENDING = 'pending'; // Indicates the candidate has been sent an invitation
+    case TECHNICAL_TEST = 'technical_test'; // Indicates the candidate has been sent a technical test
+    case INTERVIEW = 'interview'; // Indicates the candidate has been interviewed
+    case WITHDRAWN = 'withdrawn'; // Indicates the candidate has withdrawn from the process
+    case HIRED = 'hired'; // Indicates the candidate has accepted the offer and has started
+    case OFFER_ACCEPTED = 'offer_accepted'; // Indicates the candidate has accepted the offer but has not yet started
+    case COMPLETED = 'completed'; // Indicates the candidate has completed internship
 
     public function getLabel(): ?string
     {
@@ -22,9 +22,9 @@ enum CandidateStatus: string implements HasColor, HasLabel
             self::PENDING => 'Pending',
             self::TECHNICAL_TEST => 'Technical Test',
             self::INTERVIEW => 'Interview',
-            self::EXPIRED => 'Expired',
             self::WITHDRAWN => 'Withdrawn',
             self::HIRED => 'Hired',
+            self::OFFER_ACCEPTED => 'Offer Accepted',
             self::COMPLETED => 'Completed',
         };
     }
@@ -35,9 +35,9 @@ enum CandidateStatus: string implements HasColor, HasLabel
             self::PENDING => Color::Gray,
             self::TECHNICAL_TEST => Color::Blue,
             self::INTERVIEW => Color::Yellow,
-            self::EXPIRED => Color::Red,
             self::WITHDRAWN => Color::Orange,
             self::HIRED => Color::Lime,
+            self::OFFER_ACCEPTED => Color::Sky,
             self::COMPLETED => Color::Green,
         };
     }
