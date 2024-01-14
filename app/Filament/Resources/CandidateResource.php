@@ -49,7 +49,7 @@ class CandidateResource extends Resource
             Section::make([
                 TextInput::make('name')
                     ->live()
-                    ->afterStateUpdated(fn(string $state, Set $set) => $set('name', str($state)->title()->__toString()))
+                    ->afterStateUpdated(fn (string $state, Set $set) => $set('name', str($state)->title()->__toString()))
                     ->required(),
 
                 TextInput::make('email')
