@@ -27,6 +27,7 @@ class EditEmail extends EditRecord
     {
         return [
             Action::make('Send Preview Email')
+                ->icon('heroicon-o-eye')
                 ->form([
                     TextInput::make('email')
                         ->email()
