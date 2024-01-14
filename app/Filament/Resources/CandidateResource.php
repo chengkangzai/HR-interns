@@ -28,6 +28,7 @@ use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Mail;
 use Ysfkaya\FilamentPhoneInput\Forms\PhoneInput;
@@ -58,41 +59,39 @@ class CandidateResource extends Resource
 
                 PhoneInput::make('phone_number')
                     ->required(),
-            ])->columns(2),
+            ]),
 
             Section::make([
                 Select::make('job_id')
                     ->suffixAction(fn(string $context, ?Candidate $record) => $context == 'create' || is_null($record->job) ? null : JobResource::getUrl('view', ['record' => $record->job]))
-                    ->relationship('job', 'title', fn($query) => $query->where('status', JobStatus::OPEN))
+                    ->relationship('job', 'title', fn(Builder $query) => $query->where('status', JobStatus::OPEN))
+                    ->createOptionForm([
+                        TextInput::make('title')
+                            ->required(),
+                    ])
                     ->required(),
 
                 Select::make('status')
                     ->options(CandidateStatus::class)
                     ->required(),
-            ])->columns(2),
+            ]),
 
             Section::make([
                 DatePicker::make('from'),
 
                 DatePicker::make('to'),
-            ])->columns(2),
+            ]),
 
             Section::make([
                 SpatieMediaLibraryFileUpload::make('resume')
                     ->label('Resume')
-                    ->openable()
-                    ->downloadable()
-                    ->previewable()
                     ->acceptedFileTypes(['application/pdf']),
 
                 SpatieMediaLibraryFileUpload::make('documents')
                     ->label('Other Documents')
-                    ->openable()
-                    ->downloadable()
-                    ->previewable()
                     ->collection('other_documents')
                     ->multiple(),
-            ])->columns(2),
+            ]),
 
             RichEditor::make('notes')
                 ->columnSpanFull(),
