@@ -3,7 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Enums\CandidateStatus;
-use App\Enums\JobStatus;
+use App\Enums\PositionStatus;
 use App\Filament\Resources\CandidateResource\Pages;
 use App\Jobs\SendEmailJob;
 use App\Models\Candidate;
@@ -61,9 +61,9 @@ class CandidateResource extends Resource
             ]),
 
             Section::make([
-                Select::make('job_id')
-                    ->suffixAction(fn (string $context, ?Candidate $record) => $context == 'create' || is_null($record->job) ? null : JobResource::getUrl('view', ['record' => $record->job]))
-                    ->relationship('job', 'title', fn (Builder $query) => $query->where('status', JobStatus::OPEN))
+                Select::make('position_id')
+                    ->suffixAction(fn (string $context, ?Candidate $record) => $context == 'create' || is_null($record->position) ? null : PositionResource::getUrl('view', ['record' => $record->position]))
+                    ->relationship('position', 'title', fn (Builder $query) => $query->where('status', PositionStatus::OPEN))
                     ->createOptionForm([
                         TextInput::make('title')
                             ->required(),

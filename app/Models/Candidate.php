@@ -13,7 +13,8 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 
 class Candidate extends Model implements HasMedia
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory;
+use SoftDeletes;
     use InteractsWithMedia;
     use Notifiable;
 
@@ -25,7 +26,7 @@ class Candidate extends Model implements HasMedia
         'to',
         'notes',
         'status',
-        'job_id',
+        'position_id',
     ];
 
     protected $casts = [
@@ -34,8 +35,8 @@ class Candidate extends Model implements HasMedia
         'status' => CandidateStatus::class,
     ];
 
-    public function job(): BelongsTo
+    public function position(): BelongsTo
     {
-        return $this->belongsTo(Job::class);
+        return $this->belongsTo(Position::class);
     }
 }

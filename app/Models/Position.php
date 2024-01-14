@@ -2,14 +2,15 @@
 
 namespace App\Models;
 
-use App\Enums\JobStatus;
+use App\Enums\PositionStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Job extends Model
+class Position extends Model
 {
-    use HasFactory, SoftDeletes;
+    use SoftDeletes, HasFactory;
 
     protected $fillable = [
         'title',
@@ -18,8 +19,12 @@ class Job extends Model
     ];
 
     protected $casts = [
-        'created_at' => 'datetime',
-        'updated_at' => 'datetime',
-        'status' => JobStatus::class,
+        'status' => PositionStatus::class,
     ];
+
+
+    public function candidates(): HasMany
+    {
+        return $this->hasMany(Candidate::class);
+    }
 }

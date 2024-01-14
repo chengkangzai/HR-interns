@@ -2,10 +2,11 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\JobResource\Pages;
-use App\Models\Job;
+use App\Enums\PositionStatus;
+use App\Filament\Resources\PositionResource\Pages;
+use App\Models\Position;
 use Filament\Forms\Components\Placeholder;
-use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -15,13 +16,11 @@ use Filament\Tables\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
-class JobResource extends Resource
+class PositionResource extends Resource
 {
-    protected static ?string $model = Job::class;
+    protected static ?string $model = Position::class;
 
-    protected static ?string $slug = 'jobs';
-
-    protected static ?string $navigationIcon = 'heroicon-o-briefcase';
+    protected static ?string $slug = 'positions';
 
     protected static ?string $recordTitleAttribute = 'title';
 
@@ -31,18 +30,19 @@ class JobResource extends Resource
             TextInput::make('title')
                 ->required(),
 
-            RichEditor::make('description'),
+            TextInput::make('description'),
 
-            TextInput::make('status')
+            Select::make('status')
+                ->options(PositionStatus::class)
                 ->required(),
 
             Placeholder::make('created_at')
                 ->label('Created Date')
-                ->content(fn (?Job $record): string => $record?->created_at?->diffForHumans() ?? '-'),
+                ->content(fn(?Position $record): string => $record?->created_at?->diffForHumans() ?? '-'),
 
             Placeholder::make('updated_at')
                 ->label('Last Modified Date')
-                ->content(fn (?Job $record): string => $record?->updated_at?->diffForHumans() ?? '-'),
+                ->content(fn(?Position $record): string => $record?->updated_at?->diffForHumans() ?? '-'),
         ]);
     }
 
@@ -55,8 +55,7 @@ class JobResource extends Resource
 
             TextColumn::make('description'),
 
-            TextColumn::make('status')
-                ->badge(),
+            TextColumn::make('status'),
         ])
             ->actions([
                 ViewAction::make(),
@@ -68,10 +67,10 @@ class JobResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListJobs::route('/'),
-            'create' => Pages\CreateJob::route('/create'),
-            'view' => Pages\ViewJob::route('/{record}/'),
-            'edit' => Pages\EditJob::route('/{record}/edit'),
+            'index' => Pages\ListPositions::route('/'),
+            'create' => Pages\CreatePosition::route('/create'),
+            'view' => Pages\ViewPosition::route('/{record}'),
+            'edit' => Pages\EditPosition::route('/{record}/edit'),
         ];
     }
 

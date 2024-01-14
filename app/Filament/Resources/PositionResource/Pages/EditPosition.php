@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Filament\Resources\JobResource\Pages;
+namespace App\Filament\Resources\PositionResource\Pages;
 
-use App\Filament\Resources\JobResource;
+use App\Filament\Resources\PositionResource;
 use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
 
-class EditJob extends EditRecord
+class EditPosition extends EditRecord
 {
-    protected static string $resource = JobResource::class;
+    protected static string $resource = PositionResource::class;
 
     protected function getActions(): array
     {
