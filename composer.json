@@ -15,6 +15,7 @@
         "laravel/framework": "^10.40",
         "laravel/sanctum": "^3.3.3",
         "laravel/tinker": "^2.9",
+        "league/flysystem-aws-s3-v3": "^3.0",
         "ysfkaya/filament-phone-input": "^2.2.1"
     },
     "require-dev": {
