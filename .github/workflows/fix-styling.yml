@@ -17,11 +17,6 @@ jobs:
         with:
           preset: laravel
 
-      - name: Install NPM dependencies
-        run: npm ci
-
-      - name: Run Blade Formatter
-        run: node_modules/.bin/blade-formatter --write resources/**/*.blade.php --sort-tailwindcss-classes --sort-html-attributes
 
       - name: Commit changes
         uses: stefanzweifel/git-auto-commit-action@v5
