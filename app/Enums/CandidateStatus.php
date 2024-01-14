@@ -13,6 +13,8 @@ enum CandidateStatus: string implements HasColor, HasLabel
     case INTERVIEW = 'interview';
     case EXPIRED = 'expired';
     case WITHDRAWN = 'withdrawn';
+    case HIRED = 'hired';
+    case COMPLETED = 'completed';
 
     public function getLabel(): ?string
     {
@@ -22,6 +24,8 @@ enum CandidateStatus: string implements HasColor, HasLabel
             self::INTERVIEW => 'Interview',
             self::EXPIRED => 'Expired',
             self::WITHDRAWN => 'Withdrawn',
+            self::HIRED => 'Hired',
+            self::COMPLETED => 'Completed',
         };
     }
 
@@ -30,9 +34,11 @@ enum CandidateStatus: string implements HasColor, HasLabel
         return match ($this) {
             self::PENDING => Color::Gray,
             self::TECHNICAL_TEST => Color::Blue,
-            self::INTERVIEW => Color::Green,
+            self::INTERVIEW => Color::Yellow,
             self::EXPIRED => Color::Red,
             self::WITHDRAWN => Color::Orange,
+            self::HIRED => Color::Lime,
+            self::COMPLETED => Color::Green,
         };
     }
 }

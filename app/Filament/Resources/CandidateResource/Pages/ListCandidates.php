@@ -46,6 +46,14 @@ class ListCandidates extends ListRecords
                 ->badgeColor(CandidateStatus::WITHDRAWN->getColor())
                 ->badge(Candidate::where('status', CandidateStatus::WITHDRAWN)->count())
                 ->query(fn (Builder $query) => $query->where('status', CandidateStatus::WITHDRAWN)),
+            'hired' => Tab::make('Hired')
+                ->badgeColor(CandidateStatus::HIRED->getColor())
+                ->badge(Candidate::where('status', CandidateStatus::HIRED)->count())
+                ->query(fn (Builder $query) => $query->where('status', CandidateStatus::HIRED)),
+            'completed' => Tab::make('Completed')
+                ->badgeColor(CandidateStatus::COMPLETED->getColor())
+                ->badge(Candidate::where('status', CandidateStatus::COMPLETED)->count())
+                ->query(fn (Builder $query) => $query->where('status', CandidateStatus::COMPLETED)),
         ];
     }
 }
