@@ -23,36 +23,40 @@ class ListCandidates extends ListRecords
 
     public function getTabs(): array
     {
+        $statusCounts = Candidate::selectRaw('status, COUNT(*) as count')
+            ->groupBy('status')
+            ->pluck('count', 'status');
+
         return [
             null => Tab::make('All')
-                ->badge(Candidate::count()),
+                ->badge($statusCounts->sum()),
             'pending' => Tab::make('Pending')
                 ->badgeColor(CandidateStatus::PENDING->getColor())
-                ->badge(Candidate::where('status', CandidateStatus::PENDING)->count())
+                ->badge($statusCounts[CandidateStatus::PENDING->value] ?? 0)
                 ->query(fn (Builder $query) => $query->where('status', CandidateStatus::PENDING)),
             'technical_test' => Tab::make('Technical Test')
                 ->badgeColor(CandidateStatus::TECHNICAL_TEST->getColor())
-                ->badge(Candidate::where('status', CandidateStatus::TECHNICAL_TEST)->count())
+                ->badge($statusCounts[CandidateStatus::TECHNICAL_TEST->value] ?? 0)
                 ->query(fn (Builder $query) => $query->where('status', CandidateStatus::TECHNICAL_TEST)),
             'interview' => Tab::make('Interview')
                 ->badgeColor(CandidateStatus::INTERVIEW->getColor())
-                ->badge(Candidate::where('status', CandidateStatus::INTERVIEW)->count())
+                ->badge($statusCounts[CandidateStatus::INTERVIEW->value] ?? 0)
                 ->query(fn (Builder $query) => $query->where('status', CandidateStatus::INTERVIEW)),
             'withdrawn' => Tab::make('Withdrawn')
                 ->badgeColor(CandidateStatus::WITHDRAWN->getColor())
-                ->badge(Candidate::where('status', CandidateStatus::WITHDRAWN)->count())
+                ->badge($statusCounts[CandidateStatus::WITHDRAWN->value] ?? 0)
                 ->query(fn (Builder $query) => $query->where('status', CandidateStatus::WITHDRAWN)),
             'hired' => Tab::make('Hired')
                 ->badgeColor(CandidateStatus::HIRED->getColor())
-                ->badge(Candidate::where('status', CandidateStatus::HIRED)->count())
+                ->badge($statusCounts[CandidateStatus::HIRED->value] ?? 0)
                 ->query(fn (Builder $query) => $query->where('status', CandidateStatus::HIRED)),
             'offer_accepted' => Tab::make('Offer Accepted')
                 ->badgeColor(CandidateStatus::OFFER_ACCEPTED->getColor())
-                ->badge(Candidate::where('status', CandidateStatus::OFFER_ACCEPTED)->count())
+                ->badge($statusCounts[CandidateStatus::OFFER_ACCEPTED->value] ?? 0)
                 ->query(fn (Builder $query) => $query->where('status', CandidateStatus::OFFER_ACCEPTED)),
             'completed' => Tab::make('Completed')
                 ->badgeColor(CandidateStatus::COMPLETED->getColor())
-                ->badge(Candidate::where('status', CandidateStatus::COMPLETED)->count())
+                ->badge($statusCounts[CandidateStatus::COMPLETED->value] ?? 0)
                 ->query(fn (Builder $query) => $query->where('status', CandidateStatus::COMPLETED)),
         ];
     }
