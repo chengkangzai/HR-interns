@@ -7,6 +7,7 @@ use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Illuminate\Support\ServiceProvider;
+use Ysfkaya\FilamentPhoneInput\Forms\PhoneInput;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -39,5 +40,12 @@ class AppServiceProvider extends ServiceProvider
         DatePicker::configureUsing(fn (DatePicker $datePicker) => $datePicker->native(false));
 
         DateTimePicker::configureUsing(fn (DateTimePicker $dateTimePicker) => $dateTimePicker->native(false));
+
+        PhoneInput::configureUsing(function (PhoneInput $phoneInput) {
+            $phoneInput
+                ->preferredCountries(['MY'])
+                ->defaultCountry('MY')
+                ->initialCountry('MY');
+        });
     }
 }
