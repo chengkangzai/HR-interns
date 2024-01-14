@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Enums\CandidateStatus;
 use App\Enums\JobStatus;
 use App\Filament\Resources\CandidateResource\Pages;
+use App\Jobs\SendEmailJob;
 use App\Mail\DefaultMail;
 use App\Models\Candidate;
 use App\Models\Email;
@@ -169,7 +170,7 @@ class CandidateResource extends Resource
                     ->action(function (Collection $records, array $data) {
                         $email = Email::find($data['email']);
                         $records->each(function (Candidate $record) use ($email) {
-                            Mail::to($record->email)->send(new DefaultMail($record, $email));
+                            SendEmailJob::dispatch($email, $record);
                         });
                     }),
                 BulkAction::make('change_status')

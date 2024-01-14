@@ -2,8 +2,6 @@
 
 namespace App\Mail;
 
-use App\Models\Broadcast;
-use App\Models\Campaign;
 use App\Models\Candidate;
 use App\Models\Email;
 use Filament\Support\Markdown;
