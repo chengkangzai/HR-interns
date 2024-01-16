@@ -149,7 +149,7 @@ class CandidateResource extends Resource
                 TextColumn::make('range')
                     ->label('From - To')
                     ->getStateUsing(fn (Candidate $record) => isset($record->from, $record->to)
-                        ? $record->from->format('d/m/Y').' - '.$record->to->format('d/m/Y').' ('.$record->from->diffInWeeks($record->to).' weeks)'
+                        ? $record->from->format('d/m/Y').' - '.$record->to->format('d/m/Y').' ('.ceil($record->from->floatDiffInWeeks($record->to)).' weeks)'
                         : 'N/A'
                     ),
 
