@@ -97,6 +97,7 @@ class CandidateResource extends Resource
 
                 Placeholder::make('range')
                     ->label('From - To')
+                    ->visibleOn(['view', 'edit'])
                     ->content(fn (?Candidate $record): string => ceil($record->from->floatDiffInWeeks($record->to)).' weeks'),
             ]),
 
