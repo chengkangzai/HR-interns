@@ -87,6 +87,7 @@ class CandidateResource extends Resource
 
                 Select::make('status')
                     ->options(CandidateStatus::class)
+                    ->default(CandidateStatus::PENDING)
                     ->required(),
             ]),
 
