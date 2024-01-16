@@ -94,6 +94,10 @@ class CandidateResource extends Resource
                 DatePicker::make('from'),
 
                 DatePicker::make('to'),
+
+                Placeholder::make('range')
+                    ->label('From - To')
+                    ->content(fn (?Candidate $record): string => ceil($record->from->floatDiffInWeeks($record->to)).' weeks')
             ]),
 
             Section::make([
