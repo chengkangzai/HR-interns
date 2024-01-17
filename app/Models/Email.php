@@ -14,5 +14,6 @@ class Email extends Model
         'name',
         'title',
         'body',
+        'cc',
     ];
 }

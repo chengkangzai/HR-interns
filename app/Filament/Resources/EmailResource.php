@@ -31,6 +31,8 @@ class EmailResource extends Resource
             TextInput::make('title')
                 ->required(),
 
+            TextInput::make('cc'),
+
             RichEditor::make('body')
                 ->columnSpanFull()
                 ->required(),

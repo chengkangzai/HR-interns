@@ -34,7 +34,7 @@ class DefaultMail extends Mailable implements ShouldQueue
             from: config('mail.from.address'),
             to: [$this->candidate->email],
             cc: [
-                'eddiechong@pixalink.io',
+                $this->email->cc
             ],
             subject: $this->email->title
         );
