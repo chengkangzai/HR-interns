@@ -35,7 +35,7 @@ class EmailResource extends Resource
             TagsInput::make('cc')
                 ->nestedRecursiveRules('email')
                 ->validationMessages([
-                    '*.email' => 'The email No.:position must be a valid email address.',
+                    '*.email' => 'The email #:position must be a valid email address.',
                 ])
                 ->default(['eddiechong@pixalink.io'])
                 ->placeholder('Enter email addresses'),
