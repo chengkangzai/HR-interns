@@ -6,6 +6,7 @@ use App\Filament\Resources\EmailResource\Pages;
 use App\Models\Email;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -31,7 +32,13 @@ class EmailResource extends Resource
             TextInput::make('title')
                 ->required(),
 
-            TextInput::make('cc'),
+            TagsInput::make('cc')
+                ->nestedRecursiveRules('email')
+                ->validationMessages([
+                    '*.email' => 'The email No.:position must be a valid email address.',
+                ])
+                ->default(['eddiechong@pixalink.io'])
+                ->placeholder('Enter email addresses'),
 
             RichEditor::make('body')
                 ->columnSpanFull()
@@ -39,11 +46,11 @@ class EmailResource extends Resource
 
             Placeholder::make('created_at')
                 ->label('Created Date')
-                ->content(fn (?Email $record): string => $record?->created_at?->diffForHumans() ?? '-'),
+                ->content(fn(?Email $record): string => $record?->created_at?->diffForHumans() ?? '-'),
 
             Placeholder::make('updated_at')
                 ->label('Last Modified Date')
-                ->content(fn (?Email $record): string => $record?->updated_at?->diffForHumans() ?? '-'),
+                ->content(fn(?Email $record): string => $record?->updated_at?->diffForHumans() ?? '-'),
         ]);
     }
 

@@ -33,9 +33,7 @@ class DefaultMail extends Mailable implements ShouldQueue
         return new Envelope(
             from: config('mail.from.address'),
             to: [$this->candidate->email],
-            cc: [
-                $this->email->cc,
-            ],
+            cc: $this->email->cc,
             subject: $this->email->title
         );
     }

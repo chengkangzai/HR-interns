@@ -16,4 +16,8 @@ class Email extends Model
         'body',
         'cc',
     ];
+
+    protected $casts = [
+        'cc' => 'array',
+    ];
 }

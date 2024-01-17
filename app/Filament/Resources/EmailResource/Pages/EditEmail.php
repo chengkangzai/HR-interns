@@ -31,6 +31,7 @@ class EditEmail extends EditRecord
                 ->form([
                     TextInput::make('email')
                         ->email()
+                        ->default(auth()->user()->email)
                         ->required(),
                 ])
                 ->action(function (array $data) {
