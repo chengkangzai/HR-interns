@@ -30,7 +30,7 @@ class ListCandidates extends ListRecords
         return [
             null => Tab::make('All')
                 ->query(fn (Builder $query) => $query->whereNot('status', CandidateStatus::COMPLETED))
-                ->badge($statusCounts->reject(fn($_,$status)=> $status === CandidateStatus::COMPLETED->value)->sum()),
+                ->badge($statusCounts->reject(fn ($_, $status) => $status === CandidateStatus::COMPLETED->value)->sum()),
             'pending' => Tab::make('Pending')
                 ->badgeColor(CandidateStatus::PENDING->getColor())
                 ->badge($statusCounts[CandidateStatus::PENDING->value] ?? 0)
