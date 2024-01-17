@@ -47,7 +47,12 @@ class EmailResource extends Resource
 
             RichEditor::make('body')
                 ->columnSpanFull()
-                ->required(),
+                ->required()
+                ->disableToolbarButtons([
+                    'orderedList', //disable due to look bad in email
+                    'bulletList', //disable due to look bad in email
+                    'attachFiles', //disable due to no upload file support
+                ]),
 
             Placeholder::make('created_at')
                 ->label('Created Date')
