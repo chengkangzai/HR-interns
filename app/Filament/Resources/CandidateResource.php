@@ -154,6 +154,7 @@ class CandidateResource extends Resource
                     ->fontFamily(FontFamily::Mono),
 
                 TextColumn::make('range')
+                    ->sortable(query: fn (Builder $query, string $direction) => $query->orderBy('from', $direction))
                     ->label('From - To')
                     ->getStateUsing(fn (Candidate $record) => isset($record->from, $record->to)
                         ? $record->from->format('d/m/Y').' - '.$record->to->format('d/m/Y').' ('.ceil($record->from->floatDiffInWeeks($record->to)).' weeks)'
