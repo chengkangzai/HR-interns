@@ -18,6 +18,7 @@ use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Forms\Set;
+use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Support\Colors\Color;
 use Filament\Support\Enums\FontFamily;
@@ -208,6 +209,12 @@ class CandidateResource extends Resource
                         $records->each(function (Candidate $record) use ($email) {
                             SendEmailJob::dispatch($email, $record);
                         });
+
+                        Notification::make()
+                            ->success()
+                            ->title('Email Sent')
+                            ->body('Email has been sent to '.$records->count().' candidate(s).')
+                            ->send();
                     }),
                 BulkAction::make('change_status')
                     ->form([
