@@ -50,7 +50,7 @@ class CandidateResource extends Resource
             Section::make([
                 TextInput::make('name')
                     ->live(onBlur: true)
-                    ->afterStateUpdated(fn(string $state, Set $set) => $set('name', str($state)->title()->__toString()))
+                    ->afterStateUpdated(fn (string $state, Set $set) => $set('name', str($state)->title()->__toString()))
                     ->required(),
 
                 TextInput::make('email')
@@ -68,7 +68,7 @@ class CandidateResource extends Resource
             Section::make([
                 Select::make('position_id')
                     ->suffixAction(function (string $context, ?Candidate $record) {
-                        if (!$record) {
+                        if (! $record) {
                             return null;
                         }
                         if ($context == 'create') {
@@ -79,7 +79,7 @@ class CandidateResource extends Resource
                             ->icon('heroicon-o-eye')
                             ->url(PositionResource::getUrl('view', ['record' => $record->position_id]), true);
                     })
-                    ->relationship('position', 'title', fn(Builder $query) => $query->where('status', PositionStatus::OPEN))
+                    ->relationship('position', 'title', fn (Builder $query) => $query->where('status', PositionStatus::OPEN))
                     ->createOptionForm([
                         TextInput::make('title')
                             ->required(),
@@ -100,7 +100,7 @@ class CandidateResource extends Resource
                 Placeholder::make('range')
                     ->label('From - To')
                     ->visibleOn(['view', 'edit'])
-                    ->content(fn(?Candidate $record): string => isset($record->from, $record->to) ? ceil($record->from->floatDiffInWeeks($record->to)) . ' weeks' : 'N/A'),
+                    ->content(fn (?Candidate $record): string => isset($record->from, $record->to) ? ceil($record->from->floatDiffInWeeks($record->to)).' weeks' : 'N/A'),
             ]),
 
             Section::make([
@@ -125,11 +125,11 @@ class CandidateResource extends Resource
 
             Placeholder::make('created_at')
                 ->label('Created Date')
-                ->content(fn(?Candidate $record): string => $record?->created_at?->diffForHumans() ?? '-'),
+                ->content(fn (?Candidate $record): string => $record?->created_at?->diffForHumans() ?? '-'),
 
             Placeholder::make('updated_at')
                 ->label('Last Modified Date')
-                ->content(fn(?Candidate $record): string => $record?->updated_at?->diffForHumans() ?? '-'),
+                ->content(fn (?Candidate $record): string => $record?->updated_at?->diffForHumans() ?? '-'),
 
         ]);
     }
@@ -143,25 +143,25 @@ class CandidateResource extends Resource
                     ->sortable(),
 
                 TextColumn::make('email')
-                    ->url(fn(Candidate $record) => 'mailto:' . $record->email, true)
+                    ->url(fn (Candidate $record) => 'mailto:'.$record->email, true)
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->searchable()
                     ->sortable(),
 
                 TextColumn::make('phone_number')
-                    ->url(fn(Candidate $record) => 'https://wa.me/' . str_replace(['+', ' ', '(', ')', '-'], '', $record->phone_number), true)
+                    ->url(fn (Candidate $record) => 'https://wa.me/'.str_replace(['+', ' ', '(', ')', '-'], '', $record->phone_number), true)
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->fontFamily(FontFamily::Mono),
 
                 TextColumn::make('range')
                     ->label('From - To')
-                    ->getStateUsing(fn(Candidate $record) => isset($record->from, $record->to)
-                        ? $record->from->format('d/m/Y') . ' - ' . $record->to->format('d/m/Y') . ' (' . ceil($record->from->floatDiffInWeeks($record->to)) . ' weeks)'
+                    ->getStateUsing(fn (Candidate $record) => isset($record->from, $record->to)
+                        ? $record->from->format('d/m/Y').' - '.$record->to->format('d/m/Y').' ('.ceil($record->from->floatDiffInWeeks($record->to)).' weeks)'
                         : 'N/A'
                     ),
 
                 TextColumn::make('position.title')
-                    ->url(fn(Candidate $record) => PositionResource::getUrl('view', ['record' => $record->position_id])),
+                    ->url(fn (Candidate $record) => PositionResource::getUrl('view', ['record' => $record->position_id])),
 
                 TextColumn::make('from')
                     ->toggleable(isToggledHiddenByDefault: true)
@@ -193,7 +193,7 @@ class CandidateResource extends Resource
                         Select::make('status')
                             ->options(CandidateStatus::class),
                     ])
-                    ->action(fn(Candidate $record, array $data) => $record->update($data)),
+                    ->action(fn (Candidate $record, array $data) => $record->update($data)),
                 EditAction::make(),
                 DeleteAction::make(),
             ])
@@ -202,19 +202,19 @@ class CandidateResource extends Resource
                 BulkAction::make('send_email')
                     ->form([
                         Select::make('email')
-                            ->options(fn() => Email::pluck('name', 'id')),
+                            ->options(fn () => Email::pluck('name', 'id')),
                     ])
                     ->action(function (Collection $records, array $data) {
                         $email = Email::find($data['email']);
                         $records->each(function (Candidate $record, $index) use ($email) {
-                            SendEmailJob:: dispatch($email, $record)->delay(now()->addSeconds($index * 30));
+                            SendEmailJob::dispatch($email, $record)->delay(now()->addSeconds($index * 30));
                         });
 
                         Notification::make()
                             ->success()
                             ->title('Email Sent')
-                            ->body('Email has been sent to ' . $records->count() . ' candidate(s). <br>' .
-                                'ETA: <b>' . now()->addSeconds($records->count() * 30)->diffForHumans() . '</b>'
+                            ->body('Email has been sent to '.$records->count().' candidate(s). <br>'.
+                                'ETA: <b>'.now()->addSeconds($records->count() * 30)->diffForHumans().'</b>'
                             )
                             ->send();
                     })
@@ -225,7 +225,7 @@ class CandidateResource extends Resource
                             ->options(CandidateStatus::class),
                     ])
                     ->action(function (Collection $records, array $data) {
-                        $records->each(fn(Candidate $record) => $record->update([
+                        $records->each(fn (Candidate $record) => $record->update([
                             'status' => $data['status'],
                         ]));
                     }),
