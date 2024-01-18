@@ -30,6 +30,7 @@ class GenerateOfferLetterJob implements ShouldQueue
         ])
             ->setPaper('A4')
             ->setOption([
+                'isRemoteEnabled' => true,
                 'defaultFont' => 'sans-serif',
             ]);
 
