@@ -236,7 +236,7 @@
 <p class="c3 c4"><span class="c1"></span></p>
 <p class="c3"><span class="c6">Start date:</span><span>&nbsp;Your internship will commence on </span><span
             class="c8">{{ $candidate->to->toDateString() }}</span><span
-            class="c1">&nbsp;and is expected to last until {{ $candidate->from->toDateString() }}. ( {{ ceil($candidate->from->floatDiffInWeeks($candidate->to)) }} weeks)</span>
+            class="c1">&nbsp;and is expected to last until {{ $candidate->from->toDateString() }}. ({{ ceil($candidate->from->floatDiffInWeeks($candidate->to)) }} weeks)</span>
 </p>
 <p class="c3 c4"><span class="c1"></span></p>
 <p class="c3"><span class="c6">Working hours:</span><span class="c1">&nbsp;Your working schedule will be from 9:00am to 6:00pm, 5 Days a week</span>
