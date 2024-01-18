@@ -162,8 +162,7 @@ class CandidateResource extends Resource
                         : 'N/A'
                     ),
 
-                TextColumn::make('position.title')
-                    ->url(fn (Candidate $record) => PositionResource::getUrl('view', ['record' => $record->position_id])),
+                TextColumn::make('position.title'),
 
                 TextColumn::make('from')
                     ->toggleable(isToggledHiddenByDefault: true)
