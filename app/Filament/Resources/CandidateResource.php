@@ -110,6 +110,7 @@ class CandidateResource extends Resource
                     ->acceptedFileTypes(['application/pdf']),
 
                 SpatieMediaLibraryFileUpload::make('offer_letter')
+                    ->multiple()
                     ->label('Offer Letter')
                     ->collection('offer_letters')
                     ->acceptedFileTypes(['application/pdf']),
