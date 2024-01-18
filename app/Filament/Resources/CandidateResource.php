@@ -107,7 +107,7 @@ class CandidateResource extends Resource
                 SpatieMediaLibraryFileUpload::make('resume')
                     ->label('Resume')
                     ->collection('resumes')
-                    ->acceptedFileTypes(['application/pdf']),
+                    ->acceptedFileTypes(['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document']),
 
                 SpatieMediaLibraryFileUpload::make('offer_letter')
                     ->multiple()
