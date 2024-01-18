@@ -201,7 +201,7 @@
     <span
         style="overflow: hidden; display: inline-block; margin: 0.00px 0.00px; border: 0.00px solid #000000; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px); width: 454.50px; height: 59.36px;">
         <img
-            alt="" src="{{asset('images/letter-head.png')}}"
+            src="data:image/png;base64,{{ base64_encode(file_get_contents(public_path('images/letter-head.png'))) }}"
             style="width: 454.50px; height: 59.36px; margin-left: 0.00px; margin-top: 0.00px; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px);"
             title="">
     </span>
