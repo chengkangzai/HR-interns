@@ -6,7 +6,9 @@ use App\Enums\PositionStatus;
 use App\Filament\Resources\PositionResource\Pages;
 use App\Models\Position;
 use Filament\Forms\Components\Placeholder;
+use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -32,19 +34,23 @@ class PositionResource extends Resource
             TextInput::make('title')
                 ->required(),
 
-            TextInput::make('description'),
-
             Select::make('status')
                 ->options(PositionStatus::class)
                 ->required(),
 
-            Placeholder::make('created_at')
-                ->label('Created Date')
-                ->content(fn (?Position $record): string => $record?->created_at?->diffForHumans() ?? '-'),
+            Textarea::make('description')
+                ->columnSpanFull()
+                ->rows(3),
 
-            Placeholder::make('updated_at')
-                ->label('Last Modified Date')
-                ->content(fn (?Position $record): string => $record?->updated_at?->diffForHumans() ?? '-'),
+            Section::make([
+                Placeholder::make('created_at')
+                    ->label('Created Date')
+                    ->content(fn(?Position $record): string => $record?->created_at?->diffForHumans() ?? '-'),
+
+                Placeholder::make('updated_at')
+                    ->label('Last Modified Date')
+                    ->content(fn(?Position $record): string => $record?->updated_at?->diffForHumans() ?? '-'),
+            ]),
         ]);
     }
 
