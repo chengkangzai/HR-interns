@@ -6,6 +6,7 @@ use App\Enums\PositionStatus;
 use App\Filament\Resources\PositionResource\Pages;
 use App\Models\Position;
 use Filament\Forms\Components\Placeholder;
+use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
@@ -38,7 +39,7 @@ class PositionResource extends Resource
                 ->options(PositionStatus::class)
                 ->required(),
 
-            Textarea::make('description')
+            RichEditor::make('description')
                 ->columnSpanFull(),
 
             Section::make([
