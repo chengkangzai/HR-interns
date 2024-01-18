@@ -26,7 +26,7 @@ class GenerateOfferLetterJob implements ShouldQueue
         $pdf = Pdf::loadView('template.offer-letter', [
             'candidate' => $this->candidate,
             'position' => $this->candidate->position,
-            'pay' => $this->pay,
+            'pay' => $this->pay ?? 0,
         ])
             ->setPaper('A4')
             ->setOption([
