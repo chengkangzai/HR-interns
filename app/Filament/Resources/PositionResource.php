@@ -38,8 +38,10 @@ class PositionResource extends Resource
                 ->options(PositionStatus::class)
                 ->required(),
 
-            RichEditor::make('description')
-                ->columnSpanFull(),
+            Section::make([
+                RichEditor::make('description')
+                    ->columnSpanFull(),
+            ])->collapsible()->collapsed(),
 
             Section::make([
                 Placeholder::make('created_at')
