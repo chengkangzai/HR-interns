@@ -30,9 +30,9 @@ class GenerateOfferLetterJob implements ShouldQueue
         ]);
         $pdf->setPaper('A4');
 
-        $count  = $this->candidate->getMediaCollection('offer_letters')?->count() ?? 0;
+        $count = $this->candidate->getMediaCollection('offer_letters')?->count() ?? 0;
 
-        $filename = storage_path() . '/offer-letter-' . Str::slug($this->candidate->name) . '-'.$count.'.pdf';
+        $filename = storage_path().'/offer-letter-'.Str::slug($this->candidate->name).'-'.$count.'.pdf';
         $pdf->save($filename);
 
         $this->candidate->copyMedia($filename)
