@@ -27,12 +27,13 @@ class GenerateOfferLetterJob implements ShouldQueue
             'candidate' => $this->candidate,
             'position' => $this->candidate->position,
             'pay' => $this->pay,
-        ]);
-        $pdf->setPaper('A4');
+        ])
+            ->setPaper('A4')
+            ->setOption([
+                'defaultFont' => 'sans-serif',
+            ]);
 
-        $count = $this->candidate->getMediaCollection('offer_letters')?->count() ?? 0;
-
-        $filename = storage_path().'/offer-letter-'.Str::slug($this->candidate->name).'-'.$count.'.pdf';
+        $filename = storage_path().'/offer-letter-'.Str::slug($this->candidate->name).'.pdf';
         $pdf->save($filename);
 
         $this->candidate->copyMedia($filename)
