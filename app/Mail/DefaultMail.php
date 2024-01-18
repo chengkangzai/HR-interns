@@ -12,6 +12,7 @@ use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class DefaultMail extends Mailable implements ShouldQueue
 {
@@ -52,5 +53,16 @@ class DefaultMail extends Mailable implements ShouldQueue
                 'message' => $message,
             ]
         );
+    }
+
+    public function attachments(): array
+    {
+        if ($this->medias === null) {
+            return [];
+        }
+
+        return $this->medias
+            ->map(fn (Media $media) => $media->toMailAttachment())
+            ->toArray();
     }
 }

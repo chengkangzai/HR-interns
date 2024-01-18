@@ -12,6 +12,7 @@ use Filament\Actions\Action;
 use Filament\Actions\EditAction;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ViewRecord;
 use Illuminate\Database\Eloquent\Model;
@@ -33,9 +34,31 @@ class ViewCandidate extends ViewRecord
                 ->form([
                     Select::make('mail')
                         ->options(Email::pluck('name', 'id')),
+
+                    Toggle::make('include_offer_letter')
+                        ->label('Include Offer Letter')
+                        ->default(false),
                 ])
-                ->action(function (array $data) {
-                    Mail::to($this->record->email)->send(new DefaultMail($this->record, Email::find($data['mail'])));
+                ->action(function (array $data, ViewCandidate $livewire) {
+                    if ($data['include_offer_letter']) {
+                        $media = $this->record->getFirstMedia('offer_letters');
+                        if (! $media) {
+                            Notification::make()
+                                ->title('Offer Letter Not Found')
+                                ->body('The offer letter is not found. Please generate/attach the offer letter first.')
+                                ->danger()
+                                ->send();
+                            $livewire->halt();
+                        }
+                    }
+
+                    if ($data['include_offer_letter']) {
+                        $mail = new DefaultMail($this->record, Email::find($data['mail']), $this->record->getMedia('offer_letters'));
+                    } else {
+                        $mail = new DefaultMail($this->record, Email::find($data['mail']));
+                    }
+                    Mail::to($this->record->email)
+                        ->send($mail);
 
                     Notification::make()
                         ->title('Email Sent')
