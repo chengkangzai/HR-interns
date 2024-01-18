@@ -45,11 +45,11 @@ class PositionResource extends Resource
             Section::make([
                 Placeholder::make('created_at')
                     ->label('Created Date')
-                    ->content(fn(?Position $record): string => $record?->created_at?->diffForHumans() ?? '-'),
+                    ->content(fn (?Position $record): string => $record?->created_at?->diffForHumans() ?? '-'),
 
                 Placeholder::make('updated_at')
                     ->label('Last Modified Date')
-                    ->content(fn(?Position $record): string => $record?->updated_at?->diffForHumans() ?? '-'),
+                    ->content(fn (?Position $record): string => $record?->updated_at?->diffForHumans() ?? '-'),
             ]),
         ]);
     }
