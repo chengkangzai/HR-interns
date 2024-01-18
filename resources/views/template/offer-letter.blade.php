@@ -242,7 +242,7 @@
 <p class="c3"><span class="c6">Working hours:</span><span class="c1">&nbsp;Your working schedule will be from 9:00am to 6:00pm, 5 Days a week</span>
 </p>
 <p class="c3 c4"><span class="c1"></span></p>
-<p class="c3"><span class="c6">Stipend: </span><span>{{ intval($pay) == 0 ? 'No allowance' : Number::currency($pay, 'MYR','en_MY')}}</span></p>
+<p class="c3"><span class="c6">Stipend: </span>RM<span>{{ intval($pay) == 0 ? 'No allowance' : number_format($pay, 2)}}</span></p>
 <p class="c3 c4"><span class="c1"></span></p>
 <p class="c3"><span class="c6">Location:</span><span class="c1">&nbsp;The internship will be based at our office located at ASBX Room, Level 7, Asia Pacific University of Technology &amp; Innovation (APU), Jalan Teknologi 5, Taman Teknologi Malaysia, 57000 Kuala Lumpur, Wilayah Persekutuan Kuala Lumpur. </span>
 </p>
