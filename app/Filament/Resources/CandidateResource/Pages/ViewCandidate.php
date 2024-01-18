@@ -60,7 +60,7 @@ class ViewCandidate extends ViewRecord
 
                     Notification::make('generated')
                         ->title('Offer Letter Generated')
-                        ->body('The offer letter has been generated and sent to the candidate.')
+                        ->body('The offer letter will be generated in background.')
                         ->success()
                         ->send();
                 }),
