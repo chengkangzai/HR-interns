@@ -39,6 +39,7 @@ class PositionResource extends Resource
                 ->required(),
 
             Section::make('Description')
+                ->description('Provide a detailed description of the position that will be displayed on the public job board.')
                 ->collapsible()
                 ->collapsed()
                 ->schema([
