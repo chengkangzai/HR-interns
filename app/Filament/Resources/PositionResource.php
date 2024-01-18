@@ -47,6 +47,11 @@ class PositionResource extends Resource
                         ->columnSpanFull(),
                 ]),
 
+            RichEditor::make('short_description')
+                ->label('Short Description')
+                ->helperText('This description will be displayed on the offer letter.')
+                ->columnSpanFull(),
+
             Section::make([
                 Placeholder::make('created_at')
                     ->label('Created Date')

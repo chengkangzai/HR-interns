@@ -15,6 +15,7 @@ class Position extends Model
     protected $fillable = [
         'title',
         'description',
+        'short_description',
         'status',
     ];
 
