@@ -71,7 +71,9 @@ class PositionResource extends Resource
                 ->searchable()
                 ->sortable(),
 
-            TextColumn::make('description'),
+            TextColumn::make('description')
+                ->toggleable(isToggledHiddenByDefault: true)
+                ->limit(50),
 
             TextColumn::make('status')
                 ->badge(),
