@@ -39,8 +39,7 @@ class PositionResource extends Resource
                 ->required(),
 
             Textarea::make('description')
-                ->columnSpanFull()
-                ->rows(3),
+                ->columnSpanFull(),
 
             Section::make([
                 Placeholder::make('created_at')
