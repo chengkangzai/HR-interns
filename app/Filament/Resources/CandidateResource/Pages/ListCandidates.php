@@ -32,13 +32,11 @@ class ListCandidates extends ListRecords
                 ->query(fn (Builder $query) => $query->whereNotIn('status', [
                     CandidateStatus::COMPLETED,
                     CandidateStatus::WITHDRAWN,
-                    CandidateStatus::NO_RESPONSE,
                 ]))
                 ->badge(
                     $statusCounts
                         ->reject(fn ($_, $status) => $status === CandidateStatus::COMPLETED->value)
                         ->reject(fn ($_, $status) => $status === CandidateStatus::WITHDRAWN->value)
-                        ->reject(fn ($_, $status) => $status === CandidateStatus::NO_RESPONSE->value)
                         ->sum()
                 ),
             'pending' => Tab::make('Pending')
