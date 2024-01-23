@@ -35,7 +35,7 @@ class EditEmail extends EditRecord
                         ->required(),
                 ])
                 ->action(function (array $data) {
-                    $candidate = Candidate::firstOrCreate([
+                    $candidate = Candidate::withtrashed()->firstOrCreate([
                         'name' => 'Participant',
                         'email' => $data['email'],
                         'phone_number' => '+60123456789',
@@ -43,7 +43,7 @@ class EditEmail extends EditRecord
                     Mail::to($data['email'])
                         ->send(new DefaultMail($candidate, $this->record));
 
-                    $candidate->forceDelete();
+                    $candidate->delete();
                     Notification::make()
                         ->success()
                         ->title('Email Sent')
