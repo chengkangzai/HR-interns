@@ -29,13 +29,22 @@ class ListCandidates extends ListRecords
 
         return [
             null => Tab::make('All')
-                ->query(fn (Builder $query) => $query->whereNotIn('status', [CandidateStatus::COMPLETED, CandidateStatus::WITHDRAWN]))
+                ->query(fn (Builder $query) => $query->whereNotIn('status', [
+                    CandidateStatus::COMPLETED,
+                    CandidateStatus::WITHDRAWN,
+                    CandidateStatus::NO_RESPONSE,
+                ]))
                 ->badge(
                     $statusCounts
                         ->reject(fn ($_, $status) => $status === CandidateStatus::COMPLETED->value)
                         ->reject(fn ($_, $status) => $status === CandidateStatus::WITHDRAWN->value)
+                        ->reject(fn ($_, $status) => $status === CandidateStatus::NO_RESPONSE->value)
                         ->sum()
                 ),
+            'contacted' => Tab::make('Contacted')
+                ->badgeColor(CandidateStatus::CONTACTED->getColor())
+                ->badge($statusCounts[CandidateStatus::CONTACTED->value] ?? 0)
+                ->query(fn (Builder $query) => $query->where('status', CandidateStatus::CONTACTED)),
             'pending' => Tab::make('Pending')
                 ->badgeColor(CandidateStatus::PENDING->getColor())
                 ->badge($statusCounts[CandidateStatus::PENDING->value] ?? 0)
@@ -64,6 +73,10 @@ class ListCandidates extends ListRecords
                 ->badgeColor(CandidateStatus::COMPLETED->getColor())
                 ->badge($statusCounts[CandidateStatus::COMPLETED->value] ?? 0)
                 ->query(fn (Builder $query) => $query->where('status', CandidateStatus::COMPLETED)),
+            'no_response' => Tab::make('No Response')
+                ->badgeColor(CandidateStatus::NO_RESPONSE->getColor())
+                ->badge($statusCounts[CandidateStatus::NO_RESPONSE->value] ?? 0)
+                ->query(fn (Builder $query) => $query->where('status', CandidateStatus::NO_RESPONSE)),
         ];
     }
 }

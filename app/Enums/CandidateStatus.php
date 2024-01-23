@@ -5,8 +5,9 @@ namespace App\Enums;
 use Filament\Support\Colors\Color;
 use Filament\Support\Contracts\HasColor;
 use Filament\Support\Contracts\HasLabel;
+use Filament\Support\Contracts\HasDescription;
 
-enum CandidateStatus: string implements HasColor, HasLabel
+enum CandidateStatus: string implements HasColor, HasDescription, HasLabel
 {
     case PENDING = 'pending'; // Indicates the candidate has been recorded but not contacted
     case CONTACTED = 'contacted'; // Indicates the candidate has been contacted
@@ -45,6 +46,21 @@ enum CandidateStatus: string implements HasColor, HasLabel
             self::OFFER_ACCEPTED => Color::Sky,
             self::COMPLETED => Color::Green,
             self::NO_RESPONSE => Color::Red,
+        };
+    }
+
+    public function getDescription(): ?string
+    {
+        return match ($this) {
+            self::PENDING => 'Candidate has been recorded but not contacted',
+            self::CONTACTED => 'Candidate has been contacted',
+            self::TECHNICAL_TEST => 'Candidate has been sent a technical test',
+            self::INTERVIEW => 'Candidate has been interviewed',
+            self::WITHDRAWN => 'Candidate has withdrawn from the process',
+            self::HIRED => 'Candidate has accepted the offer and has started',
+            self::OFFER_ACCEPTED => 'Candidate has accepted the offer but has not yet started',
+            self::COMPLETED => 'Candidate has completed internship',
+            self::NO_RESPONSE => 'Candidate has not responded to the invitation',
         };
     }
 }
