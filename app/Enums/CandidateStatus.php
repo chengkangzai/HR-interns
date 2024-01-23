@@ -17,7 +17,6 @@ enum CandidateStatus: string implements HasColor, HasDescription, HasLabel
     case HIRED = 'hired'; // Indicates the candidate has accepted the offer and has started
     case OFFER_ACCEPTED = 'offer_accepted'; // Indicates the candidate has accepted the offer but has not yet started
     case COMPLETED = 'completed'; // Indicates the candidate has completed internship
-    case NO_RESPONSE = 'no_response'; // Indicates the candidate has not responded to the invitation
 
     public function getLabel(): ?string
     {
@@ -30,7 +29,6 @@ enum CandidateStatus: string implements HasColor, HasDescription, HasLabel
             self::HIRED => 'Hired',
             self::OFFER_ACCEPTED => 'Offer Accepted',
             self::COMPLETED => 'Completed',
-            self::NO_RESPONSE => 'No Response',
         };
     }
 
@@ -45,7 +43,6 @@ enum CandidateStatus: string implements HasColor, HasDescription, HasLabel
             self::HIRED => Color::Lime,
             self::OFFER_ACCEPTED => Color::Sky,
             self::COMPLETED => Color::Green,
-            self::NO_RESPONSE => Color::Red,
         };
     }
 
@@ -60,7 +57,6 @@ enum CandidateStatus: string implements HasColor, HasDescription, HasLabel
             self::HIRED => 'Candidate has accepted the offer and has started',
             self::OFFER_ACCEPTED => 'Candidate has accepted the offer but has not yet started',
             self::COMPLETED => 'Candidate has completed internship',
-            self::NO_RESPONSE => 'Candidate has not responded to the invitation',
         };
     }
 }
