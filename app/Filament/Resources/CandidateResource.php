@@ -58,9 +58,19 @@ class CandidateResource extends Resource
                     ->afterStateUpdated(function (string $state, Set $set) {
                         $set('email', str($state)->remove(' ')->remove('`'));
                     })
+                    ->suffixAction(fn (?string $state) => FormAction::make('Email')
+                        ->icon('heroicon-o-envelope-open')
+                        ->tooltip('Send Email')
+                        ->url('mailto:'.$state, true)
+                    )
                     ->required(),
 
                 PhoneInput::make('phone_number')
+                    ->suffixAction(fn (?string $state) => FormAction::make('WhatsApp')
+                        ->icon('heroicon-o-phone-arrow-up-right')
+                        ->tooltip('Send WhatsApp Message')
+                        ->url('https://wa.me/'.str_replace(['+', ' ', '(', ')', '-'], '', $state), true)
+                    )
                     ->formatOnDisplay(true)
                     ->required(),
             ]),
