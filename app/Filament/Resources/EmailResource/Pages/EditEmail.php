@@ -35,7 +35,7 @@ class EditEmail extends EditRecord
                         ->required(),
                 ])
                 ->action(function (array $data) {
-                    $candidate = Candidate::withtrashed()->firstOrCreate([
+                    $candidate = Candidate::firstOrCreate([
                         'name' => 'Participant',
                         'email' => $data['email'],
                         'phone_number' => '+60123456789',
