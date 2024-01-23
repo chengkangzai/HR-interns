@@ -41,6 +41,10 @@ class ListCandidates extends ListRecords
                         ->reject(fn ($_, $status) => $status === CandidateStatus::NO_RESPONSE->value)
                         ->sum()
                 ),
+            'pending' => Tab::make('Pending')
+                ->badgeColor(CandidateStatus::PENDING->getColor())
+                ->badge($statusCounts[CandidateStatus::PENDING->value] ?? 0)
+                ->query(fn (Builder $query) => $query->where('status', CandidateStatus::PENDING)),
             'contacted' => Tab::make('Contacted')
                 ->badgeColor(CandidateStatus::CONTACTED->getColor())
                 ->badge($statusCounts[CandidateStatus::CONTACTED->value] ?? 0)
@@ -49,10 +53,6 @@ class ListCandidates extends ListRecords
                 ->badgeColor(CandidateStatus::NO_RESPONSE->getColor())
                 ->badge($statusCounts[CandidateStatus::NO_RESPONSE->value] ?? 0)
                 ->query(fn (Builder $query) => $query->where('status', CandidateStatus::NO_RESPONSE)),
-            'pending' => Tab::make('Pending')
-                ->badgeColor(CandidateStatus::PENDING->getColor())
-                ->badge($statusCounts[CandidateStatus::PENDING->value] ?? 0)
-                ->query(fn (Builder $query) => $query->where('status', CandidateStatus::PENDING)),
             'technical_test' => Tab::make('Technical Test')
                 ->badgeColor(CandidateStatus::TECHNICAL_TEST->getColor())
                 ->badge($statusCounts[CandidateStatus::TECHNICAL_TEST->value] ?? 0)
