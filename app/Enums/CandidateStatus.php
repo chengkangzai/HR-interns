@@ -4,8 +4,8 @@ namespace App\Enums;
 
 use Filament\Support\Colors\Color;
 use Filament\Support\Contracts\HasColor;
-use Filament\Support\Contracts\HasLabel;
 use Filament\Support\Contracts\HasDescription;
+use Filament\Support\Contracts\HasLabel;
 
 enum CandidateStatus: string implements HasColor, HasDescription, HasLabel
 {
