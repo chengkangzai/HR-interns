@@ -45,6 +45,10 @@ class ListCandidates extends ListRecords
                 ->badgeColor(CandidateStatus::CONTACTED->getColor())
                 ->badge($statusCounts[CandidateStatus::CONTACTED->value] ?? 0)
                 ->query(fn (Builder $query) => $query->where('status', CandidateStatus::CONTACTED)),
+            'no_response' => Tab::make('No Response')
+                ->badgeColor(CandidateStatus::NO_RESPONSE->getColor())
+                ->badge($statusCounts[CandidateStatus::NO_RESPONSE->value] ?? 0)
+                ->query(fn (Builder $query) => $query->where('status', CandidateStatus::NO_RESPONSE)),
             'pending' => Tab::make('Pending')
                 ->badgeColor(CandidateStatus::PENDING->getColor())
                 ->badge($statusCounts[CandidateStatus::PENDING->value] ?? 0)
@@ -73,10 +77,7 @@ class ListCandidates extends ListRecords
                 ->badgeColor(CandidateStatus::COMPLETED->getColor())
                 ->badge($statusCounts[CandidateStatus::COMPLETED->value] ?? 0)
                 ->query(fn (Builder $query) => $query->where('status', CandidateStatus::COMPLETED)),
-            'no_response' => Tab::make('No Response')
-                ->badgeColor(CandidateStatus::NO_RESPONSE->getColor())
-                ->badge($statusCounts[CandidateStatus::NO_RESPONSE->value] ?? 0)
-                ->query(fn (Builder $query) => $query->where('status', CandidateStatus::NO_RESPONSE)),
+
         ];
     }
 }
