@@ -188,6 +188,7 @@ class CandidateResource extends Resource
             ->filters([
                 SelectFilter::make('status')
                     ->options(CandidateStatus::class)
+                    ->multiple()
                     ->label('Status'),
 
                 SelectFilter::make('position_id')
@@ -202,7 +203,6 @@ class CandidateResource extends Resource
                     ->icon('heroicon-s-check-circle')
                     ->form([
                         Select::make('status')
-                            ->multiple()
                             ->options(CandidateStatus::class),
                     ])
                     ->action(fn (Candidate $record, array $data) => $record->update($data)),
