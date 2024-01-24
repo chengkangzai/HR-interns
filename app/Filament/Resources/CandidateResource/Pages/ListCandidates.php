@@ -59,14 +59,14 @@ class ListCandidates extends ListRecords
                 ->badgeColor(CandidateStatus::WITHDRAWN->getColor())
                 ->badge($statusCounts[CandidateStatus::WITHDRAWN->value] ?? 0)
                 ->query(fn (Builder $query) => $query->where('status', CandidateStatus::WITHDRAWN)),
-            'hired' => Tab::make('Hired')
-                ->badgeColor(CandidateStatus::HIRED->getColor())
-                ->badge($statusCounts[CandidateStatus::HIRED->value] ?? 0)
-                ->query(fn (Builder $query) => $query->where('status', CandidateStatus::HIRED)),
             'offer_accepted' => Tab::make('Offer Accepted')
                 ->badgeColor(CandidateStatus::OFFER_ACCEPTED->getColor())
                 ->badge($statusCounts[CandidateStatus::OFFER_ACCEPTED->value] ?? 0)
                 ->query(fn (Builder $query) => $query->where('status', CandidateStatus::OFFER_ACCEPTED)),
+            'hired' => Tab::make('Hired')
+                ->badgeColor(CandidateStatus::HIRED->getColor())
+                ->badge($statusCounts[CandidateStatus::HIRED->value] ?? 0)
+                ->query(fn (Builder $query) => $query->where('status', CandidateStatus::HIRED)),
             'completed' => Tab::make('Completed')
                 ->badgeColor(CandidateStatus::COMPLETED->getColor())
                 ->badge($statusCounts[CandidateStatus::COMPLETED->value] ?? 0)
