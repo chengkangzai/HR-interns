@@ -202,6 +202,7 @@ class CandidateResource extends Resource
                     ->icon('heroicon-s-check-circle')
                     ->form([
                         Select::make('status')
+                            ->multiple()
                             ->options(CandidateStatus::class),
                     ])
                     ->action(fn (Candidate $record, array $data) => $record->update($data)),
