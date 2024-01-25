@@ -71,8 +71,7 @@ class CandidateResource extends Resource
                         ->tooltip('Send WhatsApp Message')
                         ->url('https://wa.me/'.str_replace(['+', ' ', '(', ')', '-'], '', $state), true)
                     )
-                    ->formatOnDisplay(true)
-                    ->required(),
+                    ->formatOnDisplay(true),
             ]),
 
             Section::make([
