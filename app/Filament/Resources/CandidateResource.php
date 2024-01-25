@@ -226,7 +226,7 @@ class CandidateResource extends Resource
                             ->success()
                             ->title('Email Sent')
                             ->body('Email has been sent to '.$records->count().' candidate(s). <br>'.
-                                'ETA: <b>'.now()->addSeconds($records->count() * 30)->diffForHumans().'</b>'
+                                'ETA: <b>'.now()->addSeconds($records->count() * 30)->shortRelativeDiffForHumans().'</b>'
                             )
                             ->send();
                     })
