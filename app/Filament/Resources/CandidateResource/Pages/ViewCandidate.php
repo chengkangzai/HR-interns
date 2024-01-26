@@ -84,11 +84,13 @@ class ViewCandidate extends ViewRecord
 
                     Section::make([
                         TimePicker::make('working_from')
+                            ->live()
                             ->label('Working From')
                             ->seconds(false)
                             ->default('09:00'),
 
                         TimePicker::make('working_to')
+                            ->live()
                             ->label('Working To')
                             ->seconds(false)
                             ->default('18:00'),
