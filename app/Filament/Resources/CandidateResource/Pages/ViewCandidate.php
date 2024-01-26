@@ -127,7 +127,7 @@ class ViewCandidate extends ViewRecord
                         $to = Carbon::parse($get('working_to'));
                         $diff = $from->addHour()->diff($to);
 
-                        return $diff->format('%h hours') . ' (excluding 1 hour lunch break)';
+                        return $diff->format('%h hours').' (excluding 1 hour lunch break)';
                     }),
             ]),
         ];
