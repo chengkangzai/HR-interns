@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Enums\CandidateStatus;
 use App\Enums\PositionStatus;
 use App\Filament\Resources\CandidateResource\Pages;
+use App\Jobs\GenerateOfferLetterJob;
 use App\Jobs\SendEmailJob;
 use App\Models\Candidate;
 use App\Models\Email;
@@ -214,6 +215,7 @@ class CandidateResource extends Resource
             ->bulkActions([
                 DeleteBulkAction::make(),
                 BulkAction::make('send_email')
+                    ->icon('heroicon-o-envelope-open')
                     ->form([
                         Select::make('email')
                             ->options(fn () => Email::pluck('name', 'id')),
@@ -240,14 +242,46 @@ class CandidateResource extends Resource
                     })
                     ->deselectRecordsAfterCompletion(true),
                 BulkAction::make('change_status')
+                    ->icon('heroicon-s-check-circle')
                     ->form([
                         Select::make('status')
                             ->options(CandidateStatus::class),
                     ])
+                    ->deselectRecordsAfterCompletion()
                     ->action(function (Collection $records, array $data) {
                         $records->each(fn (Candidate $record) => $record->update([
                             'status' => $data['status'],
                         ]));
+                    }),
+                BulkAction::make('generate_offer_letter')
+                    ->icon('heroicon-o-document')
+                    ->deselectRecordsAfterCompletion()
+                    ->form(Pages\ViewCandidate::getOfferLetterForm())
+                    ->action(function (Collection $records, array $data) {
+                        $candidates = $records
+                            ->reject(fn (Candidate $record) => $record->status === CandidateStatus::INTERVIEW);
+
+                        if ($candidates->count() > 0) {
+                            Notification::make()
+                                ->title('Invalid Candidates')
+                                ->body('The following candidates are not in interview status: <br>'.
+                                    $candidates->map(fn (Candidate $candidate) => $candidate->name.' ('.$candidate->email.')')->join('<br>')
+                                    .'<br>Please change their status to interview first.'
+                                )
+                                ->danger()
+                                ->send();
+
+                            return;
+                        }
+
+                        $records->filter(fn (Candidate $record) => $record->getMedia('offer_letters')->count() === 0)//only generate offer letter for candidates that don't have offer letter yet
+                            ->each(fn (Candidate $record) => GenerateOfferLetterJob::dispatch($record, $data['pay'], $data['working_from'], $data['working_to']));
+
+                        Notification::make()
+                            ->title('Offer Letter Generated')
+                            ->body('The offer letter will be generated in background. Please wait for a while.')
+                            ->success()
+                            ->send();
                     }),
             ]);
     }

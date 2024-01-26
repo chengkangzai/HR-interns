@@ -82,38 +82,7 @@ class ViewCandidate extends ViewRecord
             Action::make('generate_offer_letter')
                 ->icon('heroicon-o-document')
                 ->label('Generate Offer Letter')
-                ->form([
-                    TextInput::make('pay')
-                        ->numeric()
-                        ->label('Pay')
-                        ->prefix('RM')
-                        ->default(0),
-
-                    Section::make([
-                        TimePicker::make('working_from')
-                            ->live()
-                            ->label('Working From')
-                            ->seconds(false)
-                            ->default('09:00'),
-
-                        TimePicker::make('working_to')
-                            ->live()
-                            ->label('Working To')
-                            ->seconds(false)
-                            ->default('18:00'),
-
-                        Placeholder::make('working_hours')
-                            ->label('Working Hours')
-                            ->columnSpanFull()
-                            ->content(function (Get $get) {
-                                $from = Carbon::parse($get('working_from'));
-                                $to = Carbon::parse($get('working_to'));
-                                $diff = $from->addHour()->diff($to);
-
-                                return $diff->format('%h hours').' (excluding 1 hour lunch break)';
-                            }),
-                    ]),
-                ])
+                ->form(self::getOfferLetterForm())
                 ->visible(fn (Candidate $record) => $record->status === CandidateStatus::INTERVIEW)
                 ->disabled(fn (Candidate $record) => $record->position_id == null)
                 ->action(function (Candidate $record, array $data) {
@@ -125,6 +94,42 @@ class ViewCandidate extends ViewRecord
                         ->success()
                         ->send();
                 }),
+        ];
+    }
+
+    public static function getOfferLetterForm(): array
+    {
+        return [
+            TextInput::make('pay')
+                ->numeric()
+                ->label('Pay')
+                ->prefix('RM')
+                ->default(0),
+
+            Section::make([
+                TimePicker::make('working_from')
+                    ->live()
+                    ->label('Working From')
+                    ->seconds(false)
+                    ->default('09:00'),
+
+                TimePicker::make('working_to')
+                    ->live()
+                    ->label('Working To')
+                    ->seconds(false)
+                    ->default('18:00'),
+
+                Placeholder::make('working_hours')
+                    ->label('Working Hours')
+                    ->columnSpanFull()
+                    ->content(function (Get $get) {
+                        $from = Carbon::parse($get('working_from'));
+                        $to = Carbon::parse($get('working_to'));
+                        $diff = $from->addHour()->diff($to);
+
+                        return $diff->format('%h hours') . ' (excluding 1 hour lunch break)';
+                    }),
+            ]),
         ];
     }
 }
