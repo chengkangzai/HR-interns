@@ -218,6 +218,12 @@ class CandidateResource extends Resource
                     ->action(function (Collection $records, array $data) {
                         $email = Email::find($data['email']);
                         $records->each(function (Candidate $record, $index) use ($email) {
+                            activity()
+                                ->performedOn($record)
+                                ->causedBy(auth()->user())
+                                ->event('send_email')
+                                ->log('Email requested to be sent to '.$record->name.' ('.$record->email.')');
+
                             SendEmailJob::dispatch($email, $record)->delay(now()->addSeconds($index * 30));
                         });
 

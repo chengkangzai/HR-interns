@@ -62,6 +62,13 @@ class ViewCandidate extends ViewRecord
                     } else {
                         $mail = new DefaultMail($this->record, Email::find($data['mail']));
                     }
+
+                    activity()
+                        ->performedOn($this->record)
+                        ->causedBy(auth()->user())
+                        ->event('send_email')
+                        ->log('Email requested to be sent to '.$this->record->name.' ('.$this->record->email.')');
+
                     Mail::to($this->record->email)
                         ->send($mail);
 
