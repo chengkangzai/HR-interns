@@ -22,7 +22,7 @@ class CalendarWidget extends FullCalendarWidget
             ->get()
             ->map(
                 fn (Candidate $event) => [
-                    'title' => $event->name.' - '.$event->position->name,
+                    'title' => $event->name.' - '.$event->position->title,
                     'start' => $event->from,
                     'end' => $event->to,
                     'url' => CandidateResource::getUrl('view', ['record' => $event]),
