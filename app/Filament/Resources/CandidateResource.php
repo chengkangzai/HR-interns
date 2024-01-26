@@ -29,6 +29,7 @@ use Filament\Tables\Actions\DeleteBulkAction;
 use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
@@ -195,6 +196,8 @@ class CandidateResource extends Resource
                     ->preload()
                     ->relationship('position', 'title')
                     ->label('Position'),
+
+                TrashedFilter::make(),
             ])
             ->actions([
                 Action::make('status')
