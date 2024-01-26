@@ -10,12 +10,17 @@ use App\Models\Candidate;
 use App\Models\Email;
 use Filament\Actions\Action;
 use Filament\Actions\EditAction;
+use Filament\Forms\Components\Placeholder;
+use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\TimePicker;
 use Filament\Forms\Components\Toggle;
+use Filament\Forms\Get;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ViewRecord;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Mail;
 
 class ViewCandidate extends ViewRecord
@@ -74,12 +79,36 @@ class ViewCandidate extends ViewRecord
                     TextInput::make('pay')
                         ->numeric()
                         ->label('Pay')
-                        ->prefix('RM'),
+                        ->prefix('RM')
+                        ->default(0),
+
+                    Section::make([
+                        TimePicker::make('working_from')
+                            ->label('Working From')
+                            ->seconds(false)
+                            ->default('09:00'),
+
+                        TimePicker::make('working_to')
+                            ->label('Working To')
+                            ->seconds(false)
+                            ->default('18:00'),
+
+                        Placeholder::make('working_hours')
+                            ->label('Working Hours')
+                            ->columnSpanFull()
+                            ->content(function (Get $get) {
+                                $from = Carbon::parse($get('working_from'));
+                                $to = Carbon::parse($get('working_to'));
+                                $diff = $from->addHour()->diff($to);
+
+                                return $diff->format('%h hours').' (excluding 1 hour lunch break)';
+                            }),
+                    ]),
                 ])
                 ->visible(fn (Candidate $record) => $record->status === CandidateStatus::INTERVIEW)
                 ->disabled(fn (Candidate $record) => $record->position_id == null)
                 ->action(function (Candidate $record, array $data) {
-                    GenerateOfferLetterJob::dispatch($record, $data['pay']);
+                    GenerateOfferLetterJob::dispatch($record, $data['pay'], $data['working_from'], $data['working_to']);
 
                     Notification::make('generated')
                         ->title('Offer Letter Generated')

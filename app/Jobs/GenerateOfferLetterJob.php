@@ -4,6 +4,7 @@ namespace App\Jobs;
 
 use App\Models\Candidate;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -18,6 +19,8 @@ class GenerateOfferLetterJob implements ShouldQueue
     public function __construct(
         public Candidate $candidate,
         public ?int $pay,
+        public ?string $workingFrom = '09:00',
+        public ?string $workingTo = '18:00',
     ) {
     }
 
@@ -27,6 +30,10 @@ class GenerateOfferLetterJob implements ShouldQueue
             'candidate' => $this->candidate,
             'position' => $this->candidate->position,
             'pay' => $this->pay ?? 0,
+            'schedule' => [
+                'from' => Carbon::createFromTimeString($this->workingFrom),
+                'to' => Carbon::createFromTimeString($this->workingTo),
+            ],
         ])
             ->setPaper('A4')
             ->setOption([
