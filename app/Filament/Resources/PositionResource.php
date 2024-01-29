@@ -36,7 +36,12 @@ class PositionResource extends Resource
 
             Select::make('status')
                 ->options(PositionStatus::class)
+                ->default(PositionStatus::OPEN)
                 ->required(),
+
+            TextInput::make('indeed_url')
+                ->url()
+                ->columnSpanFull(),
 
             Section::make('Description')
                 ->description('Provide a detailed description of the position that will be displayed on the public job board.')

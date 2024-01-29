@@ -20,6 +20,8 @@ class Position extends Model
         'title',
         'description',
         'status',
+
+        'indeed_url',
     ];
 
     protected $casts = [
