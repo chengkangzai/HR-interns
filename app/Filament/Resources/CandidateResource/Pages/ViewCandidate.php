@@ -44,7 +44,7 @@ class ViewCandidate extends ViewRecord
                         ->options(Email::pluck('name', 'id'))
                         ->suffixAction(fn (Get $get) => $get('mail') !== null ? FormAction::make('view_email')
                             ->icon('heroicon-o-eye')
-                            ->url(fn () => EmailResource::getUrl('edit', ['record' => $get('email')]), true)
+                            ->url(fn () => EmailResource::getUrl('edit', ['record' => $get('mail')]), true)
                             : null
                         ),
 
