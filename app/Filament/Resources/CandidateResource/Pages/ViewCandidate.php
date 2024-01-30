@@ -4,12 +4,14 @@ namespace App\Filament\Resources\CandidateResource\Pages;
 
 use App\Enums\CandidateStatus;
 use App\Filament\Resources\CandidateResource;
+use App\Filament\Resources\EmailResource;
 use App\Jobs\GenerateOfferLetterJob;
 use App\Mail\DefaultMail;
 use App\Models\Candidate;
 use App\Models\Email;
 use Filament\Actions\Action;
 use Filament\Actions\EditAction;
+use Filament\Forms\Components\Actions\Action as FormAction;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
@@ -38,7 +40,12 @@ class ViewCandidate extends ViewRecord
                 ->label('Send')
                 ->form([
                     Select::make('mail')
-                        ->options(Email::pluck('name', 'id')),
+                        ->options(Email::pluck('name', 'id'))
+                        ->suffixAction(fn (Get $get) => $get('email') !== null ? FormAction::make('view_email')
+                            ->icon('heroicon-o-eye')
+                            ->url(fn () => EmailResource::getUrl('edit', ['record' => $get('email')]), true)
+                            : null
+                        ),
 
                     Toggle::make('include_offer_letter')
                         ->label('Include Offer Letter')

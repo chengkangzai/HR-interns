@@ -18,6 +18,7 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
+use Filament\Forms\Get;
 use Filament\Forms\Set;
 use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
@@ -218,7 +219,12 @@ class CandidateResource extends Resource
                     ->icon('heroicon-o-envelope-open')
                     ->form([
                         Select::make('email')
-                            ->options(fn () => Email::pluck('name', 'id')),
+                            ->options(fn () => Email::pluck('name', 'id'))
+                            ->suffixAction(fn (Get $get) => $get('email') !== null ? FormAction::make('view_email')
+                                ->icon('heroicon-o-eye')
+                                ->url(fn () => EmailResource::getUrl('edit', ['record' => $get('email')]), true)
+                                : null
+                            ),
                     ])
                     ->action(function (Collection $records, array $data) {
                         $email = Email::find($data['email']);
