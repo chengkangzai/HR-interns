@@ -220,7 +220,7 @@
                                   href="https://www.google.com/url?q=https://pixalink.io&amp;sa=D&amp;source=editors&amp;ust=1705563401434888&amp;usg=AOvVaw3Jsw5xhlNy7olk88MM6Qb0">https://pixalink.io</a></span>
 </p>
 <p class="c0 c4"><span class="c1"></span></p>
-<p class="c0"><span class="c1">11 Sep 2023</span></p>
+<p class="c0"><span class="c1">{{now()->format('d M Y')}}</span></p>
 <p class="c0 c4"><span class="c1"></span></p>
 <p class="c0"><span class="c1">{{ $candidate->name }}</span></p>
 <p class="c0"><span class="c1">{{ $candidate->email }}</span></p>
