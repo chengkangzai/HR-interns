@@ -219,6 +219,7 @@ class CandidateResource extends Resource
                     ->icon('heroicon-o-envelope-open')
                     ->form([
                         Select::make('email')
+                            ->live()
                             ->options(fn () => Email::pluck('name', 'id'))
                             ->suffixAction(fn (Get $get) => $get('email') !== null ? FormAction::make('view_email')
                                 ->icon('heroicon-o-eye')

@@ -40,6 +40,7 @@ class ViewCandidate extends ViewRecord
                 ->label('Send')
                 ->form([
                     Select::make('mail')
+                        ->live()
                         ->options(Email::pluck('name', 'id'))
                         ->suffixAction(fn (Get $get) => $get('email') !== null ? FormAction::make('view_email')
                             ->icon('heroicon-o-eye')
