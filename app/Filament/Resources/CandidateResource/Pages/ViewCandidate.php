@@ -35,6 +35,8 @@ class ViewCandidate extends ViewRecord
     {
         return [
             EditAction::make(),
+            Action::make('audit')
+                ->url(fn (Candidate $record) => CandidateResource::getUrl('audit', ['record' => $record->id])),
             Action::make('send')
                 ->icon('heroicon-o-paper-airplane')
                 ->label('Send')
