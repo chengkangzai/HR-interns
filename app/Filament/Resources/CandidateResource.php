@@ -300,7 +300,7 @@ class CandidateResource extends Resource
             'create' => Pages\CreateCandidate::route('/create'),
             'view' => Pages\ViewCandidate::route('/{record}/'),
             'edit' => Pages\EditCandidate::route('/{record}/edit'),
-            'audit'=> Pages\AuditCandidate::route('/{record}/audit'),
+            'audit' => Pages\AuditCandidate::route('/{record}/audit'),
         ];
     }
 
