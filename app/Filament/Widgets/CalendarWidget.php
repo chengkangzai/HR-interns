@@ -24,7 +24,7 @@ class CalendarWidget extends FullCalendarWidget
                 fn (Candidate $event) => [
                     'title' => $event->name.' - '.$event->position->title,
                     'start' => $event->from,
-                    'end' => $event->to,
+                    'end' => $event->to->endOfDay(),
                     'url' => CandidateResource::getUrl('view', ['record' => $event]),
                     'shouldOpenUrlInNewTab' => true,
                 ]
