@@ -29,6 +29,7 @@ class Candidate extends Model implements HasMedia
         'to',
         'notes',
         'status',
+        'additional_info',
         'position_id',
     ];
 
@@ -36,6 +37,7 @@ class Candidate extends Model implements HasMedia
         'from' => 'datetime',
         'to' => 'datetime',
         'status' => CandidateStatus::class,
+        'additional_info' => 'array',
     ];
 
     public function position(): BelongsTo

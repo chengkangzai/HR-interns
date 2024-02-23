@@ -10,7 +10,9 @@ use App\Jobs\SendEmailJob;
 use App\Models\Candidate;
 use App\Models\Email;
 use Filament\Forms\Components\Actions\Action as FormAction;
+use Filament\Forms\Components\Builder;
 use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Fieldset;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Section;
@@ -33,7 +35,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Support\Collection;
 use Ysfkaya\FilamentPhoneInput\Forms\PhoneInput;
 
@@ -91,7 +93,7 @@ class CandidateResource extends Resource
                             ->icon('heroicon-o-eye')
                             ->url(PositionResource::getUrl('view', ['record' => $record->position_id]), true);
                     })
-                    ->relationship('position', 'title', fn (Builder $query) => $query->where('status', PositionStatus::OPEN))
+                    ->relationship('position', 'title', fn (EloquentBuilder $query) => $query->where('status', PositionStatus::OPEN))
                     ->createOptionForm([
                         TextInput::make('title')
                             ->required(),
@@ -133,6 +135,51 @@ class CandidateResource extends Resource
                     ->multiple(),
             ]),
 
+            Section::make([
+                Builder::make('additional_info')
+                    ->label('Additional Information')
+                    ->blocks([
+                        Builder\Block::make('source')
+                            ->icon('heroicon-o-link')
+                            ->schema([
+                                Select::make('source')
+                                    ->options([
+                                        'LinkedIn' => 'LinkedIn',
+                                        'Indeed' => 'Indeed',
+                                        'Referral' => 'Referral',
+                                        'Others' => 'Others',
+                                    ])
+                                    ->required(),
+                            ])
+                            ->columns(2),
+
+                        Builder\Block::make('qualification')
+                            ->icon('heroicon-o-academic-cap')
+                            ->schema([
+                                Select::make('qualification')
+                                    ->options([
+                                        'Diploma' => 'Diploma',
+                                        'Bachelor' => 'Bachelor',
+                                        'Master' => 'Master',
+                                        'PhD' => 'PhD',
+                                        'Others' => 'Others',
+                                    ]),
+                                TextInput::make('major')->prefix('in '),
+                                TextInput::make('university')->prefix('from '),
+                                TextInput::make('gpa')->prefix('with GPA '),
+                                Fieldset::make('from_to')
+                                    ->label('From - To')
+                                    ->columns(2)
+                                    ->schema([
+                                        DatePicker::make('from'),
+                                        DatePicker::make('to'),
+                                    ]),
+                            ])
+                            ->columns(2),
+                    ])
+                    ->columnSpanFull(),
+            ]),
+
             RichEditor::make('notes')
                 ->columnSpanFull(),
 
@@ -167,7 +214,7 @@ class CandidateResource extends Resource
                     ->fontFamily(FontFamily::Mono),
 
                 TextColumn::make('range')
-                    ->sortable(query: fn (Builder $query, string $direction) => $query->orderBy('from', $direction))
+                    ->sortable(query: fn (EloquentBuilder $query, string $direction) => $query->orderBy('from', $direction))
                     ->label('From - To')
                     ->getStateUsing(fn (Candidate $record) => isset($record->from, $record->to)
                         ? $record->from->format('d/m/Y').' - '.$record->to->format('d/m/Y').' ('.ceil($record->from->floatDiffInWeeks($record->to)).' weeks)'
