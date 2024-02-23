@@ -147,6 +147,7 @@ class CandidateResource extends Resource
                                         'LinkedIn' => 'LinkedIn',
                                         'Indeed' => 'Indeed',
                                         'Referral' => 'Referral',
+                                        'Email' => 'Email',
                                         'Others' => 'Others',
                                     ])
                                     ->required(),
