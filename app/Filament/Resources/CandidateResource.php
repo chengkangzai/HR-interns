@@ -153,7 +153,7 @@ class CandidateResource extends Resource
                                     ->required(),
 
                                 TextInput::make('other_source')
-                                    ->visible(fn (Get $get) => $get('source') === 'Others')
+                                    ->visible(fn (Get $get) => $get('source') === 'Others'),
                             ])
                             ->columns(2),
 
@@ -315,7 +315,7 @@ class CandidateResource extends Resource
                     ->icon('heroicon-s-check-circle')
                     ->form([
                         Select::make('position')
-                            ->relationship('position', 'title', fn (EloquentBuilder $query) => $query->where('status', PositionStatus::OPEN))
+                            ->relationship('position', 'title', fn (EloquentBuilder $query) => $query->where('status', PositionStatus::OPEN)),
                     ])
                     ->deselectRecordsAfterCompletion()
                     ->action(function (Collection $records, array $data) {
