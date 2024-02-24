@@ -151,6 +151,9 @@ class CandidateResource extends Resource
                                         'Others' => 'Others',
                                     ])
                                     ->required(),
+
+                                TextInput::make('other_source')
+                                    ->visible(fn (Get $get) => $get('source') === 'Others')
                             ])
                             ->columns(2),
 
