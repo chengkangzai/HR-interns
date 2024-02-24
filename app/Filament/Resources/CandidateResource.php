@@ -311,6 +311,18 @@ class CandidateResource extends Resource
                             'status' => $data['status'],
                         ]));
                     }),
+                BulkAction::make('change_position')
+                    ->icon('heroicon-s-check-circle')
+                    ->form([
+                        Select::make('position')
+                            ->relationship('position', 'title', fn (EloquentBuilder $query) => $query->where('status', PositionStatus::OPEN))
+                    ])
+                    ->deselectRecordsAfterCompletion()
+                    ->action(function (Collection $records, array $data) {
+                        $records->each(fn (Candidate $record) => $record->update([
+                            'position_id' => $data['position'],
+                        ]));
+                    }),
                 BulkAction::make('generate_offer_letter')
                     ->icon('heroicon-o-document')
                     ->deselectRecordsAfterCompletion()
