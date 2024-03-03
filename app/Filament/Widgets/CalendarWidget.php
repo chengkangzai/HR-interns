@@ -19,6 +19,7 @@ class CalendarWidget extends FullCalendarWidget
                 CandidateStatus::INTERVIEW,
                 CandidateStatus::OFFER_ACCEPTED,
             ])
+            ->whereNotNull(['from', 'to'])
             ->get()
             ->map(
                 fn (Candidate $event) => [
