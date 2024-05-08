@@ -16,7 +16,7 @@ class DatabaseSeeder extends Seeder
 
         \App\Models\User::factory()->create([
             'name' => 'CCK',
-            'email' => 'pycck@hotmail.com',
+            'email' => 'cheng.kang@pixalink.io',
         ]);
     }
 }
