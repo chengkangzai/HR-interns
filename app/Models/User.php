@@ -47,6 +47,10 @@ class User extends Authenticatable implements FilamentUser
 
     public function canAccessPanel(Panel $panel): bool
     {
+        if (app()->isLocal()) {
+            return true;
+        }
+
         return str_ends_with($this->email, '@pixalink.io') && $this->hasVerifiedEmail();
     }
 }
