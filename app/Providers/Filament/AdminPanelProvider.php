@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use Croustibat\FilamentJobsMonitor\FilamentJobsMonitorPlugin;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
@@ -35,6 +36,7 @@ class AdminPanelProvider extends PanelProvider
                 'primary' => Color::Amber,
             ])
             ->plugins([
+                FilamentJobsMonitorPlugin::make(),
                 FilamentFullCalendarPlugin::make()
                     ->config([
                         'headerToolbar' => [
