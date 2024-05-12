@@ -37,7 +37,7 @@ class ViewPositionCandidate extends ManageRelatedRecords
                     ->options(CandidateStatus::class)
                     ->default([
                         CandidateStatus::PENDING->value,
-                        CandidateStatus::COMPLETED->value,
+                        CandidateStatus::CONTACTED->value,
                         CandidateStatus::TECHNICAL_TEST->value,
                         CandidateStatus::INTERVIEW->value,
                     ])
