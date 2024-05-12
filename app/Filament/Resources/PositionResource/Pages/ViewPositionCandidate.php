@@ -40,6 +40,8 @@ class ViewPositionCandidate extends ManageRelatedRecords
                         CandidateStatus::CONTACTED->value,
                         CandidateStatus::TECHNICAL_TEST->value,
                         CandidateStatus::INTERVIEW->value,
+                        CandidateStatus::HIRED->value,
+                        CandidateStatus::OFFER_ACCEPTED->value,
                     ])
                     ->multiple()
                     ->label('Status'),
