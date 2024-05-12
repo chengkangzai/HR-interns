@@ -5,6 +5,7 @@ namespace App\Filament\Resources\CandidateResource\Pages;
 use App\Enums\CandidateStatus;
 use App\Filament\Resources\CandidateResource;
 use App\Filament\Resources\EmailResource;
+use App\Jobs\GenerateAttendanceReportJob;
 use App\Jobs\GenerateOfferLetterJob;
 use App\Mail\DefaultMail;
 use App\Models\Candidate;
@@ -103,6 +104,20 @@ class ViewCandidate extends ViewRecord
 
                     Notification::make('generated')
                         ->title('Offer Letter Generated')
+                        ->body('The offer letter will be generated in background. Please wait for a while.')
+                        ->success()
+                        ->send();
+                }),
+
+            Action::make('generate_attendance_report')
+                ->icon('heroicon-o-document')
+                ->label('Generate Attendance Report')
+                ->visible(fn (Candidate $record) => $record->status === CandidateStatus::COMPLETED)
+                ->action(function (Candidate $record) {
+                    GenerateAttendanceReportJob::dispatch($record);
+
+                    Notification::make('generated')
+                        ->title('Attendance Report Generated')
                         ->body('The offer letter will be generated in background. Please wait for a while.')
                         ->success()
                         ->send();
