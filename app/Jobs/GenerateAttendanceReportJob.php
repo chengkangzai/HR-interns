@@ -46,13 +46,13 @@ class GenerateAttendanceReportJob implements ShouldQueue
 
         $attendances = collect($period)
             ->map(fn (Carbon $date) => [
-                'monthName' => $date->shortMonthName. ' / ' . str($date->year)->substr(2),
+                'monthName' => $date->shortMonthName.' / '.str($date->year)->substr(2),
                 'date' => $date,
                 'day' => $date->day,
             ])
             ->groupBy('monthName')
             ->map(fn ($dates) => $dates
-                ->mapWithKeys(function ($date) use ( $holidays) {
+                ->mapWithKeys(function ($date) use ($holidays) {
                     $state = 'Y';
 
                     if ($holidays->contains($date['date']->format('Y-m-d'))) {
@@ -64,7 +64,7 @@ class GenerateAttendanceReportJob implements ShouldQueue
                     }
 
                     //return - if candidate havent join company or date is before candidate join
-                    if ($date['date'] < $this->candidate->from|| $date['date'] > $this->candidate->to) {
+                    if ($date['date'] < $this->candidate->from || $date['date'] > $this->candidate->to) {
                         $state = 'NA';
                     }
 
