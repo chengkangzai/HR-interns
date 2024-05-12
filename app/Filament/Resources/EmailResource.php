@@ -6,6 +6,7 @@ use App\Filament\Resources\EmailResource\Pages;
 use App\Models\Email;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
@@ -44,6 +45,9 @@ class EmailResource extends Resource
                 ])
                 ->default(['eddiechong@pixalink.io'])
                 ->placeholder('Enter email addresses'),
+
+            Select::make('position_id')
+                ->relationship('position', 'title'),
 
             RichEditor::make('body')
                 ->columnSpanFull()

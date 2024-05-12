@@ -20,7 +20,6 @@ class Position extends Model
         'title',
         'description',
         'status',
-
         'indeed_url',
     ];
 
@@ -31,6 +30,11 @@ class Position extends Model
     public function candidates(): HasMany
     {
         return $this->hasMany(Candidate::class);
+    }
+
+    public function emails(): HasMany
+    {
+        return $this->hasMany(Email::class);
     }
 
     public function getActivitylogOptions(): LogOptions

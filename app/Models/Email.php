@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
@@ -19,11 +20,17 @@ class Email extends Model
         'title',
         'body',
         'cc',
+        'position_id',
     ];
 
     protected $casts = [
         'cc' => 'array',
     ];
+
+    public function position(): BelongsTo
+    {
+        return $this->belongsTo(Position::class);
+    }
 
     public function getActivitylogOptions(): LogOptions
     {
