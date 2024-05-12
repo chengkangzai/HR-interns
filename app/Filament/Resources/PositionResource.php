@@ -23,6 +23,7 @@ use Filament\Tables\Table;
 class PositionResource extends Resource
 {
     protected static ?string $model = Position::class;
+
     protected static ?string $slug = 'positions';
 
     protected static ?string $recordTitleAttribute = 'title';

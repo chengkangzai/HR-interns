@@ -351,7 +351,7 @@ class CandidateResource extends Resource
                         ]));
                     }),
                 BulkAction::make('change_position')
-                    ->visible(fn(Page $livewire)=>$livewire instanceof Pages\ListCandidates)
+                    ->visible(fn (Page $livewire) => $livewire instanceof Pages\ListCandidates)
                     ->icon('heroicon-s-check-circle')
                     ->form([
                         Select::make('position')
