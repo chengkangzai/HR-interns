@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5d06201da5a68fe46e1dd9fca26ea88e",
+    "content-hash": "615ccc666eabe45c2ae17ac6cfef4bdf",
     "packages": [
         {
             "name": "anourvalar/eloquent-serialize",
@@ -576,6 +576,86 @@
                 }
             ],
             "time": "2023-12-11T17:09:12+00:00"
+        },
+        {
+            "name": "chengkangzai/laravel-office-holidays",
+            "version": "v0.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/chengkangzai/laravel-office-holidays.git",
+                "reference": "999f9d337a6f7147b40f331e62095c16eee8b672"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/chengkangzai/laravel-office-holidays/zipball/999f9d337a6f7147b40f331e62095c16eee8b672",
+                "reference": "999f9d337a6f7147b40f331e62095c16eee8b672",
+                "shasum": ""
+            },
+            "require": {
+                "ext-dom": "*",
+                "illuminate/contracts": "^10.0||^11.0",
+                "php": ">=8.1",
+                "saloonphp/cache-plugin": "^3.0",
+                "saloonphp/saloon": "^3.0",
+                "spatie/laravel-package-tools": "^1.16"
+            },
+            "require-dev": {
+                "larastan/larastan": "^2.9",
+                "laravel/pint": "^1.14",
+                "nunomaduro/collision": "^8.1.1||^7.10.0",
+                "orchestra/testbench": "^9.0.0||^8.22.0",
+                "pestphp/pest": "^2.34",
+                "pestphp/pest-plugin-arch": "^2.7",
+                "pestphp/pest-plugin-laravel": "^2.3",
+                "phpstan/extension-installer": "^1.3",
+                "phpstan/phpstan-deprecation-rules": "^1.1",
+                "phpstan/phpstan-phpunit": "^1.3"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "CCK\\LaravelOfficeHolidays\\LaravelOfficeHolidaysServiceProvider"
+                    ],
+                    "aliases": {
+                        "LaravelOfficeHolidays": "CCK\\LaravelOfficeHolidays\\Facades\\LaravelOfficeHolidays"
+                    }
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "CCK\\LaravelOfficeHolidays\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Ching Cheng Kang",
+                    "email": "pycck@hotmail.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "A Laravel Package that list out holiday that Scraped from https://www.officeholidays.com/countries",
+            "homepage": "https://github.com/chengkangzai/laravel-office-holidays",
+            "keywords": [
+                "cck",
+                "laravel",
+                "laravel-office-holidays"
+            ],
+            "support": {
+                "issues": "https://github.com/chengkangzai/laravel-office-holidays/issues",
+                "source": "https://github.com/chengkangzai/laravel-office-holidays/tree/v0.0.1"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/CCK",
+                    "type": "github"
+                }
+            ],
+            "time": "2024-05-12T14:36:48+00:00"
         },
         {
             "name": "croustibat/filament-jobs-monitor",
@@ -5966,6 +6046,137 @@
                 "source": "https://github.com/MyIntervals/PHP-CSS-Parser/tree/v8.5.1"
             },
             "time": "2024-02-15T16:41:13+00:00"
+        },
+        {
+            "name": "saloonphp/cache-plugin",
+            "version": "v3.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/saloonphp/cache-plugin.git",
+                "reference": "9ed8efd0e08902ee105249c4d8d55edc0e8dc864"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/saloonphp/cache-plugin/zipball/9ed8efd0e08902ee105249c4d8d55edc0e8dc864",
+                "reference": "9ed8efd0e08902ee105249c4d8d55edc0e8dc864",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^8.1",
+                "saloonphp/saloon": "^3.0"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^3.13",
+                "league/flysystem": "^3.12.2",
+                "orchestra/testbench": "^8.0",
+                "pestphp/pest": "^2.3",
+                "psr/simple-cache": "^3.0",
+                "spatie/ray": "^1.34.2"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Saloon\\CachePlugin\\": "src/",
+                    "Saloon\\CachePlugin\\Tests\\": "tests/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Sammyjo20",
+                    "email": "29132017+Sammyjo20@users.noreply.github.com"
+                }
+            ],
+            "description": "Official plugin for caching Saloon responses",
+            "support": {
+                "issues": "https://github.com/saloonphp/cache-plugin/issues",
+                "source": "https://github.com/saloonphp/cache-plugin/tree/v3.0.0"
+            },
+            "time": "2023-10-02T16:29:40+00:00"
+        },
+        {
+            "name": "saloonphp/saloon",
+            "version": "v3.8.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/saloonphp/saloon.git",
+                "reference": "25cecb89110647c2e8ffad9e48a74ad717f7485a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/saloonphp/saloon/zipball/25cecb89110647c2e8ffad9e48a74ad717f7485a",
+                "reference": "25cecb89110647c2e8ffad9e48a74ad717f7485a",
+                "shasum": ""
+            },
+            "require": {
+                "guzzlehttp/guzzle": "^7.6",
+                "guzzlehttp/promises": "^1.5 || ^2.0",
+                "guzzlehttp/psr7": "^2.0",
+                "php": "^8.1",
+                "psr/http-factory": "^1.0",
+                "psr/http-message": "^1.1 || ^2.0"
+            },
+            "conflict": {
+                "sammyjo20/saloon": "*"
+            },
+            "require-dev": {
+                "ext-simplexml": "*",
+                "friendsofphp/php-cs-fixer": "^3.5",
+                "illuminate/collections": "^9.39 || ^10.0",
+                "league/flysystem": "^3.0",
+                "pestphp/pest": "^2.6",
+                "phpstan/phpstan": "^1.9",
+                "saloonphp/xml-wrangler": "^1.1",
+                "spatie/ray": "^1.33",
+                "symfony/dom-crawler": "^6.0 || ^7.0",
+                "symfony/var-dumper": "^6.3 || ^7.0"
+            },
+            "suggest": {
+                "illuminate/collections": "Required for the response collect() method.",
+                "saloonphp/xml-wrangler": "Required for the response xmlReader() method.",
+                "symfony/dom-crawler": "Required for the response dom() method.",
+                "symfony/var-dumper": "Required for default debugging drivers."
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Saloon\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Sam Carré",
+                    "email": "29132017+Sammyjo20@users.noreply.github.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Build beautiful API integrations and SDKs with Saloon",
+            "homepage": "https://github.com/saloonphp/saloon",
+            "keywords": [
+                "api",
+                "api-integrations",
+                "saloon",
+                "sammyjo20",
+                "sdk"
+            ],
+            "support": {
+                "issues": "https://github.com/saloonphp/saloon/issues",
+                "source": "https://github.com/saloonphp/saloon/tree/v3.8.1"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/sammyjo20",
+                    "type": "github"
+                }
+            ],
+            "time": "2024-04-08T11:53:06+00:00"
         },
         {
             "name": "spatie/color",
