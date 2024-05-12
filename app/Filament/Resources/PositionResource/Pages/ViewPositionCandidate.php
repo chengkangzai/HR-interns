@@ -36,10 +36,10 @@ class ViewPositionCandidate extends ManageRelatedRecords
                 SelectFilter::make('status')
                     ->options(CandidateStatus::class)
                     ->default([
-                        CandidateStatus::PENDING,
-                        CandidateStatus::COMPLETED,
-                        CandidateStatus::TECHNICAL_TEST,
-                        CandidateStatus::INTERVIEW,
+                        CandidateStatus::PENDING->value,
+                        CandidateStatus::COMPLETED->value,
+                        CandidateStatus::TECHNICAL_TEST->value,
+                        CandidateStatus::INTERVIEW->value,
                     ])
                     ->multiple()
                     ->label('Status'),
