@@ -267,7 +267,9 @@ class CandidateResource extends Resource
                         : 'N/A'
                     ),
 
-                TextColumn::make('position.title'),
+                TextColumn::make('position.title')
+                ->hidden(fn($livewire)=> $livewire instanceof ViewPositionCandidate)
+                ,
 
                 TextColumn::make('from')
                     ->toggleable(isToggledHiddenByDefault: true)

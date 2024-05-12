@@ -11,7 +11,9 @@ use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
+use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
 
 class EmailResource extends Resource
@@ -80,9 +82,16 @@ class EmailResource extends Resource
                 ->limit(50)
                 ->sortable(),
 
-            TextColumn::make('body')
-                ->limit(50),
-        ]);
+            TextColumn::make('position.title'),
+        ])
+            ->filters([
+                TrashedFilter::make(),
+            ])
+            ->actions([
+                EditAction::make(),
+            ])
+            ->defaultSort('sort')
+            ->reorderable('sort');
     }
 
     public static function getPages(): array

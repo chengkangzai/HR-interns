@@ -4,7 +4,6 @@ namespace App\Filament\Resources;
 
 use App\Enums\PositionStatus;
 use App\Filament\Resources\PositionResource\Pages;
-use App\Filament\Resources\PositionResource\Pages\ViewPositionCandidate;
 use App\Models\Position;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\RichEditor;
@@ -95,13 +94,15 @@ class PositionResource extends Resource
             'view' => Pages\ViewPosition::route('/{record}'),
             'edit' => Pages\EditPosition::route('/{record}/edit'),
             'candidates' => Pages\ViewPositionCandidate::route('/{record}/candidates'),
+            'emails' => Pages\ViewPositionEmail::route('/{record}/emails'),
         ];
     }
 
     public static function getRecordSubNavigation(Page $page): array
     {
         return $page->generateNavigationItems([
-            ViewPositionCandidate::class,
+            Pages\ViewPositionCandidate::class,
+            Pages\ViewPositionEmail::class,
         ]);
     }
 
