@@ -2,11 +2,13 @@
 
 namespace App\Filament\Resources\PositionResource\Pages;
 
+use App\Enums\CandidateStatus;
 use App\Filament\Resources\CandidateResource;
 use App\Filament\Resources\PositionResource;
 use Filament\Forms\Form;
 use Filament\Resources\Pages\ManageRelatedRecords;
 use Filament\Tables\Actions\CreateAction;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 
 class ViewPositionCandidate extends ManageRelatedRecords
@@ -30,6 +32,18 @@ class ViewPositionCandidate extends ManageRelatedRecords
     public function table(Table $table): Table
     {
         return CandidateResource::table($table)
+            ->filters([
+                SelectFilter::make('status')
+                    ->options(CandidateStatus::class)
+                    ->default([
+                        CandidateStatus::PENDING,
+                        CandidateStatus::COMPLETED,
+                        CandidateStatus::TECHNICAL_TEST,
+                        CandidateStatus::INTERVIEW,
+                    ])
+                    ->multiple()
+                    ->label('Status'),
+            ])
             ->headerActions([
                 CreateAction::make(),
             ]);
