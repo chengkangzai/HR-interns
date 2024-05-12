@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Enums\PositionStatus;
 use App\Filament\Resources\PositionResource\Pages;
+use App\Filament\Resources\PositionResource\Pages\ViewPositionCandidate;
 use App\Models\Position;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\RichEditor;
@@ -11,6 +12,7 @@ use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
+use Filament\Resources\Pages\Page;
 use Filament\Resources\Resource;
 use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Actions\EditAction;
@@ -21,7 +23,6 @@ use Filament\Tables\Table;
 class PositionResource extends Resource
 {
     protected static ?string $model = Position::class;
-
     protected static ?string $slug = 'positions';
 
     protected static ?string $recordTitleAttribute = 'title';
@@ -92,7 +93,15 @@ class PositionResource extends Resource
             'create' => Pages\CreatePosition::route('/create'),
             'view' => Pages\ViewPosition::route('/{record}'),
             'edit' => Pages\EditPosition::route('/{record}/edit'),
+            'candidates' => Pages\ViewPositionCandidate::route('/{record}/candidates'),
         ];
+    }
+
+    public static function getRecordSubNavigation(Page $page): array
+    {
+        return $page->generateNavigationItems([
+            ViewPositionCandidate::class,
+        ]);
     }
 
     public static function getGloballySearchableAttributes(): array

@@ -23,6 +23,7 @@ use Filament\Forms\Form;
 use Filament\Forms\Get;
 use Filament\Forms\Set;
 use Filament\Notifications\Notification;
+use Filament\Pages\Page;
 use Filament\Resources\Resource;
 use Filament\Support\Colors\Color;
 use Filament\Support\Enums\FontFamily;
@@ -350,6 +351,7 @@ class CandidateResource extends Resource
                         ]));
                     }),
                 BulkAction::make('change_position')
+                    ->visible(fn(Page $livewire)=>$livewire instanceof Pages\ListCandidates)
                     ->icon('heroicon-s-check-circle')
                     ->form([
                         Select::make('position')
