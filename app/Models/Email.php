@@ -20,6 +20,7 @@ class Email extends Model
         'title',
         'body',
         'cc',
+        'sort',
         'position_id',
     ];
 
