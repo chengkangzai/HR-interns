@@ -12,6 +12,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables\Actions\EditAction;
+use Filament\Tables\Actions\ReplicateAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
@@ -89,6 +90,11 @@ class EmailResource extends Resource
             ])
             ->actions([
                 EditAction::make(),
+                ReplicateAction::make()
+                    ->form([
+                        Select::make('position_id')
+                            ->relationship('position', 'title'),
+                    ]),
             ])
             ->defaultSort('sort')
             ->reorderable('sort');
