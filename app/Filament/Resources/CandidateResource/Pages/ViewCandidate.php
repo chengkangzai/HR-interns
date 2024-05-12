@@ -43,7 +43,10 @@ class ViewCandidate extends ViewRecord
                 ->form([
                     Select::make('mail')
                         ->reactive()
-                        ->options(Email::pluck('name', 'id'))
+                        ->options(function () {
+                            return Email::where('position_id', $this->record->position_id)
+                                ->pluck('name', 'id');
+                        })
                         ->suffixAction(fn (Get $get) => $get('mail') !== null ? FormAction::make('view_email')
                             ->icon('heroicon-o-eye')
                             ->url(fn () => EmailResource::getUrl('edit', ['record' => $get('mail')]), true)

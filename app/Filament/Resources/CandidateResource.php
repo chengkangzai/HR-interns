@@ -5,10 +5,12 @@ namespace App\Filament\Resources;
 use App\Enums\CandidateStatus;
 use App\Enums\PositionStatus;
 use App\Filament\Resources\CandidateResource\Pages;
+use App\Filament\Resources\PositionResource\Pages\ViewPositionCandidate;
 use App\Jobs\GenerateOfferLetterJob;
 use App\Jobs\SendEmailJob;
 use App\Models\Candidate;
 use App\Models\Email;
+use App\Models\Position;
 use Filament\Forms\Components\Actions\Action as FormAction;
 use Filament\Forms\Components\Builder;
 use Filament\Forms\Components\DatePicker;
@@ -32,6 +34,7 @@ use Filament\Tables\Actions\BulkAction;
 use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Actions\DeleteBulkAction;
 use Filament\Tables\Actions\EditAction;
+use Filament\Tables\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TrashedFilter;
@@ -300,6 +303,8 @@ class CandidateResource extends Resource
                             ->options(CandidateStatus::class),
                     ])
                     ->action(fn (Candidate $record, array $data) => $record->update($data)),
+                ViewAction::make()
+                    ->url(fn (Candidate $record) => CandidateResource::getUrl('view', ['record' => $record]), true),
                 EditAction::make(),
                 DeleteAction::make(),
             ])
@@ -310,7 +315,17 @@ class CandidateResource extends Resource
                     ->form([
                         Select::make('email')
                             ->live()
-                            ->options(fn () => Email::pluck('name', 'id'))
+                            ->options(function ($livewire) {
+                                if ($livewire instanceof ViewPositionCandidate) {
+                                    /** @var Position $record */
+                                    $record = $livewire->record;
+
+                                    return Email::where('position_id', $record->id)
+                                        ->pluck('name', 'id');
+                                }
+
+                                return Email::pluck('name', 'id');
+                            })
                             ->suffixAction(fn (Get $get) => $get('email') !== null ? FormAction::make('view_email')
                                 ->icon('heroicon-o-eye')
                                 ->url(fn () => EmailResource::getUrl('edit', ['record' => $get('email')]), true)
