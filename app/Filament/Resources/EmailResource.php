@@ -3,6 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\EmailResource\Pages;
+use App\Filament\Resources\PositionResource\Pages\ViewPositionEmail;
 use App\Models\Email;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\RichEditor;
@@ -14,6 +15,7 @@ use Filament\Resources\Resource;
 use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Actions\ReplicateAction;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
 
@@ -87,6 +89,9 @@ class EmailResource extends Resource
         ])
             ->filters([
                 TrashedFilter::make(),
+                SelectFilter::make('position_id')
+                    ->hidden(fn ($livewire) => $livewire instanceof ViewPositionEmail)
+                    ->relationship('position', 'title'),
             ])
             ->actions([
                 EditAction::make(),
