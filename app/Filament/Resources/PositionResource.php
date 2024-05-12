@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Enums\PositionStatus;
 use App\Filament\Resources\PositionResource\Pages;
 use App\Models\Position;
+use Filament\Forms\Components\Actions\Action;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Section;
@@ -42,6 +43,11 @@ class PositionResource extends Resource
 
             TextInput::make('indeed_url')
                 ->url()
+                ->suffixAction(
+                    Action::make('View')
+                        ->url(fn (?string $state) => $state, true)
+                        ->icon('heroicon-o-arrow-top-right-on-square')
+                )
                 ->columnSpanFull(),
 
             Section::make('Description')
