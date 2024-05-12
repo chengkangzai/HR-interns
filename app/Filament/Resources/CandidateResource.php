@@ -180,6 +180,44 @@ class CandidateResource extends Resource
                                     ]),
                             ])
                             ->columns(2),
+
+                        Builder\Block::make('social_media')
+                            ->icon('heroicon-o-globe-alt')
+                            ->schema([
+                                Select::make('social_media')
+                                    ->required()
+                                    ->options([
+                                        'linkedin' => 'LinkedIn',
+                                        'github' => 'GitHub',
+                                        'twitter' => 'Twitter',
+                                        'facebook' => 'Facebook',
+                                        'instagram' => 'Instagram',
+                                        'others' => 'Others',
+                                    ]),
+
+                                Fieldset::make('Info')
+                                    ->schema([
+                                        TextInput::make('url')
+                                            ->suffixAction(
+                                                FormAction::make('view')
+                                                    ->icon('heroicon-o-eye')
+                                                    ->url(fn (?string $state) => $state, true)
+                                            ),
+
+                                        TextInput::make('username')
+                                            ->afterStateUpdated(function (Get $get, Set $set) {
+                                                match ($get('social_media')) {
+                                                    'linkedin' => $set('url', 'https://www.linkedin.com/in/'.$get('username')),
+                                                    'github' => $set('url', 'https://github.com/'.$get('username')),
+                                                    'twitter' => $set('url', 'https://twitter.com/'.$get('username')),
+                                                    'facebook' => $set('url', 'https://www.facebook.com/'.$get('username')),
+                                                    'instagram' => $set('url', 'https://www.instagram.com/'.$get('username')),
+                                                    default => null,
+                                                };
+                                            }),
+                                    ]),
+                            ])
+                            ->columns(2),
                     ])
                     ->columnSpanFull(),
             ]),
