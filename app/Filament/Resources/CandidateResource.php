@@ -209,6 +209,7 @@ class CandidateResource extends Resource
                                             ),
 
                                         TextInput::make('username')
+                                            ->reactive()
                                             ->afterStateUpdated(function (Get $get, Set $set) {
                                                 match ($get('social_media')) {
                                                     'linkedin' => $set('url', 'https://www.linkedin.com/in/'.$get('username')),
