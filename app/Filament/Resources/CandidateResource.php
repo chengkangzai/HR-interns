@@ -63,7 +63,7 @@ class CandidateResource extends Resource
             Section::make([
                 TextInput::make('name')
                     ->live(onBlur: true)
-                    ->afterStateUpdated(fn(string $state, Set $set) => $set('name', str($state)->title()->__toString()))
+                    ->afterStateUpdated(fn (string $state, Set $set) => $set('name', str($state)->title()->__toString()))
                     ->required(),
 
                 TextInput::make('email')
@@ -71,18 +71,18 @@ class CandidateResource extends Resource
                     ->afterStateUpdated(function (string $state, Set $set) {
                         $set('email', str($state)->remove(' ')->remove('`'));
                     })
-                    ->suffixAction(fn(?string $state) => FormAction::make('Email')
+                    ->suffixAction(fn (?string $state) => FormAction::make('Email')
                         ->icon('heroicon-o-envelope-open')
                         ->tooltip('Send Email')
-                        ->url('mailto:' . $state, true)
+                        ->url('mailto:'.$state, true)
                     )
                     ->required(),
 
                 PhoneInput::make('phone_number')
-                    ->suffixAction(fn(?string $state) => FormAction::make('WhatsApp')
+                    ->suffixAction(fn (?string $state) => FormAction::make('WhatsApp')
                         ->icon('heroicon-o-phone-arrow-up-right')
                         ->tooltip('Send WhatsApp Message')
-                        ->url('https://wa.me/' . str_replace(['+', ' ', '(', ')', '-'], '', $state), true)
+                        ->url('https://wa.me/'.str_replace(['+', ' ', '(', ')', '-'], '', $state), true)
                     )
                     ->formatOnDisplay(true),
 
@@ -92,7 +92,7 @@ class CandidateResource extends Resource
             Section::make([
                 Select::make('position_id')
                     ->suffixAction(function (string $context, ?Candidate $record) {
-                        if (!$record) {
+                        if (! $record) {
                             return null;
                         }
                         if ($context == 'create') {
@@ -103,7 +103,7 @@ class CandidateResource extends Resource
                             ->icon('heroicon-o-eye')
                             ->url(PositionResource::getUrl('view', ['record' => $record->position_id]), true);
                     })
-                    ->relationship('position', 'title', fn(EloquentBuilder $query) => $query->where('status', PositionStatus::OPEN))
+                    ->relationship('position', 'title', fn (EloquentBuilder $query) => $query->where('status', PositionStatus::OPEN))
                     ->createOptionForm([
                         TextInput::make('title')
                             ->required(),
@@ -124,8 +124,8 @@ class CandidateResource extends Resource
                 Placeholder::make('range')
                     ->label('From - To')
                     ->visibleOn(['view', 'edit'])
-                    ->content(fn(Get $get): string => $get('from') !== null && $get('to') !== null
-                        ? ceil(Carbon::parse('from')->floatDiffInWeeks(Carbon::parse('to'))) . ' weeks'
+                    ->content(fn (Get $get): string => $get('from') !== null && $get('to') !== null
+                        ? ceil(Carbon::parse('from')->floatDiffInWeeks(Carbon::parse('to'))).' weeks'
                         : 'N/A'
                     ),
             ]),
@@ -166,7 +166,7 @@ class CandidateResource extends Resource
                                     ->required(),
 
                                 TextInput::make('other_source')
-                                    ->visible(fn(Get $get) => $get('source') === 'Others'),
+                                    ->visible(fn (Get $get) => $get('source') === 'Others'),
                             ])
                             ->columns(2),
 
@@ -229,18 +229,18 @@ class CandidateResource extends Resource
                                             ->suffixAction(
                                                 FormAction::make('view')
                                                     ->icon('heroicon-o-eye')
-                                                    ->url(fn(?string $state) => $state, true)
+                                                    ->url(fn (?string $state) => $state, true)
                                             ),
 
                                         TextInput::make('username')
                                             ->reactive()
                                             ->afterStateUpdated(function (Get $get, Set $set) {
                                                 match ($get('social_media')) {
-                                                    'linkedin' => $set('url', 'https://www.linkedin.com/in/' . $get('username')),
-                                                    'github' => $set('url', 'https://github.com/' . $get('username')),
-                                                    'twitter' => $set('url', 'https://twitter.com/' . $get('username')),
-                                                    'facebook' => $set('url', 'https://www.facebook.com/' . $get('username')),
-                                                    'instagram' => $set('url', 'https://www.instagram.com/' . $get('username')),
+                                                    'linkedin' => $set('url', 'https://www.linkedin.com/in/'.$get('username')),
+                                                    'github' => $set('url', 'https://github.com/'.$get('username')),
+                                                    'twitter' => $set('url', 'https://twitter.com/'.$get('username')),
+                                                    'facebook' => $set('url', 'https://www.facebook.com/'.$get('username')),
+                                                    'instagram' => $set('url', 'https://www.instagram.com/'.$get('username')),
                                                     default => null,
                                                 };
                                             }),
@@ -256,11 +256,11 @@ class CandidateResource extends Resource
 
             Placeholder::make('created_at')
                 ->label('Created Date')
-                ->content(fn(?Candidate $record): string => $record?->created_at?->diffForHumans() ?? '-'),
+                ->content(fn (?Candidate $record): string => $record?->created_at?->diffForHumans() ?? '-'),
 
             Placeholder::make('updated_at')
                 ->label('Last Modified Date')
-                ->content(fn(?Candidate $record): string => $record?->updated_at?->diffForHumans() ?? '-'),
+                ->content(fn (?Candidate $record): string => $record?->updated_at?->diffForHumans() ?? '-'),
 
         ]);
     }
@@ -277,26 +277,26 @@ class CandidateResource extends Resource
                     ->sortable(),
 
                 TextColumn::make('email')
-                    ->url(fn(Candidate $record) => 'mailto:' . $record->email, true)
+                    ->url(fn (Candidate $record) => 'mailto:'.$record->email, true)
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->searchable()
                     ->sortable(),
 
                 TextColumn::make('phone_number')
-                    ->url(fn(Candidate $record) => 'https://wa.me/' . str_replace(['+', ' ', '(', ')', '-'], '', $record->phone_number), true)
+                    ->url(fn (Candidate $record) => 'https://wa.me/'.str_replace(['+', ' ', '(', ')', '-'], '', $record->phone_number), true)
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->fontFamily(FontFamily::Mono),
 
                 TextColumn::make('range')
-                    ->sortable(query: fn(EloquentBuilder $query, string $direction) => $query->orderBy('from', $direction))
+                    ->sortable(query: fn (EloquentBuilder $query, string $direction) => $query->orderBy('from', $direction))
                     ->label('From - To')
-                    ->getStateUsing(fn(Candidate $record) => isset($record->from, $record->to)
-                        ? $record->from->format('d/m/Y') . ' - ' . $record->to->format('d/m/Y') . ' (' . ceil($record->from->floatDiffInWeeks($record->to)) . ' weeks)'
+                    ->getStateUsing(fn (Candidate $record) => isset($record->from, $record->to)
+                        ? $record->from->format('d/m/Y').' - '.$record->to->format('d/m/Y').' ('.ceil($record->from->floatDiffInWeeks($record->to)).' weeks)'
                         : 'N/A'
                     ),
 
                 TextColumn::make('position.title')
-                    ->hidden(fn($livewire) => $livewire instanceof ViewPositionCandidate),
+                    ->hidden(fn ($livewire) => $livewire instanceof ViewPositionCandidate),
 
                 TextColumn::make('from')
                     ->toggleable(isToggledHiddenByDefault: true)
@@ -326,7 +326,7 @@ class CandidateResource extends Resource
 
                 TrashedFilter::make(),
             ])
-            ->recordUrl(fn(Candidate $record) => CandidateResource::getUrl('view', ['record' => $record]))
+            ->recordUrl(fn (Candidate $record) => CandidateResource::getUrl('view', ['record' => $record]))
             ->actions([
                 Action::make('status')
                     ->color(Color::Blue)
@@ -335,7 +335,7 @@ class CandidateResource extends Resource
                         Select::make('status')
                             ->options(CandidateStatus::class),
                     ])
-                    ->action(fn(Candidate $record, array $data) => $record->update($data)),
+                    ->action(fn (Candidate $record, array $data) => $record->update($data)),
                 EditAction::make(),
                 DeleteAction::make(),
             ])
@@ -357,20 +357,20 @@ class CandidateResource extends Resource
                         ])
                         ->deselectRecordsAfterCompletion()
                         ->action(function (Collection $records, array $data) {
-                            $records->each(fn(Candidate $record) => $record->update([
+                            $records->each(fn (Candidate $record) => $record->update([
                                 'status' => $data['status'],
                             ]));
                         }),
                     BulkAction::make('change_position')
-                        ->visible(fn(Page $livewire) => $livewire instanceof Pages\ListCandidates)
+                        ->visible(fn (Page $livewire) => $livewire instanceof Pages\ListCandidates)
                         ->icon('heroicon-s-check-circle')
                         ->form([
                             Select::make('position')
-                                ->relationship('position', 'title', fn(EloquentBuilder $query) => $query->where('status', PositionStatus::OPEN)),
+                                ->relationship('position', 'title', fn (EloquentBuilder $query) => $query->where('status', PositionStatus::OPEN)),
                         ])
                         ->deselectRecordsAfterCompletion()
                         ->action(function (Collection $records, array $data) {
-                            $records->each(fn(Candidate $record) => $record->update([
+                            $records->each(fn (Candidate $record) => $record->update([
                                 'position_id' => $data['position'],
                             ]));
                         }),
@@ -396,9 +396,9 @@ class CandidateResource extends Resource
 
                                 return Email::pluck('name', 'id');
                             })
-                            ->suffixAction(fn(Get $get) => $get('email') !== null ? FormAction::make('view_email')
+                            ->suffixAction(fn (Get $get) => $get('email') !== null ? FormAction::make('view_email')
                                 ->icon('heroicon-o-eye')
-                                ->url(fn() => EmailResource::getUrl('edit', ['record' => $get('email')]), true)
+                                ->url(fn () => EmailResource::getUrl('edit', ['record' => $get('email')]), true)
                                 : null
                             ),
                     ])
@@ -409,7 +409,7 @@ class CandidateResource extends Resource
                                 ->performedOn($record)
                                 ->causedBy(auth()->user())
                                 ->event('send_email')
-                                ->log('Email requested to be sent to ' . $record->name . ' (' . $record->email . ')');
+                                ->log('Email requested to be sent to '.$record->name.' ('.$record->email.')');
 
                             SendEmailJob::dispatch($email, $record)->delay(now()->addSeconds($index * 30));
                         });
@@ -417,8 +417,8 @@ class CandidateResource extends Resource
                         Notification::make()
                             ->success()
                             ->title('Email Sent')
-                            ->body('Email has been sent to ' . $records->count() . ' candidate(s). <br>' .
-                                'ETA: <b>' . now()->addSeconds($records->count() * 30)->shortRelativeDiffForHumans() . '</b>'
+                            ->body('Email has been sent to '.$records->count().' candidate(s). <br>'.
+                                'ETA: <b>'.now()->addSeconds($records->count() * 30)->shortRelativeDiffForHumans().'</b>'
                             )
                             ->send();
                     })
@@ -429,14 +429,14 @@ class CandidateResource extends Resource
                     ->form(Pages\ViewCandidate::getOfferLetterForm())
                     ->action(function (Collection $records, array $data) {
                         $candidates = $records
-                            ->reject(fn(Candidate $record) => $record->status === CandidateStatus::INTERVIEW);
+                            ->reject(fn (Candidate $record) => $record->status === CandidateStatus::INTERVIEW);
 
                         if ($candidates->count() > 0) {
                             Notification::make()
                                 ->title('Invalid Candidates')
-                                ->body('The following candidates are not in interview status: <br>' .
-                                    $candidates->map(fn(Candidate $candidate) => $candidate->name . ' (' . $candidate->email . ')')->join('<br>')
-                                    . '<br>Please change their status to interview first.'
+                                ->body('The following candidates are not in interview status: <br>'.
+                                    $candidates->map(fn (Candidate $candidate) => $candidate->name.' ('.$candidate->email.')')->join('<br>')
+                                    .'<br>Please change their status to interview first.'
                                 )
                                 ->danger()
                                 ->send();
@@ -444,8 +444,8 @@ class CandidateResource extends Resource
                             return;
                         }
 
-                        $records->filter(fn(Candidate $record) => $record->getMedia('offer_letters')->count() === 0)//only generate offer letter for candidates that don't have offer letter yet
-                        ->each(fn(Candidate $record) => GenerateOfferLetterJob::dispatch($record, $data['pay'], $data['working_from'], $data['working_to']));
+                        $records->filter(fn (Candidate $record) => $record->getMedia('offer_letters')->count() === 0)//only generate offer letter for candidates that don't have offer letter yet
+                            ->each(fn (Candidate $record) => GenerateOfferLetterJob::dispatch($record, $data['pay'], $data['working_from'], $data['working_to']));
 
                         Notification::make()
                             ->title('Offer Letter Generated')
@@ -481,7 +481,7 @@ class CandidateResource extends Resource
                 SpatieTagsInput::make('tags'),
             ])
             ->action(function (Collection $records, array $data, $livewire) {
-                $records->each(fn(Candidate $customer) => $customer->attachTags(
+                $records->each(fn (Candidate $customer) => $customer->attachTags(
                     tags: $livewire->mountedTableBulkActionData['tags']
                 ));
 
@@ -498,19 +498,19 @@ class CandidateResource extends Resource
         return BulkAction::make('remove_tags')
             ->icon('heroicon-s-tag')
             ->color('danger')
-            ->form(fn($records) => [
+            ->form(fn ($records) => [
                 Select::make('tags')
                     ->multiple()
-                    ->options(fn() => Tag::query()
+                    ->options(fn () => Tag::query()
                         ->pluck('name')
-                        ->mapWithKeys(fn($tag) => [$tag => $tag])
+                        ->mapWithKeys(fn ($tag) => [$tag => $tag])
                     ),
             ])
             ->action(function (Collection $records, array $data) {
-                if (!isset($data['tags'])) {
+                if (! isset($data['tags'])) {
                     return;
                 }
-                $records->each(fn(Candidate $candidate) => $candidate->detachTags(
+                $records->each(fn (Candidate $candidate) => $candidate->detachTags(
                     tags: $data['tags']
                 ));
 
