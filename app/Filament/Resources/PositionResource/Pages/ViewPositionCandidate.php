@@ -26,11 +26,7 @@ class ViewPositionCandidate extends ManageRelatedRecords
 
     public function form(Form $form): Form
     {
-        return CandidateResource::form($form)
-            ->fill([
-                'position_id' => $this->record->getKey(),
-                'status' => CandidateStatus::PENDING->value,
-            ]);
+        return CandidateResource::form($form);
     }
 
     public function table(Table $table): Table
@@ -51,7 +47,10 @@ class ViewPositionCandidate extends ManageRelatedRecords
                     ->label('Status'),
             ])
             ->headerActions([
-                CreateAction::make(),
+                CreateAction::make()
+                    ->fillForm([
+                        'position_id' => $this->record->id,
+                    ]),
             ]);
     }
 }
