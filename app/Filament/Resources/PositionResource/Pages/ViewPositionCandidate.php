@@ -26,7 +26,11 @@ class ViewPositionCandidate extends ManageRelatedRecords
 
     public function form(Form $form): Form
     {
-        return CandidateResource::form($form);
+        return CandidateResource::form($form)
+            ->fill([
+                'position_id' => $this->record->getKey(),
+                'status' => CandidateStatus::PENDING->value,
+            ]);
     }
 
     public function table(Table $table): Table
