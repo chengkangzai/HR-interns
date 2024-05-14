@@ -177,9 +177,24 @@ class CandidateResource extends Resource
                                         'PhD' => 'PhD',
                                         'Others' => 'Others',
                                     ]),
-                                TextInput::make('major')->prefix('in '),
-                                TextInput::make('university')->prefix('from '),
-                                TextInput::make('gpa')->prefix('with GPA '),
+                                TextInput::make('major')
+                                    ->reactive()
+                                    ->afterStateUpdated(function (?string $state,Set $set){
+                                        if ($state){
+                                            $set('major',str($state)->title());
+                                        }
+                                    })
+                                    ->prefix('in '),
+                                TextInput::make('university')
+                                    ->reactive()
+                                    ->afterStateUpdated(function (?string $state,Set $set){
+                                        if ($state){
+                                            $set('university',str($state)->title());
+                                        }
+                                    })
+                                    ->prefix('from '),
+                                TextInput::make('gpa')
+                                    ->prefix('with GPA '),
                                 Fieldset::make('from_to')
                                     ->label('From - To')
                                     ->columns(2)
