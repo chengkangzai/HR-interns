@@ -179,17 +179,17 @@ class CandidateResource extends Resource
                                     ]),
                                 TextInput::make('major')
                                     ->reactive()
-                                    ->afterStateUpdated(function (?string $state,Set $set){
-                                        if ($state){
-                                            $set('major',str($state)->title());
+                                    ->afterStateUpdated(function (?string $state, Set $set) {
+                                        if ($state) {
+                                            $set('major', str($state)->title());
                                         }
                                     })
                                     ->prefix('in '),
                                 TextInput::make('university')
                                     ->reactive()
-                                    ->afterStateUpdated(function (?string $state,Set $set){
-                                        if ($state){
-                                            $set('university',str($state)->title());
+                                    ->afterStateUpdated(function (?string $state, Set $set) {
+                                        if ($state) {
+                                            $set('university', str($state)->title());
                                         }
                                     })
                                     ->prefix('from '),
