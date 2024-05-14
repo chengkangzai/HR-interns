@@ -12,6 +12,7 @@ use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\Tags\HasTags;
 
 class Candidate extends Model implements HasMedia
 {
@@ -19,6 +20,7 @@ class Candidate extends Model implements HasMedia
     use InteractsWithMedia;
     use LogsActivity;
     use Notifiable;
+    use HasTags;
     use SoftDeletes;
 
     protected $fillable = [

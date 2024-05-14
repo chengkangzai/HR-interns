@@ -20,6 +20,7 @@ use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
+use Filament\Forms\Components\SpatieTagsInput;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
@@ -31,16 +32,18 @@ use Filament\Support\Colors\Color;
 use Filament\Support\Enums\FontFamily;
 use Filament\Tables\Actions\Action;
 use Filament\Tables\Actions\BulkAction;
+use Filament\Tables\Actions\BulkActionGroup;
 use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Actions\DeleteBulkAction;
 use Filament\Tables\Actions\EditAction;
-use Filament\Tables\Actions\ViewAction;
+use Filament\Tables\Columns\SpatieTagsColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Support\Collection;
+use Spatie\Tags\Tag;
 use Ysfkaya\FilamentPhoneInput\Forms\PhoneInput;
 
 class CandidateResource extends Resource
@@ -81,6 +84,8 @@ class CandidateResource extends Resource
                         ->url('https://wa.me/'.str_replace(['+', ' ', '(', ')', '-'], '', $state), true)
                     )
                     ->formatOnDisplay(true),
+
+                SpatieTagsInput::make('tags'),
             ]),
 
             Section::make([
@@ -281,6 +286,9 @@ class CandidateResource extends Resource
 
                 TextColumn::make('status')
                     ->badge(),
+
+                SpatieTagsColumn::make('tags')
+                    ->toggleable(),
             ])
             ->filters([
                 SelectFilter::make('status')
@@ -296,6 +304,7 @@ class CandidateResource extends Resource
 
                 TrashedFilter::make(),
             ])
+            ->recordUrl(fn (Candidate $record) => CandidateResource::getUrl('view', ['record' => $record]))
             ->actions([
                 Action::make('status')
                     ->color(Color::Blue)
@@ -305,13 +314,50 @@ class CandidateResource extends Resource
                             ->options(CandidateStatus::class),
                     ])
                     ->action(fn (Candidate $record, array $data) => $record->update($data)),
-                ViewAction::make()
-                    ->url(fn (Candidate $record) => CandidateResource::getUrl('view', ['record' => $record]), true),
                 EditAction::make(),
                 DeleteAction::make(),
             ])
             ->bulkActions([
-                DeleteBulkAction::make(),
+                BulkActionGroup::make([
+                    self::getAddTagsBulkAction(),
+
+                    self::getRemoveTagsBulkAction(),
+                ])
+                    ->label('Tags')
+                    ->icon('heroicon-s-tag'),
+
+                BulkActionGroup::make([
+                    BulkAction::make('change_status')
+                        ->icon('heroicon-s-check-circle')
+                        ->form([
+                            Select::make('status')
+                                ->options(CandidateStatus::class),
+                        ])
+                        ->deselectRecordsAfterCompletion()
+                        ->action(function (Collection $records, array $data) {
+                            $records->each(fn (Candidate $record) => $record->update([
+                                'status' => $data['status'],
+                            ]));
+                        }),
+                    BulkAction::make('change_position')
+                        ->visible(fn (Page $livewire) => $livewire instanceof Pages\ListCandidates)
+                        ->icon('heroicon-s-check-circle')
+                        ->form([
+                            Select::make('position')
+                                ->relationship('position', 'title', fn (EloquentBuilder $query) => $query->where('status', PositionStatus::OPEN)),
+                        ])
+                        ->deselectRecordsAfterCompletion()
+                        ->action(function (Collection $records, array $data) {
+                            $records->each(fn (Candidate $record) => $record->update([
+                                'position_id' => $data['position'],
+                            ]));
+                        }),
+                ])
+                    ->label('Edit')
+                    ->icon('heroicon-s-pencil'),
+
+                DeleteBulkAction::make()
+                    ->label('Delete'),
                 BulkAction::make('send_email')
                     ->icon('heroicon-o-envelope-open')
                     ->form([
@@ -355,31 +401,6 @@ class CandidateResource extends Resource
                             ->send();
                     })
                     ->deselectRecordsAfterCompletion(true),
-                BulkAction::make('change_status')
-                    ->icon('heroicon-s-check-circle')
-                    ->form([
-                        Select::make('status')
-                            ->options(CandidateStatus::class),
-                    ])
-                    ->deselectRecordsAfterCompletion()
-                    ->action(function (Collection $records, array $data) {
-                        $records->each(fn (Candidate $record) => $record->update([
-                            'status' => $data['status'],
-                        ]));
-                    }),
-                BulkAction::make('change_position')
-                    ->visible(fn (Page $livewire) => $livewire instanceof Pages\ListCandidates)
-                    ->icon('heroicon-s-check-circle')
-                    ->form([
-                        Select::make('position')
-                            ->relationship('position', 'title', fn (EloquentBuilder $query) => $query->where('status', PositionStatus::OPEN)),
-                    ])
-                    ->deselectRecordsAfterCompletion()
-                    ->action(function (Collection $records, array $data) {
-                        $records->each(fn (Candidate $record) => $record->update([
-                            'position_id' => $data['position'],
-                        ]));
-                    }),
                 BulkAction::make('generate_offer_letter')
                     ->icon('heroicon-o-document')
                     ->deselectRecordsAfterCompletion()
@@ -427,5 +448,55 @@ class CandidateResource extends Resource
     public static function getGloballySearchableAttributes(): array
     {
         return ['name', 'email'];
+    }
+
+    private static function getAddTagsBulkAction(): BulkAction
+    {
+        return BulkAction::make('add_tags')
+            ->icon('heroicon-s-tag')
+            ->color('success')
+            ->form([
+                SpatieTagsInput::make('tags'),
+            ])
+            ->action(function (Collection $records, array $data, $livewire) {
+                $records->each(fn (Candidate $customer) => $customer->attachTags(
+                    tags: $livewire->mountedTableBulkActionData['tags']
+                ));
+
+                Notification::make('success')
+                    ->success()
+                    ->title('Tags updated successfully.')
+                    ->body('The selected candidates have been updated.')
+                    ->send();
+            });
+    }
+
+    private static function getRemoveTagsBulkAction(): BulkAction
+    {
+        return BulkAction::make('remove_tags')
+            ->icon('heroicon-s-tag')
+            ->color('danger')
+            ->form(fn ($records) => [
+                Select::make('tags')
+                    ->multiple()
+                    ->options(fn () => Tag::query()
+                        ->pluck('name')
+                        ->mapWithKeys(fn ($tag) => [$tag => $tag])
+                    ),
+            ])
+            ->action(function (Collection $records, array $data) {
+                if (! isset($data['tags'])) {
+                    return;
+                }
+                $records->each(fn (Candidate $candidate) => $candidate->detachTags(
+                    tags: $data['tags']
+                ));
+
+                Notification::make('success')
+                    ->success()
+                    ->title('Tags updated successfully.')
+                    ->body('The selected candidates have been updated.')
+                    ->send();
+            });
     }
 }
