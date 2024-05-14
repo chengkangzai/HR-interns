@@ -8,4 +8,3 @@ Route::fallback(function () {
 
 //TODO : Add Calendar for Position
 //TODO : Add Tagging for Candidate
-

@@ -17,10 +17,10 @@ use Spatie\Tags\HasTags;
 class Candidate extends Model implements HasMedia
 {
     use HasFactory;
+    use HasTags;
     use InteractsWithMedia;
     use LogsActivity;
     use Notifiable;
-    use HasTags;
     use SoftDeletes;
 
     protected $fillable = [
