@@ -35,6 +35,7 @@ class AdminPanelProvider extends PanelProvider
             ->colors([
                 'primary' => Color::Amber,
             ])
+            ->sidebarCollapsibleOnDesktop()
             ->plugins([
                 FilamentJobsMonitorPlugin::make(),
                 FilamentFullCalendarPlugin::make()
