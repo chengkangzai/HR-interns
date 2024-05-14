@@ -90,6 +90,7 @@ class EmailResource extends Resource
             ->filters([
                 TrashedFilter::make(),
                 SelectFilter::make('position_id')
+                    ->label('Position')
                     ->hidden(fn ($livewire) => $livewire instanceof ViewPositionEmail)
                     ->relationship('position', 'title'),
             ])
@@ -102,7 +103,13 @@ class EmailResource extends Resource
                     ]),
             ])
             ->defaultSort('sort')
-            ->reorderable('sort');
+            ->reorderable(function ($livewire) {
+                if ($livewire instanceof ViewPositionEmail) {
+                    return 'sort';
+                }
+
+                return null;
+            });
     }
 
     public static function getPages(): array
