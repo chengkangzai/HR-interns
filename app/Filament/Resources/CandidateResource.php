@@ -178,7 +178,7 @@ class CandidateResource extends Resource
                                         'Others' => 'Others',
                                     ]),
                                 TextInput::make('major')
-                                    ->reactive()
+                                    ->live(onBlur: true)
                                     ->afterStateUpdated(function (?string $state, Set $set) {
                                         if ($state) {
                                             $set('major', str($state)->title());
@@ -186,7 +186,7 @@ class CandidateResource extends Resource
                                     })
                                     ->prefix('in '),
                                 TextInput::make('university')
-                                    ->reactive()
+                                    ->live(onBlur: true)
                                     ->afterStateUpdated(function (?string $state, Set $set) {
                                         if ($state) {
                                             $set('university', str($state)->title());
