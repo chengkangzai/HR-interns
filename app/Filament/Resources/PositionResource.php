@@ -110,6 +110,7 @@ class PositionResource extends Resource
     public static function getRecordSubNavigation(Page $page): array
     {
         return $page->generateNavigationItems([
+            Pages\ViewPosition::class,
             Pages\ViewPositionCandidate::class,
             Pages\ViewPositionEmail::class,
         ]);

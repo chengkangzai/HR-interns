@@ -382,19 +382,22 @@ class CandidateResource extends Resource
                     ->label('Delete'),
                 BulkAction::make('send_email')
                     ->icon('heroicon-o-envelope-open')
-                    ->form([
+                    ->form(fn (Collection $records) => [
                         Select::make('email')
                             ->live()
-                            ->options(function ($livewire) {
+                            ->options(function ($livewire) use ($records) {
                                 if ($livewire instanceof ViewPositionCandidate) {
                                     /** @var Position $record */
                                     $record = $livewire->record;
 
                                     return Email::where('position_id', $record->id)
+                                        ->orderBy('sort')
                                         ->pluck('name', 'id');
                                 }
 
-                                return Email::pluck('name', 'id');
+                                return Email::whereIn('position_id', $records->pluck('position_id')->toArray())
+                                    ->orderBy('sort')
+                                    ->pluck('name', 'id');
                             })
                             ->suffixAction(fn (Get $get) => $get('email') !== null ? FormAction::make('view_email')
                                 ->icon('heroicon-o-eye')
