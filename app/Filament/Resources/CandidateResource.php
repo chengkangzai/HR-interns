@@ -125,7 +125,7 @@ class CandidateResource extends Resource
                     ->label('From - To')
                     ->visibleOn(['view', 'edit'])
                     ->content(fn (Get $get): string => $get('from') !== null && $get('to') !== null
-                        ? ceil(Carbon::parse('from')->floatDiffInWeeks(Carbon::parse('to'))).' weeks'
+                        ? ceil(Carbon::parse($get('from'))->floatDiffInWeeks(Carbon::parse($get('to')))).' weeks'
                         : 'N/A'
                     ),
             ]),
