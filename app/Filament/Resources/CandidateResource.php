@@ -117,9 +117,11 @@ class CandidateResource extends Resource
             ]),
 
             Section::make([
-                DatePicker::make('from'),
+                DatePicker::make('from')
+                    ->live(onBlur: true),
 
-                DatePicker::make('to'),
+                DatePicker::make('to')
+                    ->live(onBlur: true),
 
                 Placeholder::make('range')
                     ->label('From - To')
