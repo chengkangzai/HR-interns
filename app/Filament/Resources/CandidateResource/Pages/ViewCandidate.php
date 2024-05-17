@@ -46,6 +46,7 @@ class ViewCandidate extends ViewRecord
                         ->reactive()
                         ->options(function () {
                             return Email::where('position_id', $this->record->position_id)
+                                ->orderBy('sort')
                                 ->pluck('name', 'id');
                         })
                         ->suffixAction(fn (Get $get) => $get('mail') !== null ? FormAction::make('view_email')
