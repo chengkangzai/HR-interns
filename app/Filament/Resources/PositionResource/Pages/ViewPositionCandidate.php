@@ -50,6 +50,7 @@ class ViewPositionCandidate extends ManageRelatedRecords
                 CreateAction::make()
                     ->fillForm([
                         'position_id' => $this->record->id,
+                        'status'=> CandidateStatus::PENDING->value,
                     ]),
             ]);
     }
