@@ -10,7 +10,6 @@ use Filament\Resources\Resource;
 use Filament\Tables\Actions\BulkActionGroup;
 use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Actions\DeleteBulkAction;
-use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Spatie\Tags\Tag;
@@ -38,7 +37,7 @@ class TagsResource extends Resource
             ->columns([
                 TextColumn::make('name'),
                 TextColumn::make('Usage Count')
-                    ->getStateUsing(fn(Tag $record) => \DB::table('taggables')
+                    ->getStateUsing(fn (Tag $record) => \DB::table('taggables')
                         ->where('tag_id', $record->getKey())
                         ->count()),
             ])
