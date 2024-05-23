@@ -326,6 +326,12 @@ class CandidateResource extends Resource
                     ->relationship('position', 'title')
                     ->label('Position'),
 
+                SelectFilter::make('tags')
+                    ->relationship('tags', 'name')
+                    ->multiple()
+                    ->preload()
+                    ->getOptionLabelFromRecordUsing(fn (Tag $record) => $record->name),
+
                 TrashedFilter::make(),
             ])
             ->recordUrl(fn (Candidate $record) => CandidateResource::getUrl('view', ['record' => $record]))
