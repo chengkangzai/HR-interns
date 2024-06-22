@@ -21,8 +21,7 @@ class GenerateOfferLetterJob implements ShouldQueue
         public ?int $pay,
         public ?string $workingFrom = '09:00',
         public ?string $workingTo = '18:00',
-    ) {
-    }
+    ) {}
 
     public function handle(): void
     {

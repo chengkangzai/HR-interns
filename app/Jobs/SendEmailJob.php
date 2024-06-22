@@ -16,9 +16,7 @@ class SendEmailJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public function __construct(private readonly Email $email, private readonly Candidate $candidate)
-    {
-    }
+    public function __construct(private readonly Email $email, private readonly Candidate $candidate) {}
 
     public function handle(): void
     {

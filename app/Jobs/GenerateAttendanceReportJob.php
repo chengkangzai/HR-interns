@@ -23,8 +23,7 @@ class GenerateAttendanceReportJob implements ShouldQueue
 
     public function __construct(
         private readonly Candidate $candidate,
-    ) {
-    }
+    ) {}
 
     public function handle(): void
     {
