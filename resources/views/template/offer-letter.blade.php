@@ -1,7 +1,13 @@
 <html>
 <head>
     <meta content="text/html; charset=UTF-8" http-equiv="content-type">
-    <style type="text/css">ol {
+    <style type="text/css">
+        html {
+            margin-top: 15px;
+            margin-bottom: 5px;
+        }
+
+        ol {
             margin: 0;
             padding: 0
         }
@@ -198,45 +204,27 @@
 </head>
 <body class="c9">
 <div><p class="c2">
-    <span
-        style="overflow: hidden; display: inline-block; margin: 0.00px 0.00px; border: 0.00px solid #000000; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px); width: 454.50px; height: 59.36px;">
+
         <img
             src="data:image/png;base64,{{ base64_encode(file_get_contents(public_path('images/letter-head.png'))) }}"
-            style="width: 454.50px; height: 59.36px; margin-left: 0.00px; margin-top: 0.00px; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px);"
+            style="width: 600.50px; margin-left: 0.00px; margin-top: 0.00px; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px);"
             title="">
-    </span>
     </p>
 </div>
-<p class="c0 c4"><span class="c1"></span></p>
-<p class="c0 c4"><span class="c1"></span></p>
-<p class="c0"><span class="c1">Pixalink Sdn. Bhd.</span></p>
-<p class="c0"><span class="c1">ASBX Room, Level 7, </span></p>
-<p class="c0"><span class="c1">Asia Pacific University of Technology &amp; Innovation (APU), </span></p>
-<p class="c0"><span class="c1">Jalan Teknologi 5, </span></p>
-<p class="c0"><span class="c1">Taman Teknologi Malaysia, </span></p>
-<p class="c0"><span class="c1">57000 Kuala Lumpur, </span></p>
-<p class="c0"><span class="c1">Wilayah Persekutuan Kuala Lumpur.</span></p>
-<p class="c0"><span class="c5"><a class="c7"
-                                  href="https://www.google.com/url?q=https://pixalink.io&amp;sa=D&amp;source=editors&amp;ust=1705563401434888&amp;usg=AOvVaw3Jsw5xhlNy7olk88MM6Qb0">https://pixalink.io</a></span>
-</p>
-<p class="c0 c4"><span class="c1"></span></p>
+<hr>
 <p class="c0"><span class="c1">{{now()->format('d M Y')}}</span></p>
-<p class="c0 c4"><span class="c1"></span></p>
-<p class="c0"><span class="c1">{{ $candidate->name }}</span></p>
-<p class="c0"><span class="c1">{{ $candidate->email }}</span></p>
-<p class="c0 c4"><span class="c1"></span></p>
 <p class="c0"><span class="c1">Subject: Internship Offer - {{ $position->title }} Intern</span></p>
 <p class="c0 c4"><span class="c1"></span></p>
 <p class="c0"><span class="c1">Dear {{ $candidate->name }},</span></p>
 <p class="c0 c4"><span class="c1"></span></p>
-<p class="c3"><span class="c1">I am delighted to extend an offer to you for the {{ $position->title }} Internship position at Pixalink. Your impressive background, skillset, and passion for the industry stood out among many candidates, and we are confident that you will make valuable contributions to our team.</span>
+<p class="c3"><span class="c1">I am delighted to extend an offer to you for the {{ $position->title }} Internship position at Pixalink. </span>
 </p>
 <p class="c3 c4"><span class="c1"></span></p>
 <p class="c3"><span class="c1">The terms of your internship are as follows:</span></p>
 <p class="c3 c4"><span class="c1"></span></p>
 <p class="c3"><span class="c6">Start date:</span><span>&nbsp;Your internship will commence on </span><span
-            class="c8">{{ $candidate->from->toDateString() }}</span><span
-            class="c1">&nbsp;and is expected to last until {{ $candidate->to->toDateString() }}. ({{ ceil($candidate->from->floatDiffInWeeks($candidate->to)) }} weeks)</span>
+        class="c8">{{ $candidate->from->toDateString() }}</span><span
+        class="c1">&nbsp;and is expected to last until {{ $candidate->to->toDateString() }}. ({{ ceil($candidate->from->floatDiffInWeeks($candidate->to)) }} weeks)</span>
 </p>
 <p class="c3 c4"><span class="c1"></span></p>
 <p class="c3">
@@ -244,7 +232,9 @@
     <span class="c1">&nbsp;Your working schedule will be from {{$schedule['from']->format('g:iA')}} to {{$schedule['to']->format('g:iA')}}, 5 Days a week</span>
 </p>
 <p class="c3 c4"><span class="c1"></span></p>
-<p class="c3"><span class="c6">Stipend: </span><span>{{ intval($pay) == 0 ? 'No allowance' : 'RM'.number_format($pay, 2)}}</span></p>
+<p class="c3"><span
+        class="c6">Stipend: </span><span>{{ intval($pay) == 0 ? 'No allowance' : 'RM'.number_format($pay, 2)}}</span>
+</p>
 <p class="c3 c4"><span class="c1"></span></p>
 <p class="c3"><span class="c6">Location:</span><span class="c1">&nbsp;The internship will be based at our office located at ASBX Room, Level 7, Asia Pacific University of Technology &amp; Innovation (APU), Jalan Teknologi 5, Taman Teknologi Malaysia, 57000 Kuala Lumpur, Wilayah Persekutuan Kuala Lumpur. </span>
 </p>
@@ -265,17 +255,30 @@
 <p class="c3"><span class="c1">We look forward to having you as part of our team and are excited about the potential you bring. We are confident that this internship will be a mutually beneficial experience.</span>
 </p>
 <p class="c0 c4"><span class="c1"></span></p>
-<p class="c0"><span class="c1">Best regards,</span></p>
-<p class="c0 c4"><span class="c1"></span></p>
-<p class="c0"><span class="c1">Eddie Chong</span></p>
-<p class="c0"><span class="c1">Operation Manager</span></p>
-<p class="c0"><span class="c1">+60168390138</span></p>
-<p class="c0 c4"><span class="c1"></span></p>
-<p class="c0 c4"><span class="c1"></span></p>
-<p class="c0 c4"><span class="c1"></span></p>
+<table>
+    <td>
+        <p class="c0"><span class="c1">Best regards,</span></p>
+        <p class="c0 c4"><span class="c1"></span></p>
+        <img
+            src="data:image/png;base64,{{ base64_encode(file_get_contents(storage_path('signature.jpeg'))) }}"
+            style="height: 80px; margin-left: 0.00px; margin-top: 0.00px; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px);"
+            title="">
+        <p class="c0"><span class="c1">Eddie Chong</span></p>
+        <p class="c0"><span class="c1">Operation Manager</span></p>
+        <p class="c0"><span class="c1">+60168390138</span></p>
+    </td>
+    <td>
+        <img
+            src="data:image/png;base64,{{ base64_encode(file_get_contents(storage_path('Company-Stamp-For-Office-Use-Only.png'))) }}"
+            style="height: 120px; margin-left: 10.00px; margin-top: 0.00px; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px);"
+            title="">
+    </td>
+</table>
 <p class="c0 c4"><span class="c1"></span></p>
 <p class="c0"><span class="c1">I, ____________________________, accepted the internship offer for the {{ $position->title }} Internship position at Pixalink Sdn. Bhd.</span>
 </p>
+<p class="c0 c4"><span class="c1"></span></p>
+<p class="c0 c4"><span class="c1"></span></p>
 <p class="c0 c4"><span class="c1"></span></p>
 <p class="c0 c4"><span class="c1"></span></p>
 <p class="c0"><span class="c1">___________________________</span></p>
@@ -283,5 +286,5 @@
 <p class="c0"><span class="c1">Name:</span></p>
 <p class="c0"><span class="c1">IC:</span></p>
 <p class="c0"><span class="c1">Date:</span></p>
-<p class="c0 c4"><span class="c1"></span></p></body>
+</body>
 </html>
