@@ -9,30 +9,30 @@
     "license": "MIT",
     "require": {
         "php": "^8.1",
-        "barryvdh/laravel-dompdf": "^2.1.1",
+        "barryvdh/laravel-dompdf": "^2.2.0",
         "chengkangzai/laravel-office-holidays": "^0.0.1",
         "croustibat/filament-jobs-monitor": "^2.4",
-        "filament/filament": "^3.2.73",
-        "filament/spatie-laravel-media-library-plugin": "^3.2.73",
-        "filament/spatie-laravel-tags-plugin": "^3.2",
+        "filament/filament": "^3.2.92",
+        "filament/spatie-laravel-media-library-plugin": "^3.2.92",
+        "filament/spatie-laravel-tags-plugin": "^3.2.92",
         "guzzlehttp/guzzle": "^7.8.1",
-        "laravel/framework": "^10.48.10",
+        "laravel/framework": "^10.48.14",
         "laravel/sanctum": "^3.3.3",
         "laravel/tinker": "^2.9",
-        "league/flysystem-aws-s3-v3": "^3.27",
+        "league/flysystem-aws-s3-v3": "^3.28",
         "saade/filament-fullcalendar": "^3.2.2",
         "spatie/laravel-activitylog": "^4.8",
-        "ysfkaya/filament-phone-input": "^2.3.5",
+        "ysfkaya/filament-phone-input": "^2.3.6",
         "z3d0x/filament-logger": "^0.6.3"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23.1",
-        "laravel/pint": "^1.15.3",
-        "laravel/sail": "^1.29.1",
-        "mockery/mockery": "^1.6.11",
+        "laravel/pint": "^1.16.1",
+        "laravel/sail": "^1.29.3",
+        "mockery/mockery": "^1.6.12",
         "nunomaduro/collision": "^7.10",
-        "phpunit/phpunit": "^10.5.20",
-        "spatie/laravel-ignition": "^2.7.0"
+        "phpunit/phpunit": "^10.5.24",
+        "spatie/laravel-ignition": "^2.8.0"
     },
     "autoload": {
         "psr-4": {
