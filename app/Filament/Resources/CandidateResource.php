@@ -312,7 +312,6 @@ class CandidateResource extends Resource
                     ->badge(),
 
                 SpatieTagsColumn::make('tags')
-                    ->searchable()
                     ->toggleable(),
             ])
             ->filters([
