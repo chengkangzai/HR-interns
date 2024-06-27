@@ -301,10 +301,12 @@ class CandidateResource extends Resource
                     ->hidden(fn ($livewire) => $livewire instanceof ViewPositionCandidate),
 
                 TextColumn::make('from')
+                    ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->date(),
 
                 TextColumn::make('to')
+                    ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->date(),
 
