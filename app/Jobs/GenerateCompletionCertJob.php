@@ -24,7 +24,7 @@ class GenerateCompletionCertJob implements ShouldQueue
         $pdf = Pdf::loadView('template.completion-cert', [
             'candidate' => $this->candidate,
         ])
-            ->setPaper('A4','landscape')
+            ->setPaper('A4', 'landscape')
             ->setOption([
                 'dpi' => 170,
                 'isRemoteEnabled' => true,

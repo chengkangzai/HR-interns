@@ -92,8 +92,8 @@ class ViewCandidate extends ViewRecord
                     }
 
                     if (count($data['attachments']) !== 0) {
-                        $attachments= collect($data['attachments'])
-                            ->map(fn(string $attachment) => $this->record->getMedia($attachment));
+                        $attachments = collect($data['attachments'])
+                            ->map(fn (string $attachment) => $this->record->getMedia($attachment));
                         $mail = new DefaultMail($this->record, Email::find($data['mail']), $attachments);
                     } else {
                         $mail = new DefaultMail($this->record, Email::find($data['mail']));
@@ -164,7 +164,7 @@ class ViewCandidate extends ViewRecord
                     ->icon('heroicon-o-document')
                     ->label('Generate Completion Cert')
                     ->disabled(fn (Candidate $record) => $record->position_id == null)
-                    ->action(function (Candidate $record,$livewire) {
+                    ->action(function (Candidate $record, $livewire) {
                         GenerateCompletionCertJob::dispatch($record);
 
                         Notification::make('generated')
