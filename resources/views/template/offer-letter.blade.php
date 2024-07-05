@@ -77,7 +77,7 @@
         }
 
         .c4 {
-            height: 11pt
+            height: 8pt
         }
 
         .c6 {
@@ -212,7 +212,7 @@
     </p>
 </div>
 <hr>
-<p class="c0"><span class="c1">{{now()->format('d M Y')}}</span></p>
+<p class="c0"><span class="c1">{{now()->format('d F Y')}}</span></p>
 <p class="c0"><span class="c1">Subject: Internship Offer - {{ $position->title }} Intern</span></p>
 <p class="c0 c4"><span class="c1"></span></p>
 <p class="c0"><span class="c1">Dear {{ $candidate->name }},</span></p>
