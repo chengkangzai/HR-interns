@@ -3,6 +3,8 @@
 namespace App\Providers;
 
 use App\Listeners\LogSentMessage;
+use App\Models\Email;
+use App\Observers\EmailObserver;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -16,6 +18,12 @@ class EventServiceProvider extends ServiceProvider
         ],
         MessageSent::class => [
             LogSentMessage::class,
+        ],
+    ];
+
+    protected $observers = [
+        Email::class => [
+            EmailObserver::class,
         ],
     ];
 
