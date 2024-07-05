@@ -45,6 +45,7 @@ class ViewCandidate extends ViewRecord
                 ->label('Send')
                 ->form([
                     Select::make('mail')
+                        ->required()
                         ->reactive()
                         ->options(function () {
                             return Email::where('position_id', $this->record->position_id)
@@ -59,24 +60,31 @@ class ViewCandidate extends ViewRecord
 
                     Section::make('Attachments')
                         ->schema([
-
+                            Select::make('attachments')
+                                ->options([
+                                    'offer_letters' => 'Offer Letter',
+                                    'wfh_letter' => 'WFH Letter',
+                                    'completion_letter' => 'Completion Letter',
+                                    'attendance_report' => 'Attendance Report',
+                                ]),
                         ]),
                 ])
                 ->action(function (array $data, ViewCandidate $livewire) {
-                    if ($data['include_offer_letter']) {
-                        $media = $this->record->getFirstMedia('offer_letters');
+                    if ($data['attachments']) {
+                        $media = $this->record->getFirstMedia($data['attachments']);
                         if (! $media) {
+                            $name = str($data['attachments'])->replace('_', ' ')->title();
                             Notification::make()
-                                ->title('Offer Letter Not Found')
-                                ->body('The offer letter is not found. Please generate/attach the offer letter first.')
+                                ->title($name.' Not Found')
+                                ->body('The '.$name.' is not found. Please generate/attach the '.$name.' first.')
                                 ->danger()
                                 ->send();
                             $livewire->halt();
                         }
                     }
 
-                    if ($data['include_offer_letter']) {
-                        $mail = new DefaultMail($this->record, Email::find($data['mail']), $this->record->getMedia('offer_letters'));
+                    if ($data['attachments']) {
+                        $mail = new DefaultMail($this->record, Email::find($data['mail']), $this->record->getMedia($data['attachments']));
                     } else {
                         $mail = new DefaultMail($this->record, Email::find($data['mail']));
                     }

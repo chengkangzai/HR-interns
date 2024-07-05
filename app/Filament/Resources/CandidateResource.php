@@ -140,6 +140,7 @@ class CandidateResource extends Resource
 
                 SpatieMediaLibraryFileUpload::make('offer_letter')
                     ->multiple()
+                    ->hiddenOn('create')
                     ->label('Offer Letter')
                     ->collection('offer_letters')
                     ->acceptedFileTypes(['application/pdf']),
@@ -147,6 +148,24 @@ class CandidateResource extends Resource
                 SpatieMediaLibraryFileUpload::make('documents')
                     ->label('Other Documents')
                     ->collection('other_documents')
+                    ->multiple(),
+
+                SpatieMediaLibraryFileUpload::make('wfh_letter')
+                    ->label('WFH Letter')
+                    ->collection('wfh_letter')
+                    ->hiddenOn('create')
+                    ->multiple(),
+
+                SpatieMediaLibraryFileUpload::make('completion_letter')
+                    ->label('Completion Letter')
+                    ->collection('completion_letter')
+                    ->hiddenOn('create')
+                    ->multiple(),
+
+                SpatieMediaLibraryFileUpload::make('attendance_report')
+                    ->label('Attendance Letter')
+                    ->collection('attendance_report')
+                    ->hiddenOn('create')
                     ->multiple(),
             ]),
 
