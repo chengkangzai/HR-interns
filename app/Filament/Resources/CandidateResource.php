@@ -162,6 +162,12 @@ class CandidateResource extends Resource
                     ->hiddenOn('create')
                     ->multiple(),
 
+                SpatieMediaLibraryFileUpload::make('completion_cert')
+                    ->label('Completion Certificate')
+                    ->collection('completion_cert')
+                    ->hiddenOn('create')
+                    ->multiple(),
+
                 SpatieMediaLibraryFileUpload::make('attendance_report')
                     ->label('Attendance Letter')
                     ->collection('attendance_report')

@@ -6,6 +6,7 @@ use App\Enums\CandidateStatus;
 use App\Filament\Resources\CandidateResource;
 use App\Filament\Resources\EmailResource;
 use App\Jobs\GenerateAttendanceReportJob;
+use App\Jobs\GenerateCompletionCertJob;
 use App\Jobs\GenerateCompletionLetterJob;
 use App\Jobs\GenerateOfferLetterJob;
 use App\Jobs\GenerateWFHLetterJob;
@@ -145,7 +146,7 @@ class ViewCandidate extends ViewRecord
                             ->send();
                     }),
 
-                Action::make('generate_completion')
+                Action::make('generate_completion_letter')
                     ->icon('heroicon-o-document')
                     ->label('Generate Completion Letter')
                     ->disabled(fn (Candidate $record) => $record->position_id == null)
@@ -157,6 +158,22 @@ class ViewCandidate extends ViewRecord
                             ->body('The Completion Letter will be generating in background. Please wait for a while.')
                             ->success()
                             ->send();
+                    }),
+
+                Action::make('generate_completion_cert')
+                    ->icon('heroicon-o-document')
+                    ->label('Generate Completion Cert')
+                    ->disabled(fn (Candidate $record) => $record->position_id == null)
+                    ->action(function (Candidate $record,$livewire) {
+                        GenerateCompletionCertJob::dispatch($record);
+
+                        Notification::make('generated')
+                            ->title('Completion Cert Generating')
+                            ->body('The Completion Cert will be generating in background. Please wait for a while.')
+                            ->success()
+                            ->send();
+
+                        $livewire->dispatch('refresh');
                     }),
 
                 Action::make('generate_attendance_report')
