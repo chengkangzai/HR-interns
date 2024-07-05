@@ -63,5 +63,6 @@ class Candidate extends Model implements HasMedia
         $this->addMediaCollection('wfh_letter');
         $this->addMediaCollection('completion_letter');
         $this->addMediaCollection('attendance_report');
+        $this->addMediaCollection('completion_cert');
     }
 }

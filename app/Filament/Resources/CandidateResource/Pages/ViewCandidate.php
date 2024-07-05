@@ -68,6 +68,7 @@ class ViewCandidate extends ViewRecord
                                     'wfh_letter' => 'WFH Letter',
                                     'completion_letter' => 'Completion Letter',
                                     'attendance_report' => 'Attendance Report',
+                                    'completion_cert' => 'Completion Cert',
                                 ]),
                         ]),
                 ])
