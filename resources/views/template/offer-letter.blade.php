@@ -223,8 +223,8 @@
 <p class="c3"><span class="c1">The terms of your internship are as follows:</span></p>
 <p class="c3 c4"><span class="c1"></span></p>
 <p class="c3"><span class="c6">Start date:</span><span>&nbsp;Your internship will commence on </span><span
-        class="c8">{{ $candidate->from->toDateString() }}</span><span
-        class="c1">&nbsp;and is expected to last until {{ $candidate->to->toDateString() }}. ({{ ceil($candidate->from->floatDiffInWeeks($candidate->to)) }} weeks)</span>
+        class="c8">{{ $candidate->from->format('d F Y') }}</span><span
+        class="c1">&nbsp;and is expected to last until {{ $candidate->to->format('d F Y') }}. ({{ ceil($candidate->from->floatDiffInWeeks($candidate->to)) }} weeks)</span>
 </p>
 <p class="c3 c4"><span class="c1"></span></p>
 <p class="c3">

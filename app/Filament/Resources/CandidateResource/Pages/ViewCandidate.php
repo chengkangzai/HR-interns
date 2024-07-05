@@ -6,6 +6,7 @@ use App\Enums\CandidateStatus;
 use App\Filament\Resources\CandidateResource;
 use App\Filament\Resources\EmailResource;
 use App\Jobs\GenerateAttendanceReportJob;
+use App\Jobs\GenerateCompletionLetterJob;
 use App\Jobs\GenerateOfferLetterJob;
 use App\Jobs\GenerateWFHLetterJob;
 use App\Mail\DefaultMail;
@@ -121,8 +122,22 @@ class ViewCandidate extends ViewRecord
                         GenerateWFHLetterJob::dispatch($record);
 
                         Notification::make('generated')
-                            ->title('WFH Generated')
-                            ->body('The WFH letter will be generated in background. Please wait for a while.')
+                            ->title('WFH Letter Generating')
+                            ->body('The WFH letter will be generating in background. Please wait for a while.')
+                            ->success()
+                            ->send();
+                    }),
+
+                Action::make('generate_completion')
+                    ->icon('heroicon-o-document')
+                    ->label('Generate Completion Letter')
+                    ->disabled(fn(Candidate $record) => $record->position_id == null)
+                    ->action(function (Candidate $record) {
+                        GenerateCompletionLetterJob::dispatch($record);
+
+                        Notification::make('generated')
+                            ->title('Completion Letter Generating')
+                            ->body('The Completion Letter will be generating in background. Please wait for a while.')
                             ->success()
                             ->send();
                     }),
