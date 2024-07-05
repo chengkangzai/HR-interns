@@ -4,7 +4,6 @@ namespace App\Jobs;
 
 use App\Models\Candidate;
 use Barryvdh\DomPDF\Facade\Pdf;
-use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -20,7 +19,8 @@ class GenerateCompletionLetterJob implements ShouldQueue
         public Candidate $candidate
     ) {}
 
-    public function handle(): void {
+    public function handle(): void
+    {
         $pdf = Pdf::loadView('template.completion-letter', [
             'candidate' => $this->candidate,
         ])

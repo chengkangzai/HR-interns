@@ -40,7 +40,7 @@ class ViewCandidate extends ViewRecord
         return [
             EditAction::make(),
             Action::make('audit')
-                ->url(fn(Candidate $record) => CandidateResource::getUrl('audit', ['record' => $record->id])),
+                ->url(fn (Candidate $record) => CandidateResource::getUrl('audit', ['record' => $record->id])),
             Action::make('send')
                 ->icon('heroicon-o-paper-airplane')
                 ->label('Send')
@@ -52,9 +52,9 @@ class ViewCandidate extends ViewRecord
                                 ->orderBy('sort')
                                 ->pluck('name', 'id');
                         })
-                        ->suffixAction(fn(Get $get) => $get('mail') !== null ? FormAction::make('view_email')
+                        ->suffixAction(fn (Get $get) => $get('mail') !== null ? FormAction::make('view_email')
                             ->icon('heroicon-o-eye')
-                            ->url(fn() => EmailResource::getUrl('edit', ['record' => $get('mail')]), true)
+                            ->url(fn () => EmailResource::getUrl('edit', ['record' => $get('mail')]), true)
                             : null
                         ),
 
@@ -65,7 +65,7 @@ class ViewCandidate extends ViewRecord
                 ->action(function (array $data, ViewCandidate $livewire) {
                     if ($data['include_offer_letter']) {
                         $media = $this->record->getFirstMedia('offer_letters');
-                        if (!$media) {
+                        if (! $media) {
                             Notification::make()
                                 ->title('Offer Letter Not Found')
                                 ->body('The offer letter is not found. Please generate/attach the offer letter first.')
@@ -85,7 +85,7 @@ class ViewCandidate extends ViewRecord
                         ->performedOn($this->record)
                         ->causedBy(auth()->user())
                         ->event('send_email')
-                        ->log('Email requested to be sent to ' . $this->record->name . ' (' . $this->record->email . ')');
+                        ->log('Email requested to be sent to '.$this->record->name.' ('.$this->record->email.')');
 
                     Mail::to($this->record->email)
                         ->send($mail);
@@ -102,8 +102,8 @@ class ViewCandidate extends ViewRecord
                     ->icon('heroicon-o-document')
                     ->label('Generate Offer Letter')
                     ->form(self::getOfferLetterForm())
-                    ->visible(fn(Candidate $record) => $record->status === CandidateStatus::INTERVIEW)
-                    ->disabled(fn(Candidate $record) => $record->position_id == null)
+                    ->visible(fn (Candidate $record) => $record->status === CandidateStatus::INTERVIEW)
+                    ->disabled(fn (Candidate $record) => $record->position_id == null)
                     ->action(function (Candidate $record, array $data) {
                         GenerateOfferLetterJob::dispatch($record, $data['pay'], $data['working_from'], $data['working_to']);
 
@@ -117,7 +117,7 @@ class ViewCandidate extends ViewRecord
                 Action::make('generate_wfh')
                     ->icon('heroicon-o-document')
                     ->label('Generate WFH Letter')
-                    ->disabled(fn(Candidate $record) => $record->position_id == null)
+                    ->disabled(fn (Candidate $record) => $record->position_id == null)
                     ->action(function (Candidate $record) {
                         GenerateWFHLetterJob::dispatch($record);
 
@@ -131,7 +131,7 @@ class ViewCandidate extends ViewRecord
                 Action::make('generate_completion')
                     ->icon('heroicon-o-document')
                     ->label('Generate Completion Letter')
-                    ->disabled(fn(Candidate $record) => $record->position_id == null)
+                    ->disabled(fn (Candidate $record) => $record->position_id == null)
                     ->action(function (Candidate $record) {
                         GenerateCompletionLetterJob::dispatch($record);
 
@@ -142,19 +142,19 @@ class ViewCandidate extends ViewRecord
                             ->send();
                     }),
 
-            Action::make('generate_attendance_report')
-                ->icon('heroicon-o-document')
-                ->label('Generate Attendance Report')
-                ->visible(fn(Candidate $record) => $record->status === CandidateStatus::COMPLETED)
-                ->action(function (Candidate $record) {
-                    GenerateAttendanceReportJob::dispatch($record);
+                Action::make('generate_attendance_report')
+                    ->icon('heroicon-o-document')
+                    ->label('Generate Attendance Report')
+                    ->visible(fn (Candidate $record) => $record->status === CandidateStatus::COMPLETED)
+                    ->action(function (Candidate $record) {
+                        GenerateAttendanceReportJob::dispatch($record);
 
-                    Notification::make('generated')
-                        ->title('Attendance Report Generated')
-                        ->body('The offer letter will be generated in background. Please wait for a while.')
-                        ->success()
-                        ->send();
-                }),
+                        Notification::make('generated')
+                            ->title('Attendance Report Generated')
+                            ->body('The offer letter will be generated in background. Please wait for a while.')
+                            ->success()
+                            ->send();
+                    }),
             ]),
         ];
     }
@@ -189,7 +189,7 @@ class ViewCandidate extends ViewRecord
                         $to = Carbon::parse($get('working_to'));
                         $diff = $from->addHour()->diff($to);
 
-                        return $diff->format('%h hours') . ' (excluding 1 hour lunch break)';
+                        return $diff->format('%h hours').' (excluding 1 hour lunch break)';
                     }),
             ]),
         ];
