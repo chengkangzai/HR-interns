@@ -61,6 +61,7 @@ class ViewCandidate extends ViewRecord
                     Section::make('Attachments')
                         ->schema([
                             Select::make('attachments')
+                                ->multiple()
                                 ->options([
                                     'offer_letters' => 'Offer Letter',
                                     'wfh_letter' => 'WFH Letter',
@@ -70,21 +71,29 @@ class ViewCandidate extends ViewRecord
                         ]),
                 ])
                 ->action(function (array $data, ViewCandidate $livewire) {
-                    if ($data['attachments']) {
-                        $media = $this->record->getFirstMedia($data['attachments']);
-                        if (! $media) {
-                            $name = str($data['attachments'])->replace('_', ' ')->title();
-                            Notification::make()
-                                ->title($name.' Not Found')
-                                ->body('The '.$name.' is not found. Please generate/attach the '.$name.' first.')
-                                ->danger()
-                                ->send();
+                    if (count($data['attachments']) !== 0) {
+                        $notFound = false;
+                        foreach ($data['attachments'] as $attachment) {
+                            $media = $this->record->getFirstMedia($attachment);
+                            if (! $media) {
+                                $name = str($attachment)->replace('_', ' ')->title();
+                                Notification::make()
+                                    ->title($name.' Not Found')
+                                    ->body('The '.$name.' is not found. Please generate/attach the '.$name.' first.')
+                                    ->danger()
+                                    ->send();
+                                $notFound = true;
+                            }
+                        }
+                        if ($notFound === true) {
                             $livewire->halt();
                         }
                     }
 
-                    if ($data['attachments']) {
-                        $mail = new DefaultMail($this->record, Email::find($data['mail']), $this->record->getMedia($data['attachments']));
+                    if (count($data['attachments']) !== 0) {
+                        $attachments= collect($data['attachments'])
+                            ->map(fn(string $attachment) => $this->record->getMedia($attachment));
+                        $mail = new DefaultMail($this->record, Email::find($data['mail']), $attachments);
                     } else {
                         $mail = new DefaultMail($this->record, Email::find($data['mail']));
                     }
