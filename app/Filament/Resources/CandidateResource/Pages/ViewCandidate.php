@@ -25,6 +25,7 @@ use Filament\Forms\Components\TimePicker;
 use Filament\Forms\Get;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ViewRecord;
+use Filament\Support\Enums\MaxWidth;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Mail;
@@ -190,7 +191,8 @@ class ViewCandidate extends ViewRecord
                             ->success()
                             ->send();
                     }),
-            ]),
+            ])
+                ->dropdownWidth(MaxWidth::ExtraSmall->value),
         ];
     }
 
