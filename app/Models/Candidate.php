@@ -52,4 +52,16 @@ class Candidate extends Model implements HasMedia
         return LogOptions::defaults()
             ->logFillable();
     }
+
+    public function registerMediaCollections(): void
+    {
+        $this->addMediaCollection('resumes');
+        $this->addMediaCollection('other_documents');
+
+        //generated
+        $this->addMediaCollection('offer_letters');
+        $this->addMediaCollection('wfh_letter');
+        $this->addMediaCollection('completion_letter');
+        $this->addMediaCollection('attendance_report');
+    }
 }

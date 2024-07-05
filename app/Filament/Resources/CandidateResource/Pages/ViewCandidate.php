@@ -21,7 +21,6 @@ use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\TimePicker;
-use Filament\Forms\Components\Toggle;
 use Filament\Forms\Get;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ViewRecord;
@@ -58,9 +57,10 @@ class ViewCandidate extends ViewRecord
                             : null
                         ),
 
-                    Toggle::make('include_offer_letter')
-                        ->label('Include Offer Letter')
-                        ->default(false),
+                    Section::make('Attachments')
+                        ->schema([
+
+                        ]),
                 ])
                 ->action(function (array $data, ViewCandidate $livewire) {
                     if ($data['include_offer_letter']) {

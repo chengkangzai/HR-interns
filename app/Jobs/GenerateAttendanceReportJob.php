@@ -89,7 +89,7 @@ class GenerateAttendanceReportJob implements ShouldQueue
         $pdf->save($filename);
 
         $this->candidate->copyMedia($filename)
-            ->toMediaCollection('other_documents');
+            ->toMediaCollection('attendance_report');
 
         unlink($filename);
     }

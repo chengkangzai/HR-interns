@@ -34,7 +34,7 @@ class GenerateWFHLetterJob implements ShouldQueue
         $pdf->save($filename);
 
         $this->candidate->copyMedia($filename)
-            ->toMediaCollection('other_documents');
+            ->toMediaCollection('wfh_letter');
 
         unlink($filename);
     }

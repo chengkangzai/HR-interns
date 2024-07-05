@@ -34,7 +34,7 @@ class GenerateCompletionLetterJob implements ShouldQueue
         $pdf->save($filename);
 
         $this->candidate->copyMedia($filename)
-            ->toMediaCollection('other_documents');
+            ->toMediaCollection('completion_letter');
 
         unlink($filename);
     }
