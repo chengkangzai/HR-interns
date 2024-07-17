@@ -35,8 +35,11 @@ class TagsResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('name'),
+                TextColumn::make('name')
+                    ->searchable()
+                    ->sortable(),
                 TextColumn::make('Usage Count')
+                    ->sortable()
                     ->getStateUsing(fn (Tag $record) => \DB::table('taggables')
                         ->where('tag_id', $record->getKey())
                         ->count()),
