@@ -10,6 +10,7 @@
     "require": {
         "php": "^8.1",
         "barryvdh/laravel-dompdf": "^2.2.0",
+        "bezhansalleh/filament-shield": "^3.2",
         "chengkangzai/laravel-office-holidays": "^0.0.1",
         "croustibat/filament-jobs-monitor": "^2.4",
         "filament/filament": "^3.2.92",
@@ -20,8 +21,10 @@
         "laravel/sanctum": "^3.3.3",
         "laravel/tinker": "^2.9",
         "league/flysystem-aws-s3-v3": "^3.28",
+        "rawilk/filament-password-input": "^2.0",
         "saade/filament-fullcalendar": "^3.2.2",
         "spatie/laravel-activitylog": "^4.8",
+        "stechstudio/filament-impersonate": "^3.13",
         "ysfkaya/filament-phone-input": "^2.3.6",
         "z3d0x/filament-logger": "^0.6.3"
     },

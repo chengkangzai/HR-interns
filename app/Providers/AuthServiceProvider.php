@@ -13,7 +13,9 @@ class AuthServiceProvider extends ServiceProvider
      * @var array<class-string, class-string>
      */
     protected $policies = [
-        //
+        'Spatie\Tags\Tag' => 'App\Policies\TagPolicy',
+        'Croustibat\FilamentJobsMonitor\Models\QueueMonitor' => 'App\Policies\QueueMonitorPolicy',
+        'Spatie\Activitylog\Models\Activity' => 'App\Policies\ActivityPolicy',
     ];
 
     /**
