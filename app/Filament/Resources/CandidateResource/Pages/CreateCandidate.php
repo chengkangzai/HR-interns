@@ -3,7 +3,6 @@
 namespace App\Filament\Resources\CandidateResource\Pages;
 
 use App\Filament\Resources\CandidateResource;
-use Filament\Actions\EditAction;
 use Filament\Resources\Pages\CreateRecord;
 
 class CreateCandidate extends CreateRecord

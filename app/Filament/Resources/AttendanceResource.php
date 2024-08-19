@@ -3,7 +3,6 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\AttendanceResource\Pages;
-use App\Filament\Resources\AttendanceResource\RelationManagers;
 use App\Models\Attendance;
 use Filament\Forms;
 use Filament\Forms\Components\DatePicker;
@@ -62,7 +61,7 @@ class AttendanceResource extends Resource
                     ->sortable(),
                 TextColumn::make('user.name')
                     ->label('Employee')
-                    ->searchable(!Auth::user()->hasRole('Employee'))
+                    ->searchable(! Auth::user()->hasRole('Employee'))
                     ->hidden(Auth::user()->hasRole('Employee')),
                 TextColumn::make('time_in')
                     ->label('Time In')
@@ -74,8 +73,9 @@ class AttendanceResource extends Resource
                     ->toggleable(),
             ])
             ->modifyQueryUsing(function (Builder $query) {
-                if (Auth::user()->hasRole('Employee'))
+                if (Auth::user()->hasRole('Employee')) {
                     $query->where('user_id', Auth::id());
+                }
             })
             ->filters([
                 Filter::make('attendance')

@@ -54,12 +54,12 @@ class AdminPanelProvider extends PanelProvider
                     ->gridColumns([
                         'default' => 1,
                         'sm' => 2,
-                        'lg' => 3
+                        'lg' => 3,
                     ])
                     ->sectionColumnSpan(1)
                     ->checkboxListColumns([
                         'default' => 1,
-                        'sm' => 2
+                        'sm' => 2,
                     ])
                     ->resourceCheckboxListColumns([
                         'default' => 1,

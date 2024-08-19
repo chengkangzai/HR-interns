@@ -29,14 +29,14 @@ class GenerateAttendanceReportJob implements ShouldQueue
     {
         $period = CarbonPeriod::create($this->candidate->from->startOfMonth(), $this->candidate->to->endOfMonth());
 
-        $holidays = (new LaravelOfficeHolidays())
+        $holidays = (new LaravelOfficeHolidays)
             ->getHolidaysByState('malaysia', $period->start->year, MalaysiaStates::KualaLumpur->value)
             ->filter(fn (HolidayDto $holiday) => $holiday->type == HolidayType::REGIONAL_HOLIDAY || $holiday->type == HolidayType::NATIONAL_HOLIDAY)
             ->map(fn (HolidayDto $holiday) => $holiday->date->toDateString());
 
         if ($period->start->year !== $period->end->year) {
             $holidays = $holidays->merge(
-                (new LaravelOfficeHolidays())
+                (new LaravelOfficeHolidays)
                     ->getHolidaysByState('malaysia', $period->end->year, MalaysiaStates::KualaLumpur->value)
                     ->filter(fn (HolidayDto $holiday) => $holiday->type == HolidayType::REGIONAL_HOLIDAY || $holiday->type == HolidayType::NATIONAL_HOLIDAY)
                     ->map(fn (HolidayDto $holiday) => $holiday->date->toDateString())

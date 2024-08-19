@@ -3,8 +3,8 @@
 namespace App\Policies;
 
 use App\Models\User;
-use Spatie\Tags\Tag;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use Spatie\Tags\Tag;
 
 class TagPolicy
 {

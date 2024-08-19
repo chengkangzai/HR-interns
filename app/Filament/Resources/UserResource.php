@@ -3,7 +3,6 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\UserResource\Pages;
-use App\Filament\Resources\UserResource\RelationManagers;
 use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -11,7 +10,6 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Facades\Auth;
 use Rawilk\FilamentPasswordInput\Password;
 use STS\FilamentImpersonate\Tables\Actions\Impersonate;
@@ -70,14 +68,16 @@ class UserResource extends Resource
                     ->badge(),
             ])
             ->modifyQueryUsing(function (Builder $query) {
-                if (Auth::user()->hasRole('HR'))
-                     $query->whereKeyNot(1);
+                if (Auth::user()->hasRole('HR')) {
+                    $query->whereKeyNot(1);
+                }
             })
             ->filters([
                 Tables\Filters\SelectFilter::make('role')
                     ->relationship('roles', 'name', function (Builder $query) {
-                        if (Auth::user()->hasRole('HR'))
+                        if (Auth::user()->hasRole('HR')) {
                             $query->whereKeyNot(1);
+                        }
                     }),
             ])
             ->defaultGroup('roles.name')
