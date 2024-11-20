@@ -228,16 +228,16 @@
             Sdn Bhd, to confirm our company policy regarding the work arrangement for our interns, specifically
             pertaining to {{$candidate->name}}, who is currently undertaking an internship with us.</span></p>
 <p class="c0"><span class="c1"></span></p>
-<p class="c4"><span class="c1">In accordance with our company&#39;s flexible work policy, {{$candidate->name}} will be working
-            from home (WFH) on Mondays and Tuesdays throughout his internship period with Pixalink Sdn Bhd. This
-            arrangement is part of our company&#39;s broader initiative to accommodate diverse working styles and
+<p class="c4"><span class="c1">In accordance with our company's flexible work policy, {{$candidate->name}} will be working
+            from home (WFH) on Mondays and Tuesdays throughout their internship period with Pixalink Sdn Bhd. This
+            arrangement is part of our company's broader initiative to accommodate diverse working styles and
             commitments of our team members, while also maintaining high standards of productivity and
             efficiency.</span></p>
 <p class="c0"><span class="c1"></span></p>
-<p class="c4"><span class="c1">Please be assured that {{$candidate->name}} will remain fully engaged and accessible during his
-            WFH days, equipped with all necessary tools and resources to perform his tasks effectively. We have robust
-            systems in place to ensure seamless communication and workflow, allowing {{$candidate->name}} to contribute to his
-            projects without any compromise on the quality of his work.</span></p>
+<p class="c4"><span class="c1">Please be assured that {{$candidate->name}} will remain fully engaged and accessible during their
+            WFH days, equipped with all necessary tools and resources to perform their tasks effectively. We have robust
+            systems in place to ensure seamless communication and workflow, allowing {{$candidate->name}} to contribute to their
+            projects without any compromise on the quality of their work.</span></p>
 <p class="c0"><span class="c1"></span></p>
 <p class="c4"><span class="c1">This letter serves as a formal confirmation of {{$candidate->name}}&#39;s WFH arrangement on
             Mondays and Tuesdays. We appreciate your understanding and support in facilitating this arrangement, which
