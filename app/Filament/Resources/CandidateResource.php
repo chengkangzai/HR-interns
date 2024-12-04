@@ -21,6 +21,7 @@ use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\SpatieTagsInput;
+use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
@@ -44,6 +45,8 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
+use Illuminate\Support\HtmlString;
+use Illuminate\Support\Str;
 use Spatie\Tags\Tag;
 use Ysfkaya\FilamentPhoneInput\Forms\PhoneInput;
 
@@ -337,6 +340,33 @@ class CandidateResource extends Resource
 
                 TextColumn::make('status')
                     ->badge(),
+
+                TextColumn::make('education')
+                    ->getStateUsing(function (Candidate $record) {
+                        $qualification = $record->additional_info->where('type', 'qualification')->value('data');
+                        if (! $qualification) {
+                            return '-';
+                        }
+
+                        return $qualification['university'];
+                    })
+                    ->tooltip(function (Candidate $record) {
+                        $qualification = $record->additional_info->where('type', 'qualification')->value('data');
+                        if (! $qualification) {
+                            return '-';
+                        }
+
+                        $parts = collect([
+                            Str::of($qualification['qualification'])->whenNotEmpty(fn($str) => $str->wrap('[', ']')),
+                            Str::of($qualification['major'])->whenNotEmpty(fn($str) => $str->wrap('[', ']')->prepend('in ')),
+                            Str::of($qualification['university'])->whenNotEmpty(fn($str) => $str->wrap('[', ']')->prepend('at ')),
+                            Str::of($qualification['gpa'])->whenNotEmpty(fn($str) => $str->wrap('[', ']')->prepend('with GPA of ')),
+                        ])->filter()->values();
+
+                        return new HtmlString(
+                            $parts->isEmpty() ? '-' : $parts->join(' ')
+                        );
+                    }),
 
                 SpatieTagsColumn::make('tags')
                     ->toggleable(),
