@@ -222,7 +222,7 @@ class CandidateResource extends Resource
                                     ->live(onBlur: true)
                                     ->afterStateUpdated(function (?string $state, Set $set) {
                                         if ($state) {
-                                            $set('university', str($state)->title());
+                                            $set('university', str($state)->trim()->title());
                                         }
                                     })
                                     ->prefix('from '),
