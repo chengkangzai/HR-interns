@@ -341,6 +341,7 @@ class CandidateResource extends Resource
                     ->badge(),
 
                 TextColumn::make('education')
+                    ->toggleable(isToggledHiddenByDefault: true)
                     ->getStateUsing(function (Candidate $record) {
                         $qualification = $record->additional_info->where('type', 'qualification')->value('data');
                         if (! $qualification) {
