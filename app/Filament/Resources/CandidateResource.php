@@ -352,7 +352,7 @@ class CandidateResource extends Resource
                         return $qualification['university'];
                     })
                     ->tooltip(function (Candidate $record) {
-                        if (!$record->additional_info){
+                        if (! $record->additional_info) {
                             return '-';
                         }
 
