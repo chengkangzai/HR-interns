@@ -317,6 +317,7 @@ class CandidateResource extends Resource
                     ->fontFamily(FontFamily::Mono),
 
                 TextColumn::make('range')
+                    ->toggleable()
                     ->sortable(query: fn (EloquentBuilder $query, string $direction) => $query->orderBy('from', $direction))
                     ->label('From - To')
                     ->getStateUsing(fn (Candidate $record) => isset($record->from, $record->to)
@@ -369,7 +370,7 @@ class CandidateResource extends Resource
                     }),
 
                 SpatieTagsColumn::make('tags')
-                    ->toggleable(),
+                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 SelectFilter::make('status')
