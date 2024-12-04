@@ -344,7 +344,7 @@ class CandidateResource extends Resource
                 TextColumn::make('education')
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->getStateUsing(function (Candidate $record) {
-                        if (!$record->additional_info){
+                        if (! $record->additional_info) {
                             return '-';
                         }
 
