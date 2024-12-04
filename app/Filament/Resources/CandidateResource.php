@@ -21,7 +21,6 @@ use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\SpatieTagsInput;
-use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
@@ -357,10 +356,10 @@ class CandidateResource extends Resource
                         }
 
                         $parts = collect([
-                            Str::of($qualification['qualification'])->whenNotEmpty(fn($str) => $str->wrap('[', ']')),
-                            Str::of($qualification['major'])->whenNotEmpty(fn($str) => $str->wrap('[', ']')->prepend('in ')),
-                            Str::of($qualification['university'])->whenNotEmpty(fn($str) => $str->wrap('[', ']')->prepend('at ')),
-                            Str::of($qualification['gpa'])->whenNotEmpty(fn($str) => $str->wrap('[', ']')->prepend('with GPA of ')),
+                            Str::of($qualification['qualification'])->whenNotEmpty(fn ($str) => $str->wrap('[', ']')),
+                            Str::of($qualification['major'])->whenNotEmpty(fn ($str) => $str->wrap('[', ']')->prepend('in ')),
+                            Str::of($qualification['university'])->whenNotEmpty(fn ($str) => $str->wrap('[', ']')->prepend('at ')),
+                            Str::of($qualification['gpa'])->whenNotEmpty(fn ($str) => $str->wrap('[', ']')->prepend('with GPA of ')),
                         ])->filter()->values();
 
                         return new HtmlString(
