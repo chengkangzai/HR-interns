@@ -20,6 +20,7 @@ use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 
 class PositionResource extends Resource
@@ -96,6 +97,17 @@ class PositionResource extends Resource
             TextColumn::make('type')
                 ->badge(),
         ])
+            ->filters([
+                SelectFilter::make('status')
+                    ->options(PositionStatus::class)
+                    ->multiple()
+                    ->label('Status'),
+
+                SelectFilter::make('type')
+                    ->options(PositionType::class)
+                    ->multiple()
+                    ->label('Type'),
+            ])
             ->actions([
                 ViewAction::make(),
                 EditAction::make(),
