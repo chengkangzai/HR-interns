@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\PositionStatus;
+use App\Enums\PositionType;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -20,11 +21,13 @@ class Position extends Model
         'title',
         'description',
         'status',
+        'type',
         'indeed_url',
     ];
 
     protected $casts = [
         'status' => PositionStatus::class,
+        'type' => PositionType::class,
     ];
 
     public function candidates(): HasMany

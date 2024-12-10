@@ -3,6 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Enums\PositionStatus;
+use App\Enums\PositionType;
 use App\Filament\Resources\PositionResource\Pages;
 use App\Models\Position;
 use Filament\Forms\Components\Actions\Action;
@@ -42,6 +43,10 @@ class PositionResource extends Resource
             Select::make('status')
                 ->options(PositionStatus::class)
                 ->default(PositionStatus::OPEN)
+                ->required(),
+
+            Select::make('type')
+                ->options(PositionType::class)
                 ->required(),
 
             TextInput::make('indeed_url')
@@ -86,6 +91,9 @@ class PositionResource extends Resource
                 ->limit(50),
 
             TextColumn::make('status')
+                ->badge(),
+
+            TextColumn::make('type')
                 ->badge(),
         ])
             ->actions([
