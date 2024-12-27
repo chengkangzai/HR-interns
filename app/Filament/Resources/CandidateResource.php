@@ -106,7 +106,7 @@ class CandidateResource extends Resource
                             ->url(PositionResource::getUrl('view', ['record' => $record->position_id]), true);
                     })
                     ->relationship('position', 'title')
-                    ->options(fn() => Position::query()
+                    ->options(fn () => Position::query()
                         ->get()
                         ->groupBy('type')
                         ->map(function ($positions) {
