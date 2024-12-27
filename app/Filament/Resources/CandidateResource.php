@@ -105,7 +105,15 @@ class CandidateResource extends Resource
                             ->icon('heroicon-o-eye')
                             ->url(PositionResource::getUrl('view', ['record' => $record->position_id]), true);
                     })
-                    ->relationship('position', 'title', fn (EloquentBuilder $query) => $query->where('status', PositionStatus::OPEN))
+                    ->relationship('position', 'title')
+                    ->options(fn() => Position::query()
+                        ->get()
+                        ->groupBy('type')
+                        ->map(function ($positions) {
+                            return $positions->pluck('title', 'id');
+                        })
+                        ->toArray()
+                    )
                     ->createOptionForm([
                         TextInput::make('title')
                             ->required(),
