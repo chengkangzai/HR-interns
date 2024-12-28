@@ -12,9 +12,9 @@
         "barryvdh/laravel-dompdf": "^2.2.0",
         "chengkangzai/laravel-office-holidays": "^0.0.1",
         "croustibat/filament-jobs-monitor": "^2.5",
-        "filament/filament": "^3.2.127",
-        "filament/spatie-laravel-media-library-plugin": "^3.2.127",
-        "filament/spatie-laravel-tags-plugin": "^3.2.127",
+        "filament/filament": "^3.2.131",
+        "filament/spatie-laravel-media-library-plugin": "^3.2.131",
+        "filament/spatie-laravel-tags-plugin": "^3.2.131",
         "guzzlehttp/guzzle": "^7.9.2",
         "laravel/framework": "^10.48.25",
         "laravel/sanctum": "^3.3.3",
@@ -31,7 +31,7 @@
         "laravel/sail": "^1.39.1",
         "mockery/mockery": "^1.6.12",
         "nunomaduro/collision": "^7.11",
-        "phpunit/phpunit": "^10.5.38",
+        "phpunit/phpunit": "^10.5.40",
         "spatie/laravel-ignition": "^2.9.0"
     },
     "autoload": {
