@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\PositionResource\Pages;
 
+use App\Enums\PositionStatus;
 use App\Enums\PositionType;
 use App\Filament\Resources\PositionResource;
 use App\Models\Position;
@@ -28,7 +29,9 @@ class ListPositions extends ListRecords
             'all' => Tab::make(),
         ];
         foreach ($positions as $position) {
-            $count = Position::where('type', $position->value)->count();
+            $count = Position::where('type', $position->value)
+                ->where('status', PositionStatus::OPEN)
+                ->count();
             if ($count >= 1) {
                 $tabs[$position->value] = Tab::make()
                     ->badgeColor($position->getColor())
