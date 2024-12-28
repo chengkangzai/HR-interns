@@ -99,6 +99,7 @@ class PositionResource extends Resource
         ])
             ->filters([
                 SelectFilter::make('status')
+                    ->default(PositionStatus::OPEN)
                     ->options(PositionStatus::class)
                     ->multiple()
                     ->label('Status'),
