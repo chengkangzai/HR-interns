@@ -107,7 +107,7 @@ class CandidateResource extends Resource
                     })
                     ->relationship('position', 'title')
                     ->options(fn () => Position::query()
-                        ->where('status',PositionStatus::OPEN)
+                        ->where('status', PositionStatus::OPEN)
                         ->get()
                         ->groupBy('type')
                         ->map(function ($positions) {
