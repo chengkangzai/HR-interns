@@ -58,7 +58,7 @@ class Candidate extends Model implements HasMedia
         $this->addMediaCollection('resumes');
         $this->addMediaCollection('other_documents');
 
-        //generated
+        // generated
         $this->addMediaCollection('offer_letters');
         $this->addMediaCollection('wfh_letter');
         $this->addMediaCollection('completion_letter');

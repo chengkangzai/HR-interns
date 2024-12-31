@@ -530,7 +530,7 @@ class CandidateResource extends Resource
                             return;
                         }
 
-                        $records->filter(fn (Candidate $record) => $record->getMedia('offer_letters')->count() === 0)//only generate offer letter for candidates that don't have offer letter yet
+                        $records->filter(fn (Candidate $record) => $record->getMedia('offer_letters')->count() === 0)// only generate offer letter for candidates that don't have offer letter yet
                             ->each(fn (Candidate $record) => GenerateOfferLetterJob::dispatch($record, $data['pay'], $data['working_from'], $data['working_to']));
 
                         Notification::make()

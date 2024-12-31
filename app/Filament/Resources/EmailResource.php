@@ -58,9 +58,9 @@ class EmailResource extends Resource
                 ->columnSpanFull()
                 ->required()
                 ->disableToolbarButtons([
-                    'orderedList', //disable due to look bad in email
-                    'bulletList', //disable due to look bad in email
-                    'attachFiles', //disable due to no upload file support
+                    'orderedList', // disable due to look bad in email
+                    'bulletList', // disable due to look bad in email
+                    'attachFiles', // disable due to no upload file support
                 ]),
 
             Placeholder::make('created_at')

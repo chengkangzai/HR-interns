@@ -62,7 +62,7 @@ class GenerateAttendanceReportJob implements ShouldQueue
                         $state = 'WE';
                     }
 
-                    //return - if candidate havent join company or date is before candidate join
+                    // return - if candidate havent join company or date is before candidate join
                     if ($date['date'] < $this->candidate->from || $date['date'] > $this->candidate->to) {
                         $state = 'NA';
                     }
