@@ -96,6 +96,10 @@ class PositionResource extends Resource
 
             TextColumn::make('type')
                 ->badge(),
+
+            TextColumn::make('candidates_count')
+                ->counts('candidates')
+                ->sortable(),
         ])
             ->filters([
                 SelectFilter::make('status')
