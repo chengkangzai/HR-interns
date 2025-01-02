@@ -5,7 +5,6 @@ namespace App\Filament\Resources;
 use App\Enums\PositionStatus;
 use App\Enums\PositionType;
 use App\Enums\PositionUrlSource;
-use App\Filament\Pixalink\Resources\OrganisationResource;
 use App\Filament\Resources\PositionResource\Pages;
 use App\Models\Position;
 use Filament\Forms;
@@ -69,8 +68,9 @@ class PositionResource extends Resource
                         )
                         ->reactive()
                         ->afterStateUpdated(function (?string $state, Set $set) {
-                            if (!$state) {
+                            if (! $state) {
                                 $set('source', null);
+
                                 return;
                             }
 
