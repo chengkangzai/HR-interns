@@ -20,7 +20,7 @@ class ViewPosition extends ViewRecord
     {
         $actions = [];
 
-        foreach ($this->record->urls as $url) {
+        foreach ($this->record?->urls ?? [] as $url) {
             $actions[] = Action::make('view_at.'.$url['source'])
                 ->label('View At '.$url['source'])
                 ->icon('heroicon-o-arrow-top-right-on-square')
