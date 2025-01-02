@@ -133,6 +133,7 @@ class PositionResource extends Resource
                     ->sortable(),
 
                 TextColumn::make('urls_count')
+                    ->toggleable(isToggledHiddenByDefault: true)
                     ->numeric()
                     ->getStateUsing(fn (?Position $record) => count($record->urls ?? [])),
             ])
