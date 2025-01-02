@@ -111,25 +111,26 @@ class PositionResource extends Resource
 
     public static function table(Table $table): Table
     {
-        return $table->columns([
-            TextColumn::make('title')
-                ->searchable()
-                ->sortable(),
+        return $table
+            ->columns([
+                TextColumn::make('title')
+                    ->searchable()
+                    ->sortable(),
 
-            TextColumn::make('description')
-                ->toggleable(isToggledHiddenByDefault: true)
-                ->limit(50),
+                TextColumn::make('description')
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->limit(50),
 
-            TextColumn::make('status')
-                ->badge(),
+                TextColumn::make('status')
+                    ->badge(),
 
-            TextColumn::make('type')
-                ->badge(),
+                TextColumn::make('type')
+                    ->badge(),
 
-            TextColumn::make('candidates_count')
-                ->counts('candidates')
-                ->sortable(),
-        ])
+                TextColumn::make('candidates_count')
+                    ->counts('candidates')
+                    ->sortable(),
+            ])
             ->filters([
                 SelectFilter::make('status')
                     ->default(PositionStatus::OPEN->value)
@@ -145,7 +146,8 @@ class PositionResource extends Resource
                 ViewAction::make(),
                 EditAction::make(),
                 DeleteAction::make(),
-            ]);
+            ])
+            ->defaultGroup('type');
     }
 
     public static function getPages(): array
