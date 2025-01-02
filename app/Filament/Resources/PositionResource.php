@@ -50,15 +50,6 @@ class PositionResource extends Resource
                 ->options(PositionType::class)
                 ->required(),
 
-            TextInput::make('indeed_url')
-                ->url()
-                ->suffixAction(
-                    Action::make('View')
-                        ->url(fn (?string $state) => $state, true)
-                        ->icon('heroicon-o-arrow-top-right-on-square')
-                )
-                ->columnSpanFull(),
-
             Section::make('Description')
                 ->description('Provide a detailed description of the position that will be displayed on the public job board.')
                 ->collapsible()
