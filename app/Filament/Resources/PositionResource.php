@@ -4,15 +4,18 @@ namespace App\Filament\Resources;
 
 use App\Enums\PositionStatus;
 use App\Enums\PositionType;
+use App\Enums\PositionUrlSource;
+use App\Filament\Pixalink\Resources\OrganisationResource;
 use App\Filament\Resources\PositionResource\Pages;
 use App\Models\Position;
-use Filament\Forms\Components\Actions\Action;
+use Filament\Forms;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
+use Filament\Forms\Set;
 use Filament\Pages\SubNavigationPosition;
 use Filament\Resources\Pages\Page;
 use Filament\Resources\Resource;
@@ -49,6 +52,41 @@ class PositionResource extends Resource
             Select::make('type')
                 ->options(PositionType::class)
                 ->required(),
+
+            Forms\Components\Repeater::make('urls')
+                ->schema([
+                    Select::make('source')
+                        ->required()
+                        ->options(PositionUrlSource::class),
+
+                    TextInput::make('url')
+                        ->suffixAction(fn (?string $state) => $state
+                            ? Forms\Components\Actions\Action::make('view')
+                                ->label('View')
+                                ->icon('heroicon-o-eye')
+                                ->url($state)
+                            : null
+                        )
+                        ->reactive()
+                        ->afterStateUpdated(function (?string $state, Set $set) {
+                            if (!$state) {
+                                $set('source', null);
+                                return;
+                            }
+
+                            $source = match (true) {
+                                str_contains(strtolower($state), 'indeed.com') => PositionUrlSource::INDEED,
+                                str_contains(strtolower($state), 'linkedin.com') => PositionUrlSource::LINKED_IN,
+                                str_contains(strtolower($state), 'developerkaki.my') => PositionUrlSource::DEV_KAKI,
+                                str_contains(strtolower($state), 'sunway-csm') => PositionUrlSource::SUNWAY_PORTAL,
+                                default => null
+                            };
+
+                            $set('source', $source);
+                        })
+                        ->url()
+                        ->required(),
+                ]),
 
             Section::make('Description')
                 ->description('Provide a detailed description of the position that will be displayed on the public job board.')

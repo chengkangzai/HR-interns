@@ -22,11 +22,13 @@ class Position extends Model
         'description',
         'status',
         'type',
+        'urls',
     ];
 
     protected $casts = [
         'status' => PositionStatus::class,
         'type' => PositionType::class,
+        'urls' => 'array',
     ];
 
     public function candidates(): HasMany
