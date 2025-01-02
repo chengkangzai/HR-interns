@@ -131,6 +131,10 @@ class PositionResource extends Resource
                 TextColumn::make('candidates_count')
                     ->counts('candidates')
                     ->sortable(),
+
+                TextColumn::make('urls_count')
+                    ->numeric()
+                    ->getStateUsing(fn (?Position $record) => count($record->urls ?? [])),
             ])
             ->filters([
                 SelectFilter::make('status')
