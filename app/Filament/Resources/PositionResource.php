@@ -18,6 +18,7 @@ use Filament\Forms\Set;
 use Filament\Pages\SubNavigationPosition;
 use Filament\Resources\Pages\Page;
 use Filament\Resources\Resource;
+use Filament\Tables\Actions\Action;
 use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Actions\ViewAction;
@@ -62,8 +63,8 @@ class PositionResource extends Resource
                         ->suffixAction(fn (?string $state) => $state
                             ? Forms\Components\Actions\Action::make('view')
                                 ->label('View')
-                                ->icon('heroicon-o-eye')
-                                ->url($state)
+                                ->icon('heroicon-o-arrow-top-right-on-square')
+                                ->url($state, true)
                             : null
                         )
                         ->reactive()
@@ -146,6 +147,37 @@ class PositionResource extends Resource
                 ViewAction::make(),
                 EditAction::make(),
                 DeleteAction::make(),
+                Action::make('view_external')
+                    ->form([
+                        Select::make('url')
+                            ->options(function (Position $record) {
+                                $option = [];
+                                foreach ($record->urls ?? [] as $url) {
+                                    $urlParts = parse_url($url['url']);
+
+                                    $part = str(
+                                        $urlParts['path'].
+                                        (isset($urlParts['query']) ? '?'.$urlParts['query'] : '')
+                                    )->limit(50);
+
+                                    $option[$url['url']] = PositionUrlSource::from($url['source'])->getLabel().': '.$part;
+                                }
+
+                                return $option;
+                            }),
+                    ])
+                    ->action(function (array $data) {
+                        return redirect($data['url']);
+                    })
+                    ->icon('heroicon-o-arrow-top-right-on-square')
+                    ->url(function (?Position $record) {
+                        if (count($record?->urls ?? []) == 1) {
+                            return $record->urls[0]['url'];
+                        }
+
+                        return null;
+                    }, true)
+                    ->visible(fn (?Position $record): bool => count($record->urls ?? []) >= 1),
             ])
             ->defaultGroup('type');
     }
