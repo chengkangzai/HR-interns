@@ -20,6 +20,7 @@ class CreateUser extends CreateRecord
     {
         $data['password'] = bcrypt($data['password']);
         unset($data['password_confirmation']);
+
         return $data;
     }
 }

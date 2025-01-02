@@ -46,7 +46,7 @@ class EditUser extends EditRecord
                         ->title('Password has reset')
                         ->body('Password reset successfully.')
                         ->send();
-                })
+                }),
         ];
     }
 }
