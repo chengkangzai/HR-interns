@@ -28,7 +28,7 @@ class PdfExtractorService
             $response = $this->groq->chat([
                 [
                     'role' => 'system',
-                    'content' => <<<EOT
+                    'content' => <<<'EOT'
 Extract information from Malaysian resumes and documents following these rules:
 
 1. Personal Information:
@@ -65,10 +65,10 @@ EOT
                 ],
                 [
                     'role' => 'user',
-                    'content' => $pdfText
-                ]
+                    'content' => $pdfText,
+                ],
             ], [
-                'response_format' => ['type' => 'json_object']
+                'response_format' => ['type' => 'json_object'],
             ]);
 
             $result = json_decode($response['choices'][0]['message']['content'], true);
@@ -76,7 +76,7 @@ EOT
             // Additional validation for qualification types
             if (isset($result['qualifications'])) {
                 foreach ($result['qualifications'] as &$qual) {
-                    if (!in_array($qual['data']['qualification'], ['Diploma', 'Bachelor', 'Master', 'PhD', 'Others'])) {
+                    if (! in_array($qual['data']['qualification'], ['Diploma', 'Bachelor', 'Master', 'PhD', 'Others'])) {
                         $qual['data']['qualification'] = 'Others';
                     }
                 }
@@ -85,10 +85,11 @@ EOT
             return $result;
 
         } catch (\Exception $e) {
-            Log::error('Groq extraction failed: ' . $e->getMessage());
+            Log::error('Groq extraction failed: '.$e->getMessage());
+
             return [
                 'personal_info' => [],
-                'qualifications' => []
+                'qualifications' => [],
             ];
         }
     }

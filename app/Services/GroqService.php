@@ -17,7 +17,7 @@ class GroqService
 
     public function chat(array $messages, array $options = [])
     {
-        //curl -X POST "https://api.groq.com/openai/v1/chat/completions" \
+        // curl -X POST "https://api.groq.com/openai/v1/chat/completions" \
         //     -H "Authorization: Bearer $GROQ_API_KEY" \
         //     -H "Content-Type: application/json" \
         //     -d '{"messages": [{"role": "user", "content": "Explain the importance of fast language models"}], "model": "llama-3.3-70b-versatile"}'
