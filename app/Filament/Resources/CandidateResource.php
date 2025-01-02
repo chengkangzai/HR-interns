@@ -11,6 +11,7 @@ use App\Jobs\SendEmailJob;
 use App\Models\Candidate;
 use App\Models\Email;
 use App\Models\Position;
+use App\Services\PdfExtractorService;
 use Filament\Forms\Components\Actions\Action as FormAction;
 use Filament\Forms\Components\Builder;
 use Filament\Forms\Components\DatePicker;
@@ -46,6 +47,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\HtmlString;
 use Illuminate\Support\Str;
+use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 use Spatie\Tags\Tag;
 use Ysfkaya\FilamentPhoneInput\Forms\PhoneInput;
 
@@ -145,6 +147,94 @@ class CandidateResource extends Resource
 
             Section::make([
                 SpatieMediaLibraryFileUpload::make('resume')
+                    ->afterStateUpdated(function (TemporaryUploadedFile $state, Set $set, Get $get, string $context) {
+                        if ($context !== 'create') {
+                            return;
+                        }
+                        $extractor = app(PdfExtractorService::class)->extractInformation($state->path());
+
+                        // Set personal information if available
+                        if (isset($extractor['personal_info'][0])) {
+                            $personalInfo = $extractor['personal_info'][0];
+
+                            // Set name if empty
+                            if ($personalInfo['name']) {
+                                $set('name', str($personalInfo['name'])->title()->__toString());
+                            }
+
+                            // Set email if empty
+                            if ($personalInfo['email']) {
+                                $set('email', str($personalInfo['email'])->remove(' ')->remove('`')->__toString());
+                            }
+
+                            // Set phone number if empty
+                            if ($personalInfo['phone_number']) {
+                                $set('phone_number', $personalInfo['phone_number']);
+                            }
+                        }
+
+                        // Initialize additional info array
+                        $additionalInfo = [];
+
+                        // Add qualifications if available
+                        if (isset($extractor['qualifications']) && is_array($extractor['qualifications'])) {
+                            foreach ($extractor['qualifications'] as $qualificationEntry) {
+                                if (! isset($qualificationEntry['data'])) {
+                                    continue;
+                                }
+
+                                $qualification = $qualificationEntry['data'];
+
+                                // Create qualification block
+                                $qualificationBlock = [
+                                    'type' => 'qualification',
+                                    'data' => [
+                                        'qualification' => $qualification['qualification'] ?? null,
+                                        'major' => str($qualification['major'] ?? '')->title()->__toString(),
+                                        'university' => str($qualification['university'] ?? '')->trim()->title()->__toString(),
+                                        'gpa' => $qualification['gpa'] ?? null,
+                                        'from' => $qualification['from'] ?? null,
+                                        'to' => $qualification['to'] ?? null,
+                                    ],
+                                ];
+
+                                // Add qualification block to additional info
+                                $additionalInfo[] = $qualificationBlock;
+                            }
+                        }
+
+                        // Preserve any existing non-qualification blocks in additional_info
+                        $existingBlocks = $get('additional_info') ?? [];
+                        if (is_array($existingBlocks)) {
+                            foreach ($existingBlocks as $block) {
+                                // Only keep non-qualification blocks
+                                if (isset($block['type']) && $block['type'] !== 'qualification') {
+                                    $additionalInfo[] = $block;
+                                }
+                            }
+                        }
+
+                        // Set the additional_info field with the updated array
+                        if (! empty($additionalInfo)) {
+                            $set('additional_info', $additionalInfo);
+                        }
+
+                        // Show notification based on what was extracted
+                        if (! empty($extractedInfo)) {
+                            Notification::make()
+                                ->title('Resume Information Extracted')
+                                ->body('Successfully extracted '.implode(' and ', $extractedInfo).'.')
+                                ->success()
+                                ->send();
+                        } else {
+                            Notification::make()
+                                ->title('Resume Processing')
+                                ->body('No information could be extracted from the resume. Please fill in the information manually.')
+                                ->warning()
+                                ->send();
+                        }
+
+                    })
                     ->label('Resume')
                     ->collection('resumes')
                     ->acceptedFileTypes(['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document']),
