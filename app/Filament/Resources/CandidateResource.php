@@ -4,9 +4,14 @@ namespace App\Filament\Resources;
 
 use App\Enums\CandidateStatus;
 use App\Enums\PositionStatus;
+use App\Enums\PositionType;
 use App\Filament\Resources\CandidateResource\Pages;
 use App\Filament\Resources\PositionResource\Pages\ViewPositionCandidate;
+use App\Jobs\GenerateAttendanceReportJob;
+use App\Jobs\GenerateCompletionCertJob;
+use App\Jobs\GenerateCompletionLetterJob;
 use App\Jobs\GenerateOfferLetterJob;
+use App\Jobs\GenerateWFHLetterJob;
 use App\Jobs\SendEmailJob;
 use App\Models\Candidate;
 use App\Models\Email;
@@ -151,7 +156,7 @@ class CandidateResource extends Resource
                     ->hintActions([
                         FormAction::make('Auto-Fill from Resume')
                             ->icon('heroicon-o-pencil-square')
-                            ->visible(fn(Candidate $record, string $context) => $context == 'edit' && $record->getFirstMedia('resumes') !== null)
+                            ->visible(fn (?Candidate $record, string $context) => $context == 'edit' && $record->getFirstMedia('resumes') !== null)
                             ->action(function (Candidate $record, Set $set, Get $get) {
                                 try {
                                     $s3Url = $record->getFirstMedia('resumes')->getTemporaryUrl(now()->addMinutes(5));
@@ -180,7 +185,7 @@ class CandidateResource extends Resource
                             }),
                         FormAction::make('extract-text')
                             ->icon('heroicon-o-document-text')
-                            ->visible(fn(Candidate $record, string $context) => $context == 'edit' && $record->getFirstMedia('resumes') !== null)
+                            ->visible(fn (?Candidate $record, string $context) => $context == 'edit' && $record->getFirstMedia('resumes') !== null)
                             ->modalSubmitAction(
                                 \Filament\Actions\Action::make('Copy Text_Close')
                                     ->label('Copy Text & Close')
@@ -244,6 +249,21 @@ class CandidateResource extends Resource
                     ->acceptedFileTypes(['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document']),
 
                 SpatieMediaLibraryFileUpload::make('offer_letter')
+                    ->hintActions([
+                        FormAction::make('generate_offer_letter')
+                            ->icon('heroicon-o-document')
+                            ->label('Generate')
+                            ->form(Pages\ViewCandidate::getOfferLetterForm())
+                            ->visible(fn (?Candidate $record) => $record->status === CandidateStatus::INTERVIEW)
+                            ->action(function (?Candidate $record, array $data) {
+                                dispatch_sync(new GenerateOfferLetterJob($record, $data['pay'], $data['working_from'], $data['working_to']));
+                                Notification::make('generated')
+                                    ->title('Generating')
+                                    ->body('It will be generated in background. Please wait and refresh the page.')
+                                    ->success()
+                                    ->send();
+                            }),
+                    ])
                     ->multiple()
                     ->hiddenOn('create')
                     ->label('Offer Letter')
@@ -255,29 +275,87 @@ class CandidateResource extends Resource
                     ->collection('other_documents')
                     ->multiple(),
 
-                SpatieMediaLibraryFileUpload::make('wfh_letter')
-                    ->label('WFH Letter')
-                    ->collection('wfh_letter')
-                    ->hiddenOn('create')
-                    ->multiple(),
+                Section::make([
+                    SpatieMediaLibraryFileUpload::make('wfh_letter')
+                        ->hintActions([
+                            FormAction::make('generate_wfh')
+                                ->icon('heroicon-o-document')
+                                ->visible(fn (?Candidate $record) => $record->getFirstMedia('wfh_letter') !== null)
+                                ->label('Generate')
+                                ->action(function (?Candidate $record) {
+                                    dispatch_sync(new GenerateWFHLetterJob($record));
+                                    Notification::make('generated')
+                                        ->title('Generating')
+                                        ->body('It will be generated in background. Please wait and refresh the page.')
+                                        ->success()
+                                        ->send();
+                                }),
+                        ])
+                        ->label('WFH Letter')
+                        ->collection('wfh_letter')
+                        ->hiddenOn('create')
+                        ->multiple(),
 
-                SpatieMediaLibraryFileUpload::make('completion_letter')
-                    ->label('Completion Letter')
-                    ->collection('completion_letter')
-                    ->hiddenOn('create')
-                    ->multiple(),
+                    SpatieMediaLibraryFileUpload::make('completion_letter')
+                        ->hintActions([
+                            FormAction::make('generate_completion_letter')
+                                ->icon('heroicon-o-document')
+                                ->label('Generate')
+                                ->visible(fn (?Candidate $record) => $record->getFirstMedia('completion_letter') == null)
+                                ->action(function (?Candidate $record) {
+                                    dispatch_sync(new GenerateCompletionLetterJob($record));
+                                    Notification::make('generated')
+                                        ->title('Generating')
+                                        ->body('It will be generated in background. Please wait and refresh the page.')
+                                        ->success()
+                                        ->send();
+                                }),
+                        ])
+                        ->label('Completion Letter')
+                        ->collection('completion_letter')
+                        ->hiddenOn('create')
+                        ->multiple(),
 
-                SpatieMediaLibraryFileUpload::make('completion_cert')
-                    ->label('Completion Certificate')
-                    ->collection('completion_cert')
-                    ->hiddenOn('create')
-                    ->multiple(),
+                    SpatieMediaLibraryFileUpload::make('completion_cert')
+                        ->hintActions([
+                            FormAction::make('generate_completion_cert')
+                                ->icon('heroicon-o-document')
+                                ->label('Generate')
+                                ->visible(fn (?Candidate $record) => $record->getFirstMedia('completion_cert') == null)
+                                ->action(function (?Candidate $record) {
+                                    dispatch_sync(new GenerateCompletionCertJob($record));
+                                    Notification::make('generated')
+                                        ->title('Generating')
+                                        ->body('It will be generated in background. Please wait and refresh the page.')
+                                        ->success()
+                                        ->send();
+                                }),
+                        ])
+                        ->label('Completion Certificate')
+                        ->collection('completion_cert')
+                        ->hiddenOn('create')
+                        ->multiple(),
 
-                SpatieMediaLibraryFileUpload::make('attendance_report')
-                    ->label('Attendance Letter')
-                    ->collection('attendance_report')
-                    ->hiddenOn('create')
-                    ->multiple(),
+                    SpatieMediaLibraryFileUpload::make('attendance_report')
+                        ->label('Attendance Report')
+                        ->collection('attendance_report')
+                        ->hiddenOn('create')
+                        ->multiple()
+                        ->hintActions([
+                            FormAction::make('generate_attendance_report')
+                                ->icon('heroicon-o-document')
+                                ->label('Generate')
+                                ->visible(fn (?Candidate $record) => $record->status === CandidateStatus::COMPLETED && $record->getFirstMedia('attendance_report') == null)
+                                ->action(function (?Candidate $record) {
+                                    dispatch_sync(new GenerateAttendanceReportJob($record));
+                                    Notification::make('generated')
+                                        ->title('Generating')
+                                        ->body('It will be generated in background. Please wait and refresh the page.')
+                                        ->success()
+                                        ->send();
+                                }),
+                        ]),
+                ])->compact()->visible(fn (?Candidate $record) => $record?->position?->type == PositionType::INTERN),
             ]),
 
             Section::make([
