@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\PositionResource\Pages;
 
+use App\Enums\CandidateStatus;
 use App\Filament\Resources\EmailResource;
 use App\Filament\Resources\PositionResource;
 use Filament\Forms\Form;
@@ -31,7 +32,10 @@ class ViewPositionEmail extends ManageRelatedRecords
     {
         return EmailResource::table($table)
             ->headerActions([
-                CreateAction::make(),
+                CreateAction::make()
+                    ->fillForm([
+                        'position_id' => $this->record->id,
+                    ]),
             ]);
     }
 }
