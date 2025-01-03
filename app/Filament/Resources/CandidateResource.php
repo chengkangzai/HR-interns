@@ -149,8 +149,9 @@ class CandidateResource extends Resource
             Section::make([
                 SpatieMediaLibraryFileUpload::make('resume')
                     ->hintActions([
-                        FormAction::make('extract and refill information')
+                        FormAction::make('Auto-Fill from Resume')
                             ->hidden(fn (string $context) => $context == 'create')
+                            ->icon('heroicon-o-pencil-square')
                             ->visible(fn (Candidate $record) => $record->getFirstMedia('resumes') !== null)
                             ->action(function (Candidate $record, Set $set, Get $get) {
                                 try {
