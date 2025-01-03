@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\PositionStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -31,6 +32,12 @@ class Email extends Model
     public function position(): BelongsTo
     {
         return $this->belongsTo(Position::class);
+    }
+
+    public function openPosition(): BelongsTo
+    {
+        return $this->belongsTo(Position::class)
+            ->where('status', PositionStatus::OPEN);
     }
 
     public function getActivitylogOptions(): LogOptions

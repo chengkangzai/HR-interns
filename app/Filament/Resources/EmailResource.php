@@ -90,9 +90,13 @@ class EmailResource extends Resource
             ->filters([
                 TrashedFilter::make(),
                 SelectFilter::make('position_id')
-                    ->label('Position')
+                    ->searchable()
+                    ->preload()
                     ->hidden(fn ($livewire) => $livewire instanceof ViewPositionEmail)
-                    ->relationship('position', 'title'),
+                    ->relationship('openPosition', 'title',function ($query){
+                        $query->whereHas('candidates');
+                    })
+                    ->label('Position'),
             ])
             ->actions([
                 EditAction::make(),
