@@ -48,6 +48,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\HtmlString;
 use Illuminate\Support\Str;
 use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
+use Spatie\PdfToText\Pdf;
 use Spatie\Tags\Tag;
 use Ysfkaya\FilamentPhoneInput\Forms\PhoneInput;
 
@@ -147,6 +148,35 @@ class CandidateResource extends Resource
 
             Section::make([
                 SpatieMediaLibraryFileUpload::make('resume')
+                    ->hintActions([
+                        FormAction::make('extract-text')
+                            ->hidden(fn (string $context) => $context == 'create')
+                            ->icon('heroicon-o-document-text')
+                            ->visible(fn (Candidate $record) => $record->getFirstMedia('resumes') !== null)
+                            ->modalSubmitAction(
+                                \Filament\Actions\Action::make('Copy Text_Close')
+                                    ->label('Copy Text & Close')
+                                    ->extraAttributes([
+                                        'x-on:click' => new HtmlString('navigator.clipboard.writeText(document.getElementById(\'pdf-content\').innerText) && new FilamentNotification().success().title(\'Copied !\').send() && close'),
+                                    ])
+                            )
+                            ->modalCancelAction(false)
+                            ->form([
+                                Placeholder::make('text')
+                                    ->content(function (Candidate $record): HtmlString {
+                                        $pdfPath = $record->getFirstMedia('resumes')->getPath();
+                                        $pdfText = (new Pdf)->setPdf($pdfPath)->text();
+
+                                        return new HtmlString(<<<HTML
+                            <div class="flex flex-col relative">
+                                <div class="max-h-96 overflow-y-auto p-4 bg-gray-50 rounded-lg whitespace-pre-wrap" id="pdf-content">
+                                    {$pdfText}
+                                </div>
+                            </div>
+                        HTML);
+                                    }),
+                            ]),
+                    ])
                     ->afterStateUpdated(function (TemporaryUploadedFile $state, Set $set, Get $get, string $context) {
                         if ($context !== 'create') {
                             return;
@@ -154,8 +184,8 @@ class CandidateResource extends Resource
                         $extractor = app(PdfExtractorService::class)->extractInformation($state->path());
 
                         // Set personal information if available
-                        if (isset($extractor['personal_info'][0])) {
-                            $personalInfo = $extractor['personal_info'][0];
+                        if (isset($extractor['personal_info'])) {
+                            $personalInfo = $extractor['personal_info'];
 
                             // Set name if empty
                             if ($personalInfo['name']) {
@@ -211,6 +241,29 @@ class CandidateResource extends Resource
                                 if (isset($block['type']) && $block['type'] !== 'qualification') {
                                     $additionalInfo[] = $block;
                                 }
+                            }
+                        }
+
+                        if (isset($extractor['social_media']) && is_array($extractor['social_media'])) {
+                            foreach ($extractor['social_media'] as $socialMediaEntry) {
+                                if (!isset($socialMediaEntry['data'])) {
+                                    continue;
+                                }
+
+                                $socialMedia = $socialMediaEntry['data'];
+
+                                // Create social media block
+                                $socialMediaBlock = [
+                                    'type' => 'social_media',
+                                    'data' => [
+                                        'social_media' => $socialMedia['social_media'] ?? null,
+                                        'username' => $socialMedia['username'] ?? null,
+                                        'url' => $socialMedia['url'] ?? null,
+                                    ],
+                                ];
+
+                                // Add social media block to additional info
+                                $additionalInfo[] = $socialMediaBlock;
                             }
                         }
 

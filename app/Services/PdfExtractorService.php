@@ -14,12 +14,8 @@ class PdfExtractorService
         $this->groq = app(GroqService::class);
     }
 
-    /**
-     * Extract information from PDF using Groq
-     */
     public function extractInformation(string $pdfPath): array
     {
-        // Extract text from PDF
         $pdfText = (new Pdf)
             ->setPdf($pdfPath)
             ->text();
@@ -38,8 +34,27 @@ Extract information from Malaysian resumes and documents following these rules:
   * If no Malaysian number found, extract other country numbers
   * Always format with international code (e.g., +60, +65, +44)
 - Email: Extract email address
+- Format as:
+{
+    "name": string,
+    "email": string,
+    "phone_number": string
+}
 
-2. Qualifications:
+2. Social Media:
+- Extract social media profiles
+- Must be one of: 'linkedin', 'github', 'twitter', 'facebook', 'instagram', 'others'
+- Format as:
+[{
+    "type": "social_media",
+    "data": {
+        "social_media": string,  // One of the allowed types
+        "username": string,
+        "url": string
+    }
+}]
+
+3. Qualifications:
 - Only include formal academic qualifications from recognized institutions
 - Qualification must be ONE of: 'Diploma', 'Bachelor', 'Master', 'PhD', 'Others'
 - Ignore all online courses, certificates, and non-academic qualifications
@@ -59,7 +74,7 @@ Format qualifications as:
     }
 }]
 
-Return only valid JSON with personal_info and qualifications arrays.
+Return only valid JSON with personal_info, social_media, and qualifications arrays.
 Maintain chronological order of qualifications (newest first).
 EOT
                 ],
@@ -71,13 +86,22 @@ EOT
                 'response_format' => ['type' => 'json_object'],
             ]);
 
+            info($response['choices'][0]['message']['content']);
+
             $result = json_decode($response['choices'][0]['message']['content'], true);
 
-            // Additional validation for qualification types
             if (isset($result['qualifications'])) {
                 foreach ($result['qualifications'] as &$qual) {
                     if (! in_array($qual['data']['qualification'], ['Diploma', 'Bachelor', 'Master', 'PhD', 'Others'])) {
                         $qual['data']['qualification'] = 'Others';
+                    }
+                }
+            }
+
+            if (isset($result['social_media'])) {
+                foreach ($result['social_media'] as &$social) {
+                    if (! in_array($social['data']['social_media'], ['linkedin', 'github', 'twitter', 'facebook', 'instagram', 'others'])) {
+                        $social['data']['social_media'] = 'others';
                     }
                 }
             }
@@ -89,6 +113,7 @@ EOT
 
             return [
                 'personal_info' => [],
+                'social_media' => [],
                 'qualifications' => [],
             ];
         }
