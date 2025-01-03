@@ -150,9 +150,8 @@ class CandidateResource extends Resource
                 SpatieMediaLibraryFileUpload::make('resume')
                     ->hintActions([
                         FormAction::make('Auto-Fill from Resume')
-                            ->hidden(fn (string $context) => $context == 'create')
                             ->icon('heroicon-o-pencil-square')
-                            ->visible(fn (Candidate $record) => $record->getFirstMedia('resumes') !== null)
+                            ->visible(fn(Candidate $record, string $context) => $context == 'edit' && $record->getFirstMedia('resumes') !== null)
                             ->action(function (Candidate $record, Set $set, Get $get) {
                                 try {
                                     $s3Url = $record->getFirstMedia('resumes')->getTemporaryUrl(now()->addMinutes(5));
@@ -180,9 +179,8 @@ class CandidateResource extends Resource
                                 }
                             }),
                         FormAction::make('extract-text')
-                            ->hidden(fn (string $context) => $context == 'create')
                             ->icon('heroicon-o-document-text')
-                            ->visible(fn (Candidate $record) => $record->getFirstMedia('resumes') !== null)
+                            ->visible(fn(Candidate $record, string $context) => $context == 'edit' && $record->getFirstMedia('resumes') !== null)
                             ->modalSubmitAction(
                                 \Filament\Actions\Action::make('Copy Text_Close')
                                     ->label('Copy Text & Close')
