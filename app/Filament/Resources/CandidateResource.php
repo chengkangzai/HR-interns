@@ -181,109 +181,118 @@ class CandidateResource extends Resource
                         if ($context !== 'create') {
                             return;
                         }
-                        $extractor = app(PdfExtractorService::class)->extractInformation($state->path());
+                        try {
 
-                        // Set personal information if available
-                        if (isset($extractor['personal_info'])) {
-                            $personalInfo = $extractor['personal_info'];
+                            $extractor = app(PdfExtractorService::class)->extractInformation($state->path());
 
-                            // Set name if empty
-                            if ($personalInfo['name']) {
-                                $set('name', str($personalInfo['name'])->title()->__toString());
-                            }
+                            // Set personal information if available
+                            if (isset($extractor['personal_info'])) {
+                                $personalInfo = $extractor['personal_info'];
 
-                            // Set email if empty
-                            if ($personalInfo['email']) {
-                                $set('email', str($personalInfo['email'])->remove(' ')->remove('`')->__toString());
-                            }
-
-                            // Set phone number if empty
-                            if ($personalInfo['phone_number']) {
-                                $set('phone_number', $personalInfo['phone_number']);
-                            }
-                        }
-
-                        // Initialize additional info array
-                        $additionalInfo = [];
-
-                        // Add qualifications if available
-                        if (isset($extractor['qualifications']) && is_array($extractor['qualifications'])) {
-                            foreach ($extractor['qualifications'] as $qualificationEntry) {
-                                if (! isset($qualificationEntry['data'])) {
-                                    continue;
+                                // Set name if empty
+                                if ($personalInfo['name']) {
+                                    $set('name', str($personalInfo['name'])->title()->__toString());
                                 }
 
-                                $qualification = $qualificationEntry['data'];
-
-                                // Create qualification block
-                                $qualificationBlock = [
-                                    'type' => 'qualification',
-                                    'data' => [
-                                        'qualification' => $qualification['qualification'] ?? null,
-                                        'major' => str($qualification['major'] ?? '')->title()->__toString(),
-                                        'university' => str($qualification['university'] ?? '')->trim()->title()->__toString(),
-                                        'gpa' => $qualification['gpa'] ?? null,
-                                        'from' => $qualification['from'] ?? null,
-                                        'to' => $qualification['to'] ?? null,
-                                    ],
-                                ];
-
-                                // Add qualification block to additional info
-                                $additionalInfo[] = $qualificationBlock;
-                            }
-                        }
-
-                        // Preserve any existing non-qualification blocks in additional_info
-                        $existingBlocks = $get('additional_info') ?? [];
-                        if (is_array($existingBlocks)) {
-                            foreach ($existingBlocks as $block) {
-                                // Only keep non-qualification blocks
-                                if (isset($block['type']) && $block['type'] !== 'qualification') {
-                                    $additionalInfo[] = $block;
-                                }
-                            }
-                        }
-
-                        if (isset($extractor['social_media']) && is_array($extractor['social_media'])) {
-                            foreach ($extractor['social_media'] as $socialMediaEntry) {
-                                if (!isset($socialMediaEntry['data'])) {
-                                    continue;
+                                // Set email if empty
+                                if ($personalInfo['email']) {
+                                    $set('email', str($personalInfo['email'])->remove(' ')->remove('`')->__toString());
                                 }
 
-                                $socialMedia = $socialMediaEntry['data'];
-
-                                // Create social media block
-                                $socialMediaBlock = [
-                                    'type' => 'social_media',
-                                    'data' => [
-                                        'social_media' => $socialMedia['social_media'] ?? null,
-                                        'username' => $socialMedia['username'] ?? null,
-                                        'url' => $socialMedia['url'] ?? null,
-                                    ],
-                                ];
-
-                                // Add social media block to additional info
-                                $additionalInfo[] = $socialMediaBlock;
+                                // Set phone number if empty
+                                if ($personalInfo['phone_number']) {
+                                    $set('phone_number', $personalInfo['phone_number']);
+                                }
                             }
-                        }
 
-                        // Set the additional_info field with the updated array
-                        if (! empty($additionalInfo)) {
-                            $set('additional_info', $additionalInfo);
-                        }
+                            // Initialize additional info array
+                            $additionalInfo = [];
 
-                        // Show notification based on what was extracted
-                        if (! empty($extractedInfo)) {
+                            // Add qualifications if available
+                            if (isset($extractor['qualifications']) && is_array($extractor['qualifications'])) {
+                                foreach ($extractor['qualifications'] as $qualificationEntry) {
+                                    if (! isset($qualificationEntry['data'])) {
+                                        continue;
+                                    }
+
+                                    $qualification = $qualificationEntry['data'];
+
+                                    // Create qualification block
+                                    $qualificationBlock = [
+                                        'type' => 'qualification',
+                                        'data' => [
+                                            'qualification' => $qualification['qualification'] ?? null,
+                                            'major' => str($qualification['major'] ?? '')->title()->__toString(),
+                                            'university' => str($qualification['university'] ?? '')->trim()->title()->__toString(),
+                                            'gpa' => $qualification['gpa'] ?? null,
+                                            'from' => $qualification['from'] ?? null,
+                                            'to' => $qualification['to'] ?? null,
+                                        ],
+                                    ];
+
+                                    // Add qualification block to additional info
+                                    $additionalInfo[] = $qualificationBlock;
+                                }
+                            }
+
+                            // Preserve any existing non-qualification blocks in additional_info
+                            $existingBlocks = $get('additional_info') ?? [];
+                            if (is_array($existingBlocks)) {
+                                foreach ($existingBlocks as $block) {
+                                    // Only keep non-qualification blocks
+                                    if (isset($block['type']) && $block['type'] !== 'qualification') {
+                                        $additionalInfo[] = $block;
+                                    }
+                                }
+                            }
+
+                            if (isset($extractor['social_media']) && is_array($extractor['social_media'])) {
+                                foreach ($extractor['social_media'] as $socialMediaEntry) {
+                                    if (! isset($socialMediaEntry['data'])) {
+                                        continue;
+                                    }
+
+                                    $socialMedia = $socialMediaEntry['data'];
+
+                                    // Create social media block
+                                    $socialMediaBlock = [
+                                        'type' => 'social_media',
+                                        'data' => [
+                                            'social_media' => $socialMedia['social_media'] ?? null,
+                                            'username' => $socialMedia['username'] ?? null,
+                                            'url' => $socialMedia['url'] ?? null,
+                                        ],
+                                    ];
+
+                                    // Add social media block to additional info
+                                    $additionalInfo[] = $socialMediaBlock;
+                                }
+                            }
+
+                            // Set the additional_info field with the updated array
+                            if (! empty($additionalInfo)) {
+                                $set('additional_info', $additionalInfo);
+                            }
+
+                            // Show notification based on what was extracted
+                            if (! empty($extractedInfo)) {
+                                Notification::make()
+                                    ->title('Resume Information Extracted')
+                                    ->body('Successfully extracted '.implode(' and ', $extractedInfo).'.')
+                                    ->success()
+                                    ->send();
+                            } else {
+                                Notification::make()
+                                    ->title('Resume Processing')
+                                    ->body('No information could be extracted from the resume. Please fill in the information manually.')
+                                    ->warning()
+                                    ->send();
+                            }
+                        } catch (\Exception) {
                             Notification::make()
-                                ->title('Resume Information Extracted')
-                                ->body('Successfully extracted '.implode(' and ', $extractedInfo).'.')
-                                ->success()
-                                ->send();
-                        } else {
-                            Notification::make()
-                                ->title('Resume Processing')
-                                ->body('No information could be extracted from the resume. Please fill in the information manually.')
-                                ->warning()
+                                ->title('Error Occurred')
+                                ->body('Time to manually extract resume information!')
+                                ->danger()
                                 ->send();
                         }
 
