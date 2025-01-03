@@ -154,9 +154,15 @@ class CandidateResource extends Resource
                             ->visible(fn (Candidate $record) => $record->getFirstMedia('resumes') !== null)
                             ->action(function (Candidate $record, Set $set, Get $get) {
                                 try {
-                                    $pdfPath = $record->getFirstMedia('resumes')->getPath();
+                                    $s3Url = $record->getFirstMedia('resumes')->getTemporaryUrl(now()->addMinutes(5));
+                                    $tempPath = storage_path('app/'.uniqid().'.pdf');
 
-                                    $extractedInfo = CandidateResource::extractAndFillResumeInformation($pdfPath, $set, $get);
+                                    file_put_contents($tempPath, file_get_contents($s3Url));
+
+                                    $extractedInfo = CandidateResource::extractAndFillResumeInformation($tempPath, $set, $get);
+
+                                    unlink($tempPath);
+
                                     if (! empty($extractedInfo)) {
                                         Notification::make()
                                             ->title('Information Extracted')
