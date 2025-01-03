@@ -488,7 +488,9 @@ class CandidateResource extends Resource
                 SelectFilter::make('position_id')
                     ->searchable()
                     ->preload()
-                    ->relationship('openPosition', 'title')
+                    ->relationship('openPosition', 'title',function ($query){
+                        $query->whereHas('candidates');
+                    })
                     ->label('Position'),
 
                 SelectFilter::make('tags')
