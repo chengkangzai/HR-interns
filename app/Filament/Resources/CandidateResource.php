@@ -149,6 +149,7 @@ class CandidateResource extends Resource
             Section::make([
                 SpatieMediaLibraryFileUpload::make('resume')
                     ->hintActions([
+                        FormAction::make('extract and refill information'),
                         FormAction::make('extract-text')
                             ->hidden(fn (string $context) => $context == 'create')
                             ->icon('heroicon-o-document-text')
@@ -190,17 +191,17 @@ class CandidateResource extends Resource
                                 $personalInfo = $extractor['personal_info'];
 
                                 // Set name if empty
-                                if ($personalInfo['name']) {
+                                if ($personalInfo['name'] && str($get('name'))->isEmpty()) {
                                     $set('name', str($personalInfo['name'])->title()->__toString());
                                 }
 
                                 // Set email if empty
-                                if ($personalInfo['email']) {
+                                if ($personalInfo['email'] && str($get('email'))->isEmpty()) {
                                     $set('email', str($personalInfo['email'])->remove(' ')->remove('`')->__toString());
                                 }
 
                                 // Set phone number if empty
-                                if ($personalInfo['phone_number']) {
+                                if ($personalInfo['phone_number'] && str($get('phone_number'))->isEmpty()) {
                                     $set('phone_number', $personalInfo['phone_number']);
                                 }
                             }
