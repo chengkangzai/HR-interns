@@ -110,7 +110,6 @@ class CandidateResource extends Resource
                     ->relationship('position', 'title')
                     ->options(fn () => Position::query()
                         ->where('status', PositionStatus::OPEN)
-                        ->whereHas('candidates')
                         ->get()
                         ->groupBy('type')
                         ->map(function ($positions) {
@@ -489,7 +488,7 @@ class CandidateResource extends Resource
                 SelectFilter::make('position_id')
                     ->searchable()
                     ->preload()
-                    ->relationship('position', 'title')
+                    ->relationship('openPosition', 'title')
                     ->label('Position'),
 
                 SelectFilter::make('tags')
