@@ -156,7 +156,7 @@ class CandidateResource extends Resource
                                 try {
                                     $pdfPath = $record->getFirstMedia('resumes')->getPath();
 
-                                    $extractedInfo = $this->extractAndFillResumeInformation($pdfPath, $set, $get);
+                                    $extractedInfo = CandidateResource::extractAndFillResumeInformation($pdfPath, $set, $get);
                                     if (! empty($extractedInfo)) {
                                         Notification::make()
                                             ->title('Information Extracted')
@@ -206,7 +206,7 @@ class CandidateResource extends Resource
                         }
 
                         try {
-                            $extractedInfo = $this->extractAndFillResumeInformation($state->path(), $set, $get);
+                            $extractedInfo = CandidateResource::extractAndFillResumeInformation($state->path(), $set, $get);
 
                             if (! empty($extractedInfo)) {
                                 Notification::make()
@@ -688,7 +688,7 @@ class CandidateResource extends Resource
             });
     }
 
-    public function extractAndFillResumeInformation(string $pdfPath, Set $set, Get $get): array
+    public static function extractAndFillResumeInformation(string $pdfPath, Set $set, Get $get): array
     {
         $extractor = app(PdfExtractorService::class)->extractInformation($pdfPath);
         $extractedInfo = [];
