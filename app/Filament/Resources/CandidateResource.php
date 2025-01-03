@@ -190,12 +190,12 @@ class CandidateResource extends Resource
                                         $s3Url = $record->getFirstMedia('resumes')->getTemporaryUrl(now()->addMinutes(5));
 
                                         // Create temp file path
-                                        $tempPath = storage_path('app/' . uniqid() . '.pdf');
+                                        $tempPath = storage_path('app/'.uniqid().'.pdf');
 
                                         // Download file from S3
                                         file_put_contents($tempPath, file_get_contents($s3Url));
 
-                                        $pdfText = (new Pdf())
+                                        $pdfText = (new Pdf)
                                             ->setPdf($tempPath)
                                             ->text();
 
