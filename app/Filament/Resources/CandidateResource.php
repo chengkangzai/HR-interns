@@ -149,7 +149,29 @@ class CandidateResource extends Resource
             Section::make([
                 SpatieMediaLibraryFileUpload::make('resume')
                     ->hintActions([
-                        FormAction::make('extract and refill information'),
+                        FormAction::make('extract and refill information')
+                            ->hidden(fn (string $context) => $context == 'create')
+                            ->visible(fn (Candidate $record) => $record->getFirstMedia('resumes') !== null)
+                            ->action(function (Candidate $record, Set $set, Get $get) {
+                                try {
+                                    $pdfPath = $record->getFirstMedia('resumes')->getPath();
+
+                                    $extractedInfo = $this->extractAndFillResumeInformation($pdfPath, $set, $get);
+                                    if (! empty($extractedInfo)) {
+                                        Notification::make()
+                                            ->title('Information Extracted')
+                                            ->body('Successfully extracted '.implode(', ', $extractedInfo).'.')
+                                            ->success()
+                                            ->send();
+                                    }
+                                } catch (\Exception $e) {
+                                    Notification::make()
+                                        ->title('Error Occurred')
+                                        ->body('Failed to extract resume information: '.$e->getMessage())
+                                        ->danger()
+                                        ->send();
+                                }
+                            }),
                         FormAction::make('extract-text')
                             ->hidden(fn (string $context) => $context == 'create')
                             ->icon('heroicon-o-document-text')
@@ -182,111 +204,15 @@ class CandidateResource extends Resource
                         if ($context !== 'create') {
                             return;
                         }
+
                         try {
+                            $extractedInfo = $this->extractAndFillResumeInformation($state->path(), $set, $get);
 
-                            $extractor = app(PdfExtractorService::class)->extractInformation($state->path());
-
-                            // Set personal information if available
-                            if (isset($extractor['personal_info'])) {
-                                $personalInfo = $extractor['personal_info'];
-
-                                // Set name if empty
-                                if ($personalInfo['name'] && str($get('name'))->isEmpty()) {
-                                    $set('name', str($personalInfo['name'])->title()->__toString());
-                                }
-
-                                // Set email if empty
-                                if ($personalInfo['email'] && str($get('email'))->isEmpty()) {
-                                    $set('email', str($personalInfo['email'])->remove(' ')->remove('`')->__toString());
-                                }
-
-                                // Set phone number if empty
-                                if ($personalInfo['phone_number'] && str($get('phone_number'))->isEmpty()) {
-                                    $set('phone_number', $personalInfo['phone_number']);
-                                }
-                            }
-
-                            // Initialize additional info array
-                            $additionalInfo = [];
-
-                            // Add qualifications if available
-                            if (isset($extractor['qualifications']) && is_array($extractor['qualifications'])) {
-                                foreach ($extractor['qualifications'] as $qualificationEntry) {
-                                    if (! isset($qualificationEntry['data'])) {
-                                        continue;
-                                    }
-
-                                    $qualification = $qualificationEntry['data'];
-
-                                    // Create qualification block
-                                    $qualificationBlock = [
-                                        'type' => 'qualification',
-                                        'data' => [
-                                            'qualification' => $qualification['qualification'] ?? null,
-                                            'major' => str($qualification['major'] ?? '')->title()->__toString(),
-                                            'university' => str($qualification['university'] ?? '')->trim()->title()->__toString(),
-                                            'gpa' => $qualification['gpa'] ?? null,
-                                            'from' => $qualification['from'] ?? null,
-                                            'to' => $qualification['to'] ?? null,
-                                        ],
-                                    ];
-
-                                    // Add qualification block to additional info
-                                    $additionalInfo[] = $qualificationBlock;
-                                }
-                            }
-
-                            // Preserve any existing non-qualification blocks in additional_info
-                            $existingBlocks = $get('additional_info') ?? [];
-                            if (is_array($existingBlocks)) {
-                                foreach ($existingBlocks as $block) {
-                                    // Only keep non-qualification blocks
-                                    if (isset($block['type']) && $block['type'] !== 'qualification') {
-                                        $additionalInfo[] = $block;
-                                    }
-                                }
-                            }
-
-                            if (isset($extractor['social_media']) && is_array($extractor['social_media'])) {
-                                foreach ($extractor['social_media'] as $socialMediaEntry) {
-                                    if (! isset($socialMediaEntry['data'])) {
-                                        continue;
-                                    }
-
-                                    $socialMedia = $socialMediaEntry['data'];
-
-                                    // Create social media block
-                                    $socialMediaBlock = [
-                                        'type' => 'social_media',
-                                        'data' => [
-                                            'social_media' => $socialMedia['social_media'] ?? null,
-                                            'username' => $socialMedia['username'] ?? null,
-                                            'url' => $socialMedia['url'] ?? null,
-                                        ],
-                                    ];
-
-                                    // Add social media block to additional info
-                                    $additionalInfo[] = $socialMediaBlock;
-                                }
-                            }
-
-                            // Set the additional_info field with the updated array
-                            if (! empty($additionalInfo)) {
-                                $set('additional_info', $additionalInfo);
-                            }
-
-                            // Show notification based on what was extracted
                             if (! empty($extractedInfo)) {
                                 Notification::make()
                                     ->title('Resume Information Extracted')
                                     ->body('Successfully extracted '.implode(' and ', $extractedInfo).'.')
                                     ->success()
-                                    ->send();
-                            } else {
-                                Notification::make()
-                                    ->title('Resume Processing')
-                                    ->body('No information could be extracted from the resume. Please fill in the information manually.')
-                                    ->warning()
                                     ->send();
                             }
                         } catch (\Exception) {
@@ -296,7 +222,6 @@ class CandidateResource extends Resource
                                 ->danger()
                                 ->send();
                         }
-
                     })
                     ->label('Resume')
                     ->collection('resumes')
@@ -761,5 +686,83 @@ class CandidateResource extends Resource
                     ->body('The selected candidates have been updated.')
                     ->send();
             });
+    }
+
+    public function extractAndFillResumeInformation(string $pdfPath, Set $set, Get $get): array
+    {
+        $extractor = app(PdfExtractorService::class)->extractInformation($pdfPath);
+        $extractedInfo = [];
+
+        if (isset($extractor['personal_info'])) {
+            $personalInfo = $extractor['personal_info'];
+
+            if (! empty($personalInfo['name']) && str($get('name'))->isEmpty()) {
+                $set('name', str($personalInfo['name'])->title()->__toString());
+                $extractedInfo[] = 'name';
+            }
+
+            if (! empty($personalInfo['email']) && str($get('email'))->isEmpty()) {
+                $set('email', str($personalInfo['email'])->remove(' ')->remove('`')->__toString());
+                $extractedInfo[] = 'email';
+            }
+
+            if (! empty($personalInfo['phone_number']) && str($get('phone_number'))->isEmpty()) {
+                $set('phone_number', $personalInfo['phone_number']);
+                $extractedInfo[] = 'phone number';
+            }
+        }
+
+        $additionalInfo = [];
+
+        if (isset($extractor['qualifications']) && is_array($extractor['qualifications'])) {
+            foreach ($extractor['qualifications'] as $qualificationEntry) {
+                if (! isset($qualificationEntry['data'])) {
+                    continue;
+                }
+
+                $qualification = $qualificationEntry['data'];
+                $additionalInfo[] = [
+                    'type' => 'qualification',
+                    'data' => [
+                        'qualification' => $qualification['qualification'] ?? null,
+                        'major' => str($qualification['major'] ?? '')->title()->__toString(),
+                        'university' => str($qualification['university'] ?? '')->trim()->title()->__toString(),
+                        'gpa' => $qualification['gpa'] ?? null,
+                        'from' => $qualification['from'] ?? null,
+                        'to' => $qualification['to'] ?? null,
+                    ],
+                ];
+            }
+            if (! empty($extractor['qualifications'])) {
+                $extractedInfo[] = 'qualifications';
+            }
+        }
+
+        if (isset($extractor['social_media']) && is_array($extractor['social_media'])) {
+            foreach ($extractor['social_media'] as $socialMediaEntry) {
+                if (! isset($socialMediaEntry['data'])) {
+                    continue;
+                }
+
+                $socialMedia = $socialMediaEntry['data'];
+                $additionalInfo[] = [
+                    'type' => 'social_media',
+                    'data' => [
+                        'social_media' => $socialMedia['social_media'] ?? null,
+                        'username' => $socialMedia['username'] ?? null,
+                        'url' => $socialMedia['url'] ?? null,
+                    ],
+                ];
+            }
+            if (! empty($extractor['social_media'])) {
+                $extractedInfo[] = 'social media';
+            }
+        }
+
+        if (! empty($additionalInfo)) {
+            $set('additional_info', $additionalInfo);
+        }
+
+        return $extractedInfo;
     }
 }
