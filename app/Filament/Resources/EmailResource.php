@@ -93,7 +93,7 @@ class EmailResource extends Resource
                     ->searchable()
                     ->preload()
                     ->hidden(fn ($livewire) => $livewire instanceof ViewPositionEmail)
-                    ->relationship('openPosition', 'title',function ($query){
+                    ->relationship('openPosition', 'title', function ($query) {
                         $query->whereHas('candidates');
                     })
                     ->label('Position'),
