@@ -186,9 +186,20 @@ class CandidateResource extends Resource
                             ->modalCancelAction(false)
                             ->form([
                                 Placeholder::make('text')
-                                    ->content(function (Candidate $record): HtmlString {
-                                        $pdfPath = $record->getFirstMedia('resumes')->getPath();
-                                        $pdfText = (new Pdf)->setPdf($pdfPath)->text();
+                                    ->content(function (Candidate $record): HtmlString {// Get temporary S3 URL valid for 5 minutes
+                                        $s3Url = $record->getFirstMedia('resumes')->getTemporaryUrl(now()->addMinutes(5));
+
+                                        // Create temp file path
+                                        $tempPath = storage_path('app/' . uniqid() . '.pdf');
+
+                                        // Download file from S3
+                                        file_put_contents($tempPath, file_get_contents($s3Url));
+
+                                        $pdfText = (new Pdf())
+                                            ->setPdf($tempPath)
+                                            ->text();
+
+                                        unlink($tempPath); // Clean up temp file
 
                                         return new HtmlString(<<<HTML
                             <div class="flex flex-col relative">
