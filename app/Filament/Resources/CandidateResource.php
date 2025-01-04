@@ -213,7 +213,7 @@ class CandidateResource extends Resource
 
                                         return new HtmlString(<<<HTML
                             <div class="flex flex-col relative">
-                                <div class="max-h-96 overflow-y-auto p-4 bg-gray-50 rounded-lg whitespace-pre-wrap" id="pdf-content">
+                                <div class="max-h-96 overflow-y-auto p-4 bg-gray-50 dark:bg-gray-800 rounded-lg whitespace-pre-wrap dark:text-gray-200" id="pdf-content">
                                     {$pdfText}
                                 </div>
                             </div>
