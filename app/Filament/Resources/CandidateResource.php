@@ -101,6 +101,7 @@ class CandidateResource extends Resource
 
             Section::make([
                 Select::make('position_id')
+                    ->live()
                     ->suffixAction(function (string $context, ?Candidate $record) {
                         if (! $record) {
                             return null;
@@ -133,22 +134,23 @@ class CandidateResource extends Resource
                     ->options(CandidateStatus::class)
                     ->default(CandidateStatus::PENDING)
                     ->required(),
-            ]),
 
-            Section::make([
-                DatePicker::make('from')
-                    ->live(onBlur: true),
+                Section::make([
+                    DatePicker::make('from')
+                        ->live(onBlur: true),
 
-                DatePicker::make('to')
-                    ->live(onBlur: true),
+                    DatePicker::make('to')
+                        ->live(onBlur: true),
 
-                Placeholder::make('range')
-                    ->label('From - To')
-                    ->visibleOn(['view', 'edit'])
-                    ->content(fn (Get $get): string => $get('from') !== null && $get('to') !== null
-                        ? ceil(Carbon::parse($get('from'))->floatDiffInWeeks(Carbon::parse($get('to')))).' weeks'
-                        : 'N/A'
-                    ),
+                    Placeholder::make('range')
+                        ->label('From - To')
+                        ->visibleOn(['view', 'edit'])
+                        ->content(fn (Get $get): string => $get('from') !== null && $get('to') !== null
+                            ? ceil(Carbon::parse($get('from'))->floatDiffInWeeks(Carbon::parse($get('to')))).' weeks'
+                            : 'N/A'
+                        ),
+                ])->compact()
+                    ->visible(fn (Get $get) => Position::find($get('position_id'))->type !== PositionType::FULL_TIME),
             ]),
 
             Section::make([
