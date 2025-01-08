@@ -7,7 +7,7 @@ use Spatie\PdfToText\Pdf;
 
 class PdfExtractorService
 {
-    private $groq;
+    private GroqService $groq;
 
     public function __construct()
     {
@@ -85,8 +85,6 @@ EOT
             ], [
                 'response_format' => ['type' => 'json_object'],
             ]);
-
-            info($response['choices'][0]['message']['content']);
 
             $result = json_decode($response['choices'][0]['message']['content'], true);
 
