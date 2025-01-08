@@ -69,7 +69,7 @@ Format qualifications as:
         "qualification": string,  // MUST be one of: Diploma, Bachelor, Master, PhD, Others
         "major": string,
         "gpa": string,  // If not available, use null
-        "from": YYYY-MM-DD,  // If only year available, use YYYY-01-01
+        "from": YYYY-MM-DD,  // If only year available, use YYYY-01-01, if not available, use null
         "to": YYYY-MM-DD or null if ongoing
     }
 }]
