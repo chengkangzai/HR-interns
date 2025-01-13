@@ -130,24 +130,27 @@ EOT
 
             if (isset($result['qualifications'])) {
                 foreach ($result['qualifications'] as &$qual) {
-                    if (! in_array($qual['data']['qualification'], ['Diploma', 'Bachelor', 'Master', 'PhD', 'Others'])) {
-                        $qual['data']['qualification'] = 'Others';
+                    $qualification = data_get($qual, 'data.qualification');
+                    if (! in_array($qualification, ['Diploma', 'Bachelor', 'Master', 'PhD', 'Others'])) {
+                        data_set($qual, 'data.qualification', 'Others');
                     }
                 }
             }
 
             if (isset($result['social_media'])) {
                 foreach ($result['social_media'] as &$social) {
-                    if (! in_array($social['data']['social_media'], ['linkedin', 'github', 'twitter', 'facebook', 'instagram', 'others'])) {
-                        $social['data']['social_media'] = 'others';
+                    $socialMedia = data_get($social, 'data.social_media');
+                    if (! in_array($socialMedia, ['linkedin', 'github', 'twitter', 'facebook', 'instagram', 'others'])) {
+                        data_set($social, 'data.social_media', 'others');
                     }
                 }
             }
 
             if (isset($result['work_experience'])) {
                 foreach ($result['work_experience'] as &$work) {
-                    if (! in_array($work['employment_type'], ['Full_time', 'Part_time', 'Contract', 'Internship', 'Freelance', 'Other'])) {
-                        $work['employment_type'] = 'Other';
+                    $employmentType = data_get($work, 'employment_type');
+                    if (! in_array($employmentType, ['Full_time', 'Part_time', 'Contract', 'Internship', 'Freelance', 'Other'])) {
+                        data_set($work, 'employment_type', 'Other');
                     }
                 }
             }
