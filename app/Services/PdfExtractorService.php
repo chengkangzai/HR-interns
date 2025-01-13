@@ -77,6 +77,7 @@ Format qualifications as:
 4. Work Experience:
 - Extract all work experiences
 - Employment type must be ONE of: 'Full_time', 'Part_time', 'Contract', 'Internship', 'Freelance', 'Other'
+- If employment type is not explicitly stated, default to 'Full_time'
 - Location format must be 'City, State/Country' (e.g., 'Johor Bahru, Johor', 'Bukit Jalil, Kuala Lumpur')
 - For current positions, set end_date as null and is_current as true
 
