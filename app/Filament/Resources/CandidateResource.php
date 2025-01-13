@@ -245,7 +245,8 @@ class CandidateResource extends Resource
                                     ->success()
                                     ->send();
                             }
-                        } catch (\Exception) {
+                        } catch (\Exception $e) {
+                            info($e);
                             Notification::make()
                                 ->title('Error Occurred')
                                 ->body('Time to manually extract resume information!')
@@ -961,6 +962,21 @@ class CandidateResource extends Resource
             if (! empty($personalInfo['phone_number']) && str($get('phone_number'))->isEmpty()) {
                 $set('phone_number', $personalInfo['phone_number']);
                 $extractedInfo[] = 'phone number';
+            }
+        }
+
+        // Handle skills array
+        if (isset($extractor['skills']) && is_array($extractor['skills'])) {
+            $existingSkills = collect($get('skills') ?? []);
+            $newSkills = $existingSkills
+                ->merge($extractor['skills'])
+                ->unique()
+                ->values()
+                ->toArray();
+
+            if (! empty($newSkills)) {
+                $set('skills', $newSkills);
+                $extractedInfo[] = 'skills';
             }
         }
 

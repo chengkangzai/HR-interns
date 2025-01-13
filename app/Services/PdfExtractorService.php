@@ -4,6 +4,7 @@ namespace App\Services;
 
 use Illuminate\Support\Facades\Log;
 use Spatie\PdfToText\Pdf;
+use Spatie\Tags\Tag;
 
 class PdfExtractorService
 {
@@ -20,11 +21,16 @@ class PdfExtractorService
             ->setPdf($pdfPath)
             ->text();
 
+        $skills = Tag::query()
+            ->whereType('skills')
+            ->pluck('name')
+            ->toJson();
+
         try {
             $response = $this->groq->chat([
                 [
                     'role' => 'system',
-                    'content' => <<<'EOT'
+                    'content' => <<<EOT
 Extract information from Malaysian resumes and documents following these rules:
 
 1. Personal Information:
@@ -41,7 +47,16 @@ Extract information from Malaysian resumes and documents following these rules:
     "phone_number": string
 }
 
-2. Social Media:
+2. Skills:
+- Extract all technical skills, frameworks, programming languages, and tools
+- Match against the following existing skill tags if possible:
+{$skills}
+- If a skill doesn't match any existing tag, create a new one
+- Normalize skill names (e.g., "Tailwind CSS" -> "TailwindCSS", "React.js" -> "React")
+- Return as array of strings
+- Format as: ["Laravel", "TailwindCSS", "Vue.js"]
+
+3. Social Media:
 - Extract social media profiles
 - Must be one of: 'linkedin', 'github', 'twitter', 'facebook', 'instagram', 'others'
 - Format as:
@@ -54,7 +69,7 @@ Extract information from Malaysian resumes and documents following these rules:
     }
 }]
 
-3. Qualifications:
+4. Qualifications:
 - Only include formal academic qualifications from recognized institutions
 - Qualification must be ONE of: 'Diploma', 'Bachelor', 'Master', 'PhD', 'Others'
 - Ignore all online courses, certificates, and non-academic qualifications
@@ -74,7 +89,7 @@ Format qualifications as:
     }
 }]
 
-4. Work Experience:
+5. Work Experience:
 - Extract all work experiences
 - Employment type must be ONE of: 'Full_time', 'Part_time', 'Contract', 'Internship', 'Freelance', 'Other'
 - If employment type is not explicitly stated, default to 'Full_time'
@@ -85,7 +100,7 @@ Format work experience as:
 [{
     "company": string,          // Company name
     "position": string,         // Job title
-    "employment_type": string,  // MUST be one of the allowed types
+    "employment_type": string,  // MUST be one of the allowed types, default to 'Full_time' if not specified
     "location": string,         // City, State/Country format
     "start_date": YYYY-MM-DD,  // If only year available, use YYYY-01-01
     "end_date": YYYY-MM-DD,    // null if currently working
@@ -93,8 +108,13 @@ Format work experience as:
     "responsibilities": string  // Job description/responsibilities
 }]
 
-Return only valid JSON with personal_info, social_media, qualifications, and work_experience arrays.
+Return only valid JSON with personal_info, skills (array of strings), social_media, qualifications, and work_experience arrays.
 Maintain chronological order of qualifications and work experience (newest first).
+
+IMPORTANT:
+- When processing work experience entries, if the employment type is not explicitly mentioned in the text, set it to 'Full_time' by default. Do not leave it empty or set it to 'Other' unless specifically indicated in the text.
+- For skills, prioritize matching with existing skill tags before creating new ones.
+- Normalize skill names to match common conventions (e.g., "Node JS" -> "Node.js", "Type Script" -> "TypeScript")
 EOT
                 ],
                 [
@@ -141,6 +161,7 @@ EOT
                 'social_media' => [],
                 'qualifications' => [],
                 'work_experience' => [],
+                'skills' => [],
             ];
         }
     }
