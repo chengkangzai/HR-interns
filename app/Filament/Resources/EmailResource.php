@@ -43,12 +43,6 @@ class EmailResource extends Resource
                 ->validationMessages([
                     '*.email' => 'The email #:position must be a valid email address.',
                 ])
-                ->suggestions([
-                    'eddiechong@pixalink.io',
-                    'cheng.kang@pixalink.io',
-                    'deserie@pixalink.io',
-                ])
-                ->default(['eddiechong@pixalink.io'])
                 ->placeholder('Enter email addresses'),
 
             Select::make('position_id')
