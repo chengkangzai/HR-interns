@@ -76,7 +76,7 @@ class CandidateResource extends Resource
             Section::make([
                 TextInput::make('name')
                     ->live(onBlur: true)
-                    ->afterStateUpdated(fn (string $state, Set $set) => $set('name', str($state)->title()->__toString()))
+                    ->afterStateUpdated(fn (string $state, Set $set) => $set('name', str($state)->title()))
                     ->required(),
 
                 TextInput::make('email')
@@ -883,12 +883,12 @@ class CandidateResource extends Resource
             $personalInfo = $extractor['personal_info'];
 
             if (! empty($personalInfo['name']) && str($get('name'))->isEmpty()) {
-                $set('name', str($personalInfo['name'])->title()->__toString());
+                $set('name', str($personalInfo['name'])->title());
                 $extractedInfo[] = 'name';
             }
 
             if (! empty($personalInfo['email']) && str($get('email'))->isEmpty()) {
-                $set('email', str($personalInfo['email'])->remove(' ')->remove('`')->__toString());
+                $set('email', str($personalInfo['email'])->remove(' ')->remove('`'));
                 $extractedInfo[] = 'email';
             }
 
@@ -911,8 +911,8 @@ class CandidateResource extends Resource
                     'type' => 'qualification',
                     'data' => [
                         'qualification' => $qualification['qualification'] ?? null,
-                        'major' => str($qualification['major'] ?? '')->title()->__toString(),
-                        'university' => str($qualification['university'] ?? '')->trim()->title()->__toString(),
+                        'major' => str($qualification['major'] ?? '')->title(),
+                        'university' => str($qualification['university'] ?? '')->trim(),
                         'gpa' => $qualification['gpa'] ?? null,
                         'from' => $qualification['from'] ?? null,
                         'to' => $qualification['to'] ?? null,
@@ -951,14 +951,14 @@ class CandidateResource extends Resource
 
             foreach ($extractor['work_experience'] as $experience) {
                 $workExperiences[] = [
-                    'company' => str($experience['company'] ?? '')->trim()->title()->__toString(),
-                    'position' => str($experience['position'] ?? '')->trim()->title()->__toString(),
+                    'company' => str($experience['company'] ?? '')->trim(),
+                    'position' => str($experience['position'] ?? '')->trim(),
                     'employment_type' => $experience['employment_type'] ?? 'Other',
-                    'location' => str($experience['location'] ?? '')->trim()->title()->__toString(),
+                    'location' => str($experience['location'] ?? '')->trim()->title(),
                     'start_date' => $experience['start_date'] ?? null,
                     'end_date' => $experience['end_date'] ?? null,
                     'is_current' => $experience['is_current'] ?? false,
-                    'responsibilities' => str($experience['responsibilities'] ?? '')->trim()->__toString(),
+                    'responsibilities' => str($experience['responsibilities'] ?? '')->trim(),
                 ];
             }
 
