@@ -12,6 +12,7 @@ use Filament\Tables\Actions\DeleteBulkAction;
 use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Spatie\Tags\Tag;
 
@@ -29,6 +30,9 @@ class TagsResource extends Resource
             ->schema([
                 TextInput::make('name.en')
                     ->label('Name'),
+
+                TextInput::make('type')
+                    ->label('Type'),
             ]);
     }
 
@@ -39,6 +43,12 @@ class TagsResource extends Resource
                 TextColumn::make('name')
                     ->searchable()
                     ->sortable(),
+
+                TextColumn::make('type')
+                    ->placeholder('default')
+                    ->searchable()
+                    ->sortable(),
+
                 TextColumn::make('Usage Count')
                     ->sortable()
                     ->getStateUsing(fn (Tag $record) => \DB::table('taggables')
@@ -46,7 +56,7 @@ class TagsResource extends Resource
                         ->count()),
             ])
             ->filters([
-                //
+                SelectFilter::make('type'),
             ])
             ->actions([
                 EditAction::make(),

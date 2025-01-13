@@ -22,12 +22,15 @@ use Filament\Forms\Components\Builder;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Fieldset;
 use Filament\Forms\Components\Placeholder;
+use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\SpatieTagsInput;
+use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
 use Filament\Forms\Set;
@@ -97,6 +100,9 @@ class CandidateResource extends Resource
                     ->formatOnDisplay(true),
 
                 SpatieTagsInput::make('tags'),
+
+                SpatieTagsInput::make('skills')
+                    ->type('skills'),
             ]),
 
             Section::make([
@@ -361,6 +367,72 @@ class CandidateResource extends Resource
             ]),
 
             Section::make([
+                Repeater::make('working_experiences')
+                    ->columnSpanFull()
+                    ->columns(2)
+                    ->schema([
+                        TextInput::make('company')
+                            ->live(onBlur: true)
+                            ->afterStateUpdated(function (?string $state, Set $set) {
+                                if ($state) {
+                                    $set('company', str($state)->trim()->title());
+                                }
+                            })
+                            ->required(),
+
+                        TextInput::make('position')
+                            ->live(onBlur: true)
+                            ->afterStateUpdated(function (?string $state, Set $set) {
+                                if ($state) {
+                                    $set('position', str($state)->title());
+                                }
+                            })
+                            ->required(),
+
+                        Select::make('employment_type')
+                            ->options([
+                                'Full-time' => 'Full-time',
+                                'Part-time' => 'Part-time',
+                                'Contract' => 'Contract',
+                                'Internship' => 'Internship',
+                                'Freelance' => 'Freelance',
+                            ]),
+
+                        Textarea::make('responsibilities')
+                            ->rows(3)
+                            ->placeholder('Describe your key responsibilities and achievements'),
+
+                        Fieldset::make('duration')
+                            ->label('Employment Period')
+                            ->columns(2)
+                            ->schema([
+                                DatePicker::make('start_date')
+                                    ->required(),
+                                DatePicker::make('end_date')
+                                    ->helperText('Leave empty if is current position'),
+                            ]),
+
+                        Toggle::make('is_current')
+                            ->label('currently work here')
+                            ->live()
+                            ->afterStateUpdated(function (bool $state, Set $set) {
+                                if ($state) {
+                                    $set('end_date', null);
+                                }
+                            }),
+
+                        TextInput::make('location')
+                            ->placeholder('City, Country')
+                            ->live(onBlur: true)
+                            ->afterStateUpdated(function (?string $state, Set $set) {
+                                if ($state) {
+                                    $set('location', str($state)->trim()->title());
+                                }
+                            }),
+                    ]),
+            ])->heading('Working Experiences')->collapsible(),
+
+            Section::make([
                 Builder::make('additional_info')
                     ->label('Additional Information')
                     ->blocks([
@@ -461,7 +533,7 @@ class CandidateResource extends Resource
                             ->columns(2),
                     ])
                     ->columnSpanFull(),
-            ]),
+            ])->heading('Additional Information')->collapsible(),
 
             RichEditor::make('notes')
                 ->columnSpanFull(),
@@ -561,6 +633,10 @@ class CandidateResource extends Resource
                     }),
 
                 SpatieTagsColumn::make('tags')
+                    ->toggleable(isToggledHiddenByDefault: true),
+
+                SpatieTagsColumn::make('skill_tags')
+                    ->type('skills')
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
