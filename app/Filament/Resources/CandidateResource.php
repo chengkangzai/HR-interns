@@ -437,8 +437,7 @@ class CandidateResource extends Resource
                             ->columns(2)
                             ->schema([
                                 DatePicker::make('start_date')
-                                    ->prefix('from ')
-                                    ->required(),
+                                    ->prefix('from '),
                                 DatePicker::make('end_date')
                                     ->prefix('to'),
 
