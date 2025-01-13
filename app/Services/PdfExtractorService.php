@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use Filament\Notifications\Notification;
 use Illuminate\Support\Facades\Log;
 use Spatie\PdfToText\Pdf;
 use Spatie\Tags\Tag;
@@ -155,6 +156,11 @@ EOT
 
         } catch (\Exception $e) {
             Log::error('Groq extraction failed: '.$e->getMessage());
+
+            Notification::make('Groq extraction failed: '.$e->getMessage())
+                ->body($e->getMessage())
+                ->danger()
+                ->send();
 
             return [
                 'personal_info' => [],
