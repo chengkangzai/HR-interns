@@ -399,8 +399,18 @@ class CandidateResource extends Resource
                                 'Full_time', 'Part_time', 'Contract', 'Internship', 'Freelance', 'Other',
                             ]),
 
-                        Textarea::make('responsibilities')
+                        TextInput::make('location')
                             ->inlineLabel()
+                            ->placeholder('City, Country')
+                            ->live(onBlur: true)
+                            ->afterStateUpdated(function (?string $state, Set $set) {
+                                if ($state) {
+                                    $set('location', str($state)->trim()->title());
+                                }
+                            }),
+
+                        Textarea::make('responsibilities')
+                            ->columnSpanFull()
                             ->rows(3)
                             ->placeholder('Describe your key responsibilities and achievements'),
 
@@ -434,16 +444,6 @@ class CandidateResource extends Resource
                             ->afterStateUpdated(function (bool $state, Set $set) {
                                 if ($state) {
                                     $set('end_date', null);
-                                }
-                            }),
-
-                        TextInput::make('location')
-                            ->inlineLabel()
-                            ->placeholder('City, Country')
-                            ->live(onBlur: true)
-                            ->afterStateUpdated(function (?string $state, Set $set) {
-                                if ($state) {
-                                    $set('location', str($state)->trim()->title());
                                 }
                             }),
                     ]),
