@@ -981,7 +981,6 @@ class CandidateResource extends Resource
         if (isset($extractor['work_experience']) && is_array($extractor['work_experience'])) {
             $workExperiences = [];
             foreach ($extractor['work_experience'] as $experience) {
-                dd($experience['employment_type']);
                 $workExperiences[] = [
                     'company' => str($experience['company'] ?? '')->trim(),
                     'position' => str($experience['position'] ?? '')->trim(),
