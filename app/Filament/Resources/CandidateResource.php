@@ -156,7 +156,7 @@ class CandidateResource extends Resource
                             : 'N/A'
                         ),
                 ])->compact()
-                    ->visible(fn (Get $get) => Position::find($get('position_id'))->type !== PositionType::FULL_TIME),
+                    ->visible(fn (Get $get) => Position::find($get('position_id'))?->type !== PositionType::FULL_TIME),
             ]),
 
             Section::make([
@@ -370,6 +370,7 @@ class CandidateResource extends Resource
                 Repeater::make('working_experiences')
                     ->columnSpanFull()
                     ->columns(2)
+                    ->defaultItems(0)
                     ->schema([
                         TextInput::make('company')
                             ->live(onBlur: true)
@@ -391,11 +392,7 @@ class CandidateResource extends Resource
 
                         Select::make('employment_type')
                             ->options([
-                                'Full-time' => 'Full-time',
-                                'Part-time' => 'Part-time',
-                                'Contract' => 'Contract',
-                                'Internship' => 'Internship',
-                                'Freelance' => 'Freelance',
+                                'Full_time', 'Part_time', 'Contract', 'Internship', 'Freelance', 'Other',
                             ]),
 
                         Textarea::make('responsibilities')
@@ -928,6 +925,29 @@ class CandidateResource extends Resource
             }
             if (! empty($extractor['social_media'])) {
                 $extractedInfo[] = 'social media';
+            }
+        }
+
+        // Handle working experiences for the repeater
+        if (isset($extractor['work_experience']) && is_array($extractor['work_experience'])) {
+            $workExperiences = [];
+
+            foreach ($extractor['work_experience'] as $experience) {
+                $workExperiences[] = [
+                    'company' => str($experience['company'] ?? '')->trim()->title()->__toString(),
+                    'position' => str($experience['position'] ?? '')->trim()->title()->__toString(),
+                    'employment_type' => $experience['employment_type'] ?? 'Other',
+                    'location' => str($experience['location'] ?? '')->trim()->title()->__toString(),
+                    'start_date' => $experience['start_date'] ?? null,
+                    'end_date' => $experience['end_date'] ?? null,
+                    'is_current' => $experience['is_current'] ?? false,
+                    'responsibilities' => str($experience['responsibilities'] ?? '')->trim()->__toString(),
+                ];
+            }
+
+            if (! empty($workExperiences)) {
+                $set('working_experiences', $workExperiences);
+                $extractedInfo[] = 'work experience';
             }
         }
 
