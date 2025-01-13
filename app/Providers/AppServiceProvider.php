@@ -34,7 +34,7 @@ class AppServiceProvider extends ServiceProvider
 
     private function setupFilamentDefault(): void
     {
-        Section::configureUsing(fn (Section $section) => $section->columns(2)->collapsible()->compact(true));
+        Section::configureUsing(fn (Section $section) => $section->columns(2)->compact(true));
 
         SpatieMediaLibraryFileUpload::configureUsing(fn (SpatieMediaLibraryFileUpload $fileUpload) => $fileUpload
             ->openable()

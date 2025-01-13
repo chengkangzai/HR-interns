@@ -17,6 +17,7 @@ use App\Models\Candidate;
 use App\Models\Email;
 use App\Models\Position;
 use App\Services\PdfExtractorService;
+use Carbon\CarbonInterface;
 use Filament\Forms\Components\Actions\Action as FormAction;
 use Filament\Forms\Components\Builder;
 use Filament\Forms\Components\DatePicker;
@@ -364,7 +365,7 @@ class CandidateResource extends Resource
                                 }),
                         ]),
                 ])->heading('Interns Documents')->collapsed(true)->visible(fn (?Candidate $record) => $record?->position?->type == PositionType::INTERN),
-            ])->heading('Attachments'),
+            ])->heading('Attachments')->collapsible(),
 
             Section::make([
                 Repeater::make('working_experiences')
@@ -411,6 +412,19 @@ class CandidateResource extends Resource
                                 DatePicker::make('start_date')
                                     ->required(),
                                 DatePicker::make('end_date'),
+
+                                Placeholder::make('range')
+                                    ->label('From - To')
+                                    ->visibleOn(['view', 'edit'])
+                                    ->content(fn (Get $get): string => $get('start_date') !== null && $get('end_date') !== null
+                                        ? Carbon::parse($get('start_date'))->diffForHumans(Carbon::parse($get('end_date')), [
+                                            'syntax' => CarbonInterface::DIFF_ABSOLUTE,
+                                            'parts' => 2,
+                                            'join' => ' and ',
+                                            'short' => false,
+                                        ])
+                                        : 'N/A'
+                                    ),
                             ]),
 
                         Toggle::make('is_current')
@@ -433,7 +447,7 @@ class CandidateResource extends Resource
                                 }
                             }),
                     ]),
-            ])->heading('Working Experiences'),
+            ])->heading('Working Experiences')->collapsible(),
 
             Section::make([
                 Builder::make('additional_info')
@@ -547,7 +561,7 @@ class CandidateResource extends Resource
                             ->columns(2),
                     ])
                     ->columnSpanFull(),
-            ])->heading('Additional Information'),
+            ])->heading('Additional Information')->collapsible(),
 
             RichEditor::make('notes')
                 ->columnSpanFull(),
