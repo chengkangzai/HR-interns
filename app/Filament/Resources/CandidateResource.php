@@ -373,17 +373,8 @@ class CandidateResource extends Resource
                     ->columns(2)
                     ->defaultItems(0)
                     ->schema([
-                        TextInput::make('company')
-                            ->inlineLabel()
-                            ->live(onBlur: true)
-                            ->afterStateUpdated(function (?string $state, Set $set) {
-                                if ($state) {
-                                    $set('company', str($state)->trim()->title());
-                                }
-                            })
-                            ->required(),
-
                         TextInput::make('position')
+                            ->prefix('as ')
                             ->inlineLabel()
                             ->live(onBlur: true)
                             ->afterStateUpdated(function (?string $state, Set $set) {
@@ -393,8 +384,25 @@ class CandidateResource extends Resource
                             })
                             ->required(),
 
+                        TextInput::make('company')
+                            ->prefix('at ')
+                            ->inlineLabel()
+                            ->live(onBlur: true)
+                            ->afterStateUpdated(function (?string $state, Set $set) {
+                                if ($state) {
+                                    $set('company', str($state)->trim()->title());
+                                }
+                            })
+                            ->suffixActions([
+                                FormAction::make('google_company')
+                                    ->icon('heroicon-o-magnifying-glass')
+                                    ->url(fn ($state) => 'https://www.google.com/search?q='.urlencode($state), true),
+                            ])
+                            ->required(),
+
                         Select::make('employment_type')
                             ->inlineLabel()
+                            ->prefix('working ')
                             ->options([
                                 'Full_time', 'Part_time', 'Contract', 'Internship', 'Freelance', 'Other',
                             ]),
@@ -402,6 +410,8 @@ class CandidateResource extends Resource
                         TextInput::make('location')
                             ->inlineLabel()
                             ->placeholder('City, Country')
+                            ->prefix('in ')
+
                             ->live(onBlur: true)
                             ->afterStateUpdated(function (?string $state, Set $set) {
                                 if ($state) {
@@ -420,8 +430,10 @@ class CandidateResource extends Resource
                             ->columns(2)
                             ->schema([
                                 DatePicker::make('start_date')
+                                    ->prefix('from ')
                                     ->required(),
-                                DatePicker::make('end_date'),
+                                DatePicker::make('end_date')
+                                    ->prefix('to'),
 
                                 Placeholder::make('range')
                                     ->label('From - To')
