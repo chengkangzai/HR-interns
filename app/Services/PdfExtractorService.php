@@ -74,8 +74,26 @@ Format qualifications as:
     }
 }]
 
-Return only valid JSON with personal_info, social_media, and qualifications arrays.
-Maintain chronological order of qualifications (newest first).
+4. Work Experience:
+- Extract all work experiences
+- Employment type must be ONE of: 'Full_time', 'Part_time', 'Contract', 'Internship', 'Freelance', 'Other'
+- Location format must be 'City, State/Country' (e.g., 'Johor Bahru, Johor', 'Bukit Jalil, Kuala Lumpur')
+- For current positions, set end_date as null and is_current as true
+
+Format work experience as:
+[{
+    "company": string,          // Company name
+    "position": string,         // Job title
+    "employment_type": string,  // MUST be one of the allowed types
+    "location": string,         // City, State/Country format
+    "start_date": YYYY-MM-DD,  // If only year available, use YYYY-01-01
+    "end_date": YYYY-MM-DD,    // null if currently working
+    "is_current": boolean,      // true if currently working
+    "responsibilities": string  // Job description/responsibilities
+}]
+
+Return only valid JSON with personal_info, social_media, qualifications, and work_experience arrays.
+Maintain chronological order of qualifications and work experience (newest first).
 EOT
                 ],
                 [
@@ -104,6 +122,14 @@ EOT
                 }
             }
 
+            if (isset($result['work_experience'])) {
+                foreach ($result['work_experience'] as &$work) {
+                    if (! in_array($work['employment_type'], ['Full_time', 'Part_time', 'Contract', 'Internship', 'Freelance', 'Other'])) {
+                        $work['employment_type'] = 'Other';
+                    }
+                }
+            }
+
             return $result;
 
         } catch (\Exception $e) {
@@ -113,6 +139,7 @@ EOT
                 'personal_info' => [],
                 'social_media' => [],
                 'qualifications' => [],
+                'work_experience' => [],
             ];
         }
     }
