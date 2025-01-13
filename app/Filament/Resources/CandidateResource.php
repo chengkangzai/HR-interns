@@ -404,7 +404,12 @@ class CandidateResource extends Resource
                             ->inlineLabel()
                             ->prefix('working ')
                             ->options([
-                                'Full_time', 'Part_time', 'Contract', 'Internship', 'Freelance', 'Other',
+                                'Full_time' => 'Full time',
+                                'Part_time' => 'Part time',
+                                'Contract' => 'Contract',
+                                'Internship' => 'Internship',
+                                'Freelance' => 'Freelance',
+                                'Other' => 'Other',
                             ]),
 
                         TextInput::make('location')
@@ -975,8 +980,8 @@ class CandidateResource extends Resource
         // Handle working experiences for the repeater
         if (isset($extractor['work_experience']) && is_array($extractor['work_experience'])) {
             $workExperiences = [];
-
             foreach ($extractor['work_experience'] as $experience) {
+                dd($experience['employment_type']);
                 $workExperiences[] = [
                     'company' => str($experience['company'] ?? '')->trim(),
                     'position' => str($experience['position'] ?? '')->trim(),
