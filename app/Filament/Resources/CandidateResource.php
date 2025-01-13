@@ -363,8 +363,8 @@ class CandidateResource extends Resource
                                         ->send();
                                 }),
                         ]),
-                ])->compact()->visible(fn (?Candidate $record) => $record?->position?->type == PositionType::INTERN),
-            ]),
+                ])->heading('Interns Documents')->collapsed(true)->visible(fn (?Candidate $record) => $record?->position?->type == PositionType::INTERN),
+            ])->heading('Attachments'),
 
             Section::make([
                 Repeater::make('working_experiences')
@@ -373,6 +373,7 @@ class CandidateResource extends Resource
                     ->defaultItems(0)
                     ->schema([
                         TextInput::make('company')
+                            ->inlineLabel()
                             ->live(onBlur: true)
                             ->afterStateUpdated(function (?string $state, Set $set) {
                                 if ($state) {
@@ -382,6 +383,7 @@ class CandidateResource extends Resource
                             ->required(),
 
                         TextInput::make('position')
+                            ->inlineLabel()
                             ->live(onBlur: true)
                             ->afterStateUpdated(function (?string $state, Set $set) {
                                 if ($state) {
@@ -391,25 +393,28 @@ class CandidateResource extends Resource
                             ->required(),
 
                         Select::make('employment_type')
+                            ->inlineLabel()
                             ->options([
                                 'Full_time', 'Part_time', 'Contract', 'Internship', 'Freelance', 'Other',
                             ]),
 
                         Textarea::make('responsibilities')
+                            ->inlineLabel()
                             ->rows(3)
                             ->placeholder('Describe your key responsibilities and achievements'),
 
                         Fieldset::make('duration')
+                            ->inlineLabel()
                             ->label('Employment Period')
                             ->columns(2)
                             ->schema([
                                 DatePicker::make('start_date')
                                     ->required(),
-                                DatePicker::make('end_date')
-                                    ->helperText('Leave empty if is current position'),
+                                DatePicker::make('end_date'),
                             ]),
 
                         Toggle::make('is_current')
+                            ->inlineLabel()
                             ->label('currently work here')
                             ->live()
                             ->afterStateUpdated(function (bool $state, Set $set) {
@@ -419,6 +424,7 @@ class CandidateResource extends Resource
                             }),
 
                         TextInput::make('location')
+                            ->inlineLabel()
                             ->placeholder('City, Country')
                             ->live(onBlur: true)
                             ->afterStateUpdated(function (?string $state, Set $set) {
@@ -427,7 +433,7 @@ class CandidateResource extends Resource
                                 }
                             }),
                     ]),
-            ])->heading('Working Experiences')->collapsible(),
+            ])->heading('Working Experiences'),
 
             Section::make([
                 Builder::make('additional_info')
@@ -437,6 +443,7 @@ class CandidateResource extends Resource
                             ->icon('heroicon-o-link')
                             ->schema([
                                 Select::make('source')
+                                    ->inlineLabel()
                                     ->options([
                                         'LinkedIn' => 'LinkedIn',
                                         'Indeed' => 'Indeed',
@@ -447,6 +454,7 @@ class CandidateResource extends Resource
                                     ->required(),
 
                                 TextInput::make('other_source')
+                                    ->inlineLabel()
                                     ->visible(fn (Get $get) => $get('source') === 'Others'),
                             ])
                             ->columns(2),
@@ -455,6 +463,7 @@ class CandidateResource extends Resource
                             ->icon('heroicon-o-academic-cap')
                             ->schema([
                                 Select::make('qualification')
+                                    ->inlineLabel()
                                     ->options([
                                         'Diploma' => 'Diploma',
                                         'Bachelor' => 'Bachelor',
@@ -463,6 +472,7 @@ class CandidateResource extends Resource
                                         'Others' => 'Others',
                                     ]),
                                 TextInput::make('major')
+                                    ->inlineLabel()
                                     ->live(onBlur: true)
                                     ->afterStateUpdated(function (?string $state, Set $set) {
                                         if ($state) {
@@ -471,6 +481,7 @@ class CandidateResource extends Resource
                                     })
                                     ->prefix('in '),
                                 TextInput::make('university')
+                                    ->inlineLabel()
                                     ->live(onBlur: true)
                                     ->afterStateUpdated(function (?string $state, Set $set) {
                                         if ($state) {
@@ -479,8 +490,10 @@ class CandidateResource extends Resource
                                     })
                                     ->prefix('from '),
                                 TextInput::make('gpa')
+                                    ->inlineLabel()
                                     ->prefix('with GPA '),
                                 Fieldset::make('from_to')
+                                    ->inlineLabel()
                                     ->label('From - To')
                                     ->columns(2)
                                     ->schema([
@@ -494,6 +507,7 @@ class CandidateResource extends Resource
                             ->icon('heroicon-o-globe-alt')
                             ->schema([
                                 Select::make('social_media')
+                                    ->inlineLabel()
                                     ->required()
                                     ->options([
                                         'linkedin' => 'LinkedIn',
@@ -505,8 +519,10 @@ class CandidateResource extends Resource
                                     ]),
 
                                 Fieldset::make('Info')
+                                    ->inlineLabel()
                                     ->schema([
                                         TextInput::make('url')
+                                            ->inlineLabel()
                                             ->suffixAction(
                                                 FormAction::make('view')
                                                     ->icon('heroicon-o-eye')
@@ -514,6 +530,7 @@ class CandidateResource extends Resource
                                             ),
 
                                         TextInput::make('username')
+                                            ->inlineLabel()
                                             ->reactive()
                                             ->afterStateUpdated(function (Get $get, Set $set) {
                                                 match ($get('social_media')) {
@@ -530,7 +547,7 @@ class CandidateResource extends Resource
                             ->columns(2),
                     ])
                     ->columnSpanFull(),
-            ])->heading('Additional Information')->collapsible(),
+            ])->heading('Additional Information'),
 
             RichEditor::make('notes')
                 ->columnSpanFull(),

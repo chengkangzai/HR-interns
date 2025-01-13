@@ -2,10 +2,15 @@
 
 namespace App\Providers;
 
+use Filament\Forms\Components\Builder;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\Field;
+use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
+use Filament\Forms\Components\Textarea;
 use Illuminate\Support\ServiceProvider;
 use Ysfkaya\FilamentPhoneInput\Forms\PhoneInput;
 
@@ -29,7 +34,7 @@ class AppServiceProvider extends ServiceProvider
 
     private function setupFilamentDefault(): void
     {
-        Section::configureUsing(fn (Section $section) => $section->columns(2)->compact(true));
+        Section::configureUsing(fn (Section $section) => $section->columns(2)->collapsible()->compact(true));
 
         SpatieMediaLibraryFileUpload::configureUsing(fn (SpatieMediaLibraryFileUpload $fileUpload) => $fileUpload
             ->openable()
@@ -46,6 +51,22 @@ class AppServiceProvider extends ServiceProvider
                 ->preferredCountries(['MY'])
                 ->defaultCountry('MY')
                 ->initialCountry('MY');
+        });
+
+        Field::configureUsing(function (Field $field) {
+            $excludedFields = [
+                Repeater::class,
+                Builder::class,
+                Textarea::class,
+                RichEditor::class,
+                SpatieMediaLibraryFileUpload::class,
+            ];
+
+            // Skip inline label for excluded field types
+            if (in_array(get_class($field), $excludedFields)) {
+                return;
+            }
+            $field->inlineLabel();
         });
     }
 }
