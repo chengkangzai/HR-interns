@@ -100,7 +100,8 @@ class CandidateResource extends Resource
                     )
                     ->formatOnDisplay(true),
 
-                SpatieTagsInput::make('tags'),
+                SpatieTagsInput::make('tags')
+                    ->type('default'),
 
                 SpatieTagsInput::make('skills')
                     ->type('skills'),
