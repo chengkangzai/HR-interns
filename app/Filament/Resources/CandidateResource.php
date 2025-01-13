@@ -554,6 +554,40 @@ class CandidateResource extends Resource
                                     ->schema([
                                         TextInput::make('url')
                                             ->inlineLabel()
+                                            ->reactive()
+                                            ->afterStateUpdated(function (?string $state, Set $set) {
+                                                if (! $state) {
+                                                    return null;
+                                                }
+
+                                                // Convert URL to lowercase for consistent matching
+                                                $url = str($state)->lower();
+
+                                                // Match social media platform and extract username
+                                                $platform = match (true) {
+                                                    $url->contains('linkedin.com') => 'linkedin',
+                                                    $url->contains('github.com') => 'github',
+                                                    $url->contains('twitter.com') => 'twitter',
+                                                    $url->contains('facebook.com') => 'facebook',
+                                                    $url->contains('instagram.com') => 'instagram',
+                                                    default => 'others'
+                                                };
+
+                                                $username = match ($platform) {
+                                                    'linkedin' => $url->after('linkedin.com/in/')->before('/')->toString(),
+                                                    'github' => $url->after('github.com/')->before('/')->toString(),
+                                                    'twitter' => $url->after('twitter.com/')->before('/')->toString(),
+                                                    'facebook' => $url->after('facebook.com/')->before('/')->toString(),
+                                                    'instagram' => $url->after('instagram.com/')->before('/')->toString(),
+                                                    default => null
+                                                };
+
+                                                $set('social_media', $platform);
+                                                if ($username) {
+                                                    $set('username', $username);
+                                                }
+
+                                            })
                                             ->suffixAction(
                                                 FormAction::make('view')
                                                     ->icon('heroicon-o-eye')
