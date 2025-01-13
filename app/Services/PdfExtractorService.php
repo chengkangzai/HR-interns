@@ -113,7 +113,6 @@ Return only valid JSON with personal_info, skills (array of strings), social_med
 Maintain chronological order of qualifications and work experience (newest first).
 
 IMPORTANT:
-- When processing work experience entries, if the employment type is not explicitly mentioned in the text, set it to 'Full_time' by default. Do not leave it empty or set it to 'Other' unless specifically indicated in the text.
 - For skills, prioritize matching with existing skill tags before creating new ones.
 - Normalize skill names to match common conventions (e.g., "Node JS" -> "Node.js", "Type Script" -> "TypeScript")
 EOT
