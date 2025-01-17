@@ -60,6 +60,7 @@ Extract information from Malaysian resumes and documents following these rules:
 3. Social Media:
 - Extract social media profiles
 - Must be one of: 'linkedin', 'github', 'twitter', 'facebook', 'instagram', 'others'
+- The url must be in the full address. For example, 'https://google.com' instead of 'google.com'
 - Format as:
 [{
     "type": "social_media",
