@@ -49,11 +49,21 @@ Extract information from Malaysian resumes and documents following these rules:
 }
 
 2. Skills:
-- Extract all technical skills, frameworks, programming languages, and tools
+- Extract skills from multiple sources:
+  a) Explicit skill sections/lists in the resume
+  b) Technical skills mentioned in work experience descriptions
+  c) Tools, technologies, and frameworks used in projects
+  d) Programming languages and software mentioned anywhere in the document
+- Look for skills in various formats:
+  * Direct mentions (e.g., "Proficient in Python")
+  * Project usage (e.g., "Developed React components")
+  * Tool usage (e.g., "Used JIRA for project management")
+  * Implied skills (e.g., "REST API development" implies API development skills)
 - Match against the following existing skill tags if possible:
 {$skills}
 - If a skill doesn't match any existing tag, create a new one
 - Normalize skill names (e.g., "Tailwind CSS" -> "TailwindCSS", "React.js" -> "React")
+- Remove duplicates and combine skills from all sources
 - Return as array of strings
 - Format as: ["Laravel", "TailwindCSS", "Vue.js"]
 
@@ -116,6 +126,7 @@ Maintain chronological order of qualifications and work experience (newest first
 IMPORTANT:
 - For skills, prioritize matching with existing skill tags before creating new ones.
 - Normalize skill names to match common conventions (e.g., "Node JS" -> "Node.js", "Type Script" -> "TypeScript")
+- Combine and deduplicate skills from all sources (explicit lists, work experience, projects)
 EOT
                 ],
                 [
