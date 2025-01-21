@@ -12,7 +12,7 @@ use App\Jobs\GenerateCompletionCertJob;
 use App\Jobs\GenerateCompletionLetterJob;
 use App\Jobs\GenerateOfferLetterJob;
 use App\Jobs\GenerateWFHLetterJob;
-use App\Jobs\SendEmailJob;
+use App\Mail\DefaultMail;
 use App\Models\Candidate;
 use App\Models\Email;
 use App\Models\Position;
@@ -55,9 +55,11 @@ use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\HtmlString;
 use Illuminate\Support\Str;
 use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Spatie\PdfToText\Pdf;
 use Spatie\Tags\Tag;
 use Ysfkaya\FilamentPhoneInput\Forms\PhoneInput;
@@ -798,21 +800,17 @@ class CandidateResource extends Resource
                 DeleteBulkAction::make()
                     ->label('Delete'),
                 BulkAction::make('send_email')
+                    ->visible(fn ($livewire) => $livewire instanceof ViewPositionCandidate)
                     ->icon('heroicon-o-envelope-open')
                     ->form(fn (Collection $records) => [
                         Select::make('email')
                             ->live()
-                            ->options(function ($livewire) use ($records) {
-                                if ($livewire instanceof ViewPositionCandidate) {
-                                    /** @var Position $record */
-                                    $record = $livewire->record;
+                            ->required()
+                            ->options(function ($livewire) {
+                                /** @var Position $record */
+                                $record = $livewire->record;
 
-                                    return Email::where('position_id', $record->id)
-                                        ->orderBy('sort')
-                                        ->pluck('name', 'id');
-                                }
-
-                                return Email::whereIn('position_id', $records->pluck('position_id')->toArray())
+                                return Email::where('position_id', $record->id)
                                     ->orderBy('sort')
                                     ->pluck('name', 'id');
                             })
@@ -821,17 +819,74 @@ class CandidateResource extends Resource
                                 ->url(fn () => EmailResource::getUrl('edit', ['record' => $get('email')]), true)
                                 : null
                             ),
+
+                        Section::make('Attachments')
+                            ->schema([
+                                Select::make('attachments')
+                                    ->multiple()
+                                    ->columnSpanFull()
+                                    ->reactive()
+                                    ->options(function (Get $get) use ($records) {
+                                        $availableAttachments = [];
+
+                                        $position = $records->first()->position;
+                                        $emailId = $get('email');
+                                        $email = Email::find($emailId);
+
+                                        // Position documents
+                                        if ($position?->hasMedia('documents')) {
+                                            foreach ($position->getMedia('documents') as $document) {
+                                                /** @var Media $document */
+                                                $availableAttachments["position_{$document->id}"] = "[Position] {$document->name}";
+                                            }
+                                        }
+
+                                        // Email template documents
+                                        if ($email?->hasMedia('documents')) {
+                                            foreach ($email->getMedia('documents') as $document) {
+                                                /** @var Media $document */
+                                                $availableAttachments["email_{$document->id}"] = "[Email] {$document->name}";
+                                            }
+                                        }
+
+                                        return $availableAttachments;
+                                    }),
+                            ]),
                     ])
                     ->action(function (Collection $records, array $data) {
                         $email = Email::find($data['email']);
-                        $records->each(function (Candidate $record, $index) use ($email) {
+                        $attachments = null;
+
+                        // Only process attachments if all candidates are from same position
+                        if (! empty($data['attachments'])) {
+                            $attachments = collect($data['attachments'])
+                                ->map(function (string $attachment) use ($records, $email) {
+                                    [$type, $id] = explode('_', $attachment, 2);
+
+                                    return match ($type) {
+                                        'position' => $records->first()->position->getMedia('documents')->firstWhere('id', $id),
+                                        'email' => $email->getMedia('documents')->firstWhere('id', $id),
+                                        default => null,
+                                    };
+                                })
+                                ->filter();
+                        }
+
+                        $records->each(function (Candidate $record, $index) use ($email, $attachments) {
                             activity()
                                 ->performedOn($record)
                                 ->causedBy(auth()->user())
                                 ->event('send_email')
                                 ->log('Email requested to be sent to '.$record->name.' ('.$record->email.')');
 
-                            SendEmailJob::dispatch($email, $record)->delay(now()->addSeconds($index * 30));
+                            $mail = new DefaultMail(
+                                candidate: $record,
+                                email: $email,
+                                medias: $attachments,
+                            );
+
+                            Mail::to($record->email)
+                                ->later(now()->addSeconds($index * 30), $mail);
                         });
 
                         Notification::make()
@@ -841,8 +896,7 @@ class CandidateResource extends Resource
                                 'ETA: <b>'.now()->addSeconds($records->count() * 30)->shortRelativeDiffForHumans().'</b>'
                             )
                             ->send();
-                    })
-                    ->deselectRecordsAfterCompletion(true),
+                    }),
                 BulkAction::make('generate_offer_letter')
                     ->icon('heroicon-o-document')
                     ->deselectRecordsAfterCompletion()
