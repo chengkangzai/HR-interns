@@ -125,7 +125,7 @@ class ViewCandidate extends ViewRecord
                     ->visible(fn (Candidate $record) => $record->status === CandidateStatus::INTERVIEW)
                     ->disabled(fn (Candidate $record) => $record->position_id == null)
                     ->action(function (Candidate $record, array $data) {
-                        GenerateOfferLetterJob::dispatch($record, $data['pay'], $data['working_from'], $data['working_to']);
+                        dispatch_sync(new GenerateOfferLetterJob($record, $data['pay'], $data['working_from'], $data['working_to']));
 
                         Notification::make('generated')
                             ->title('Offer Letter Generated')
@@ -139,7 +139,7 @@ class ViewCandidate extends ViewRecord
                     ->label('Generate WFH Letter')
                     ->disabled(fn (Candidate $record) => $record->position_id == null)
                     ->action(function (Candidate $record) {
-                        GenerateWFHLetterJob::dispatch($record);
+                        dispatch_sync(new GenerateWFHLetterJob($record));
 
                         Notification::make('generated')
                             ->title('WFH Letter Generating')
@@ -153,7 +153,7 @@ class ViewCandidate extends ViewRecord
                     ->label('Generate Completion Letter')
                     ->disabled(fn (Candidate $record) => $record->position_id == null)
                     ->action(function (Candidate $record) {
-                        GenerateCompletionLetterJob::dispatch($record);
+                        dispatch_sync(new GenerateCompletionLetterJob($record));
 
                         Notification::make('generated')
                             ->title('Completion Letter Generating')
@@ -167,7 +167,7 @@ class ViewCandidate extends ViewRecord
                     ->label('Generate Completion Cert')
                     ->disabled(fn (Candidate $record) => $record->position_id == null)
                     ->action(function (Candidate $record, $livewire) {
-                        GenerateCompletionCertJob::dispatch($record);
+                        dispatch_sync(new GenerateCompletionCertJob($record));
 
                         Notification::make('generated')
                             ->title('Completion Cert Generating')
@@ -183,7 +183,7 @@ class ViewCandidate extends ViewRecord
                     ->label('Generate Attendance Report')
                     ->visible(fn (Candidate $record) => $record->status === CandidateStatus::COMPLETED)
                     ->action(function (Candidate $record) {
-                        GenerateAttendanceReportJob::dispatch($record);
+                        dispatch_sync(new GenerateAttendanceReportJob($record));
 
                         Notification::make('generated')
                             ->title('Attendance Report Generated')
