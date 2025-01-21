@@ -70,6 +70,7 @@ class ViewCandidate extends ViewRecord
                                 ->options(function (Get $get) {
                                     $availableAttachments = [];
 
+                                    // Candidate attachments
                                     $recordAttachments = [
                                         'offer_letters' => 'Offer Letter',
                                         'wfh_letter' => 'WFH Letter',
@@ -84,6 +85,16 @@ class ViewCandidate extends ViewRecord
                                         }
                                     }
 
+                                    // Position attachments
+                                    $position = $this->record->position;
+                                    if ($position && $position->hasMedia('documents')) {
+                                        foreach ($position->getMedia('documents') as $document) {
+                                            /** @var Media $document */
+                                            $availableAttachments["position_{$document->id}"] = "[Position] {$document->name}";
+                                        }
+                                    }
+
+                                    // Email template attachments
                                     $emailId = $get('mail');
                                     if ($emailId) {
                                         $email = Email::find($emailId);
@@ -107,15 +118,12 @@ class ViewCandidate extends ViewRecord
                             ->map(function (string $attachment) use ($data) {
                                 [$type, $id] = explode('_', $attachment, 2);
 
-                                if ($type === 'record') {
-                                    return $this->record->getFirstMedia($id);
-                                } elseif ($type === 'email') {
-                                    $email = Email::find($data['mail']);
-
-                                    return $email->getMedia('documents')->firstWhere('id', $id);
-                                }
-
-                                return null;
+                                return match ($type) {
+                                    'record' => $this->record->getFirstMedia($id),
+                                    'position' => $this->record->position->getMedia('documents')->firstWhere('id', $id),
+                                    'email' => Email::find($data['mail'])->getMedia('documents')->firstWhere('id', $id),
+                                    default => null,
+                                };
                             })
                             ->filter();
 
@@ -133,7 +141,7 @@ class ViewCandidate extends ViewRecord
                         ->log('Email requested to be sent to '.$this->record->name.' ('.$this->record->email.')');
 
                     Mail::to($this->record->email)
-                        ->send($mail);
+                        ->queue($mail);
 
                     Notification::make()
                         ->title('Email Sent')
