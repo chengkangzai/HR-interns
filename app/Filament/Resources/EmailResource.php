@@ -8,6 +8,7 @@ use App\Models\Email;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
@@ -31,7 +32,7 @@ class EmailResource extends Resource
 
     public static function form(Form $form): Form
     {
-        return $form->schema([
+        return $form->schema(components: [
             TextInput::make('name')
                 ->required(),
 
@@ -56,6 +57,10 @@ class EmailResource extends Resource
                     'bulletList', // disable due to look bad in email
                     'attachFiles', // disable due to no upload file support
                 ]),
+
+            SpatieMediaLibraryFileUpload::make('documents')
+                ->acceptedFileTypes(['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'])
+                ->collection('documents'),
 
             Placeholder::make('created_at')
                 ->label('Created Date')

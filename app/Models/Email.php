@@ -9,10 +9,13 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 
-class Email extends Model
+class Email extends Model implements HasMedia
 {
     use HasFactory;
+    use InteractsWithMedia;
     use LogsActivity;
     use SoftDeletes;
 
@@ -44,5 +47,10 @@ class Email extends Model
     {
         return LogOptions::defaults()
             ->logFillable();
+    }
+
+    public function registerMediaCollections(): void
+    {
+        $this->addMediaCollection('documents');
     }
 }
