@@ -4,7 +4,6 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\EmailResource\Pages;
 use App\Filament\Resources\PositionResource\Pages\ViewPositionEmail;
-use App\Models\Candidate;
 use App\Models\Email;
 use Filament\Forms\Components\Actions\Action as FormAction;
 use Filament\Forms\Components\Placeholder;
@@ -50,7 +49,7 @@ class EmailResource extends Resource
 
             Select::make('position_id')
                 ->relationship('position', 'title')
-                ->suffixAction(function (string $context, ?Candidate $record) {
+                ->suffixAction(function (string $context, ?Email $record) {
                     if (! $record) {
                         return null;
                     }
