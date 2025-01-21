@@ -4,7 +4,9 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\EmailResource\Pages;
 use App\Filament\Resources\PositionResource\Pages\ViewPositionEmail;
+use App\Models\Candidate;
 use App\Models\Email;
+use Filament\Forms\Components\Actions\Action as FormAction;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
@@ -47,7 +49,19 @@ class EmailResource extends Resource
                 ->placeholder('Enter email addresses'),
 
             Select::make('position_id')
-                ->relationship('position', 'title'),
+                ->relationship('position', 'title')
+                ->suffixAction(function (string $context, ?Candidate $record) {
+                    if (! $record) {
+                        return null;
+                    }
+                    if ($context == 'create') {
+                        return null;
+                    }
+
+                    return FormAction::make('view_position')
+                        ->icon('heroicon-o-eye')
+                        ->url(PositionResource::getUrl('view', ['record' => $record->position_id]), true);
+                }),
 
             RichEditor::make('body')
                 ->columnSpanFull()
