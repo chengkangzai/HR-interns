@@ -99,6 +99,7 @@ class PositionResource extends Resource
                 ]),
 
             Forms\Components\SpatieMediaLibraryFileUpload::make('documents')
+                ->preserveFilenames()
                 ->acceptedFileTypes(['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'])
                 ->collection('documents'),
 
