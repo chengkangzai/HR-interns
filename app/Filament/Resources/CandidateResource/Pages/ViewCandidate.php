@@ -64,10 +64,11 @@ class ViewCandidate extends ViewRecord
                         ->schema([
                             Select::make('attachments')
                                 ->multiple()
-                                ->options(function () {
+                                ->reactive()
+                                ->options(function (Get $get) {
                                     $availableAttachments = [];
 
-                                    $possibleAttachments = [
+                                    $recordAttachments = [
                                         'offer_letters' => 'Offer Letter',
                                         'wfh_letter' => 'WFH Letter',
                                         'completion_letter' => 'Completion Letter',
@@ -75,9 +76,19 @@ class ViewCandidate extends ViewRecord
                                         'completion_cert' => 'Completion Cert',
                                     ];
 
-                                    foreach ($possibleAttachments as $key => $label) {
+                                    foreach ($recordAttachments as $key => $label) {
                                         if ($this->record->hasMedia($key)) {
-                                            $availableAttachments[$key] = $label;
+                                            $availableAttachments["record_{$key}"] = "Candidate - {$label}";
+                                        }
+                                    }
+
+                                    $emailId = $get('mail');
+                                    if ($emailId) {
+                                        $email = Email::find($emailId);
+                                        if ($email && $email->hasMedia('documents')) {
+                                            foreach ($email->getMedia('documents') as $document) {
+                                                $availableAttachments["email_{$document->id}"] = "Template - {$document->name}";
+                                            }
                                         }
                                     }
 
@@ -86,12 +97,28 @@ class ViewCandidate extends ViewRecord
                         ]),
                 ])
                 ->action(function (array $data, ViewCandidate $livewire) {
-                    if (count($data['attachments']) !== 0) {
-                        $attachments = collect($data['attachments'])
-                            ->map(fn (string $attachment) => $this->record->getMedia($attachment));
-                        $mail = new DefaultMail($this->record, Email::find($data['mail']), $attachments);
-                    } else {
+                    if (count($data['attachments']) === 0) {
                         $mail = new DefaultMail($this->record, Email::find($data['mail']));
+                    } else {
+                        $attachments = collect($data['attachments'])
+                            ->map(function (string $attachment) use ($data) {
+                                // Parse the attachment identifier
+                                [$type, $id] = explode('_', $attachment, 2);
+
+                                if ($type === 'record') {
+                                    return $this->record->getMedia($id);
+                                } elseif ($type === 'email') {
+                                    $email = Email::find($data['mail']);
+
+                                    return $email->getMedia('documents')->where('id', $id);
+                                }
+
+                                return null;
+                            })
+                            ->filter()
+                            ->flatten();
+
+                        $mail = new DefaultMail($this->record, Email::find($data['mail']), $attachments);
                     }
 
                     activity()
