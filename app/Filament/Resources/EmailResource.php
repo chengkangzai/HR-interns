@@ -72,6 +72,7 @@ class EmailResource extends Resource
                 ]),
 
             SpatieMediaLibraryFileUpload::make('documents')
+                ->preserveFilenames()
                 ->acceptedFileTypes(['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'])
                 ->collection('documents'),
 

@@ -64,9 +64,9 @@ class ViewCandidate extends ViewRecord
                     Section::make('Attachments')
                         ->schema([
                             Select::make('attachments')
-                                ->multiple()
                                 ->reactive()
                                 ->columnSpanFull()
+                                ->multiple()
                                 ->options(function (Get $get) {
                                     $availableAttachments = [];
 
@@ -80,7 +80,7 @@ class ViewCandidate extends ViewRecord
 
                                     foreach ($recordAttachments as $key => $label) {
                                         if ($this->record->hasMedia($key)) {
-                                            $availableAttachments["record_{$key}"] = "Candidate - {$label}";
+                                            $availableAttachments["record_{$key}"] = "[Candidate] {$label}";
                                         }
                                     }
 
@@ -90,7 +90,7 @@ class ViewCandidate extends ViewRecord
                                         if ($email && $email->hasMedia('documents')) {
                                             foreach ($email->getMedia('documents') as $document) {
                                                 /** @var Media $document */
-                                                $availableAttachments["email_{$document->id}"] = "Template - {$document->name}";
+                                                $availableAttachments["email_{$document->id}"] = "[Email] {$document->name}";
                                             }
                                         }
                                     }
@@ -105,23 +105,25 @@ class ViewCandidate extends ViewRecord
                     } else {
                         $attachments = collect($data['attachments'])
                             ->map(function (string $attachment) use ($data) {
-                                // Parse the attachment identifier
                                 [$type, $id] = explode('_', $attachment, 2);
 
                                 if ($type === 'record') {
-                                    return $this->record->getMedia($id);
+                                    return $this->record->getFirstMedia($id);
                                 } elseif ($type === 'email') {
                                     $email = Email::find($data['mail']);
 
-                                    return $email->getMedia('documents')->where('id', $id);
+                                    return $email->getMedia('documents')->firstWhere('id', $id);
                                 }
 
                                 return null;
                             })
-                            ->filter()
-                            ->flatten();
+                            ->filter();
 
-                        $mail = new DefaultMail($this->record, Email::find($data['mail']), $attachments);
+                        $mail = new DefaultMail(
+                            candidate: $this->record,
+                            email: Email::find($data['mail']),
+                            medias: $attachments
+                        );
                     }
 
                     activity()
