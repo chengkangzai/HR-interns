@@ -26,15 +26,15 @@ use Filament\Forms\Get;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ViewRecord;
 use Filament\Support\Enums\MaxWidth;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Mail;
 
+/**
+ * @property Candidate $record
+ */
 class ViewCandidate extends ViewRecord
 {
     protected static string $resource = CandidateResource::class;
-
-    public string|int|null|Model|Candidate $record;
 
     protected function getActions(): array
     {
@@ -64,35 +64,28 @@ class ViewCandidate extends ViewRecord
                         ->schema([
                             Select::make('attachments')
                                 ->multiple()
-                                ->options([
-                                    'offer_letters' => 'Offer Letter',
-                                    'wfh_letter' => 'WFH Letter',
-                                    'completion_letter' => 'Completion Letter',
-                                    'attendance_report' => 'Attendance Report',
-                                    'completion_cert' => 'Completion Cert',
-                                ]),
+                                ->options(function () {
+                                    $availableAttachments = [];
+
+                                    $possibleAttachments = [
+                                        'offer_letters' => 'Offer Letter',
+                                        'wfh_letter' => 'WFH Letter',
+                                        'completion_letter' => 'Completion Letter',
+                                        'attendance_report' => 'Attendance Report',
+                                        'completion_cert' => 'Completion Cert',
+                                    ];
+
+                                    foreach ($possibleAttachments as $key => $label) {
+                                        if ($this->record->hasMedia($key)) {
+                                            $availableAttachments[$key] = $label;
+                                        }
+                                    }
+
+                                    return $availableAttachments;
+                                }),
                         ]),
                 ])
                 ->action(function (array $data, ViewCandidate $livewire) {
-                    if (count($data['attachments']) !== 0) {
-                        $notFound = false;
-                        foreach ($data['attachments'] as $attachment) {
-                            $media = $this->record->getFirstMedia($attachment);
-                            if (! $media) {
-                                $name = str($attachment)->replace('_', ' ')->title();
-                                Notification::make()
-                                    ->title($name.' Not Found')
-                                    ->body('The '.$name.' is not found. Please generate/attach the '.$name.' first.')
-                                    ->danger()
-                                    ->send();
-                                $notFound = true;
-                            }
-                        }
-                        if ($notFound === true) {
-                            $livewire->halt();
-                        }
-                    }
-
                     if (count($data['attachments']) !== 0) {
                         $attachments = collect($data['attachments'])
                             ->map(fn (string $attachment) => $this->record->getMedia($attachment));
