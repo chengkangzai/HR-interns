@@ -98,6 +98,10 @@ class PositionResource extends Resource
                         ->columnSpanFull(),
                 ]),
 
+            Forms\Components\SpatieMediaLibraryFileUpload::make('documents')
+                ->acceptedFileTypes(['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'])
+                ->collection('documents'),
+
             Section::make([
                 Placeholder::make('created_at')
                     ->label('Created Date')
