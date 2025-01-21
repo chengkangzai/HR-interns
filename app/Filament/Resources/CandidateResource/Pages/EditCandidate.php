@@ -5,6 +5,7 @@ namespace App\Filament\Resources\CandidateResource\Pages;
 use App\Filament\Resources\CandidateResource;
 use App\Models\Candidate;
 use Filament\Actions\DeleteAction;
+use Filament\Actions\ViewAction;
 use Filament\Resources\Pages\EditRecord;
 use Illuminate\Database\Eloquent\Model;
 
@@ -17,6 +18,7 @@ class EditCandidate extends EditRecord
     protected function getActions(): array
     {
         return [
+            ViewAction::make(),
             DeleteAction::make(),
         ];
     }
