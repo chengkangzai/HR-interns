@@ -28,6 +28,7 @@ use Filament\Resources\Pages\ViewRecord;
 use Filament\Support\Enums\MaxWidth;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Mail;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 /**
  * @property Candidate $record
@@ -65,6 +66,7 @@ class ViewCandidate extends ViewRecord
                             Select::make('attachments')
                                 ->multiple()
                                 ->reactive()
+                                ->columnSpanFull()
                                 ->options(function (Get $get) {
                                     $availableAttachments = [];
 
@@ -87,6 +89,7 @@ class ViewCandidate extends ViewRecord
                                         $email = Email::find($emailId);
                                         if ($email && $email->hasMedia('documents')) {
                                             foreach ($email->getMedia('documents') as $document) {
+                                                /** @var Media $document */
                                                 $availableAttachments["email_{$document->id}"] = "Template - {$document->name}";
                                             }
                                         }
