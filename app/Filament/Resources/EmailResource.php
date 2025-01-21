@@ -100,9 +100,12 @@ class EmailResource extends Resource
 
             TextColumn::make('position.title'),
         ])
+            ->filtersFormColumns(2)
             ->filters([
-                TrashedFilter::make(),
+                TrashedFilter::make()
+                    ->columnSpanFull(),
                 SelectFilter::make('position_id')
+                    ->columnSpanFull()
                     ->searchable()
                     ->preload()
                     ->hidden(fn ($livewire) => $livewire instanceof ViewPositionEmail)
