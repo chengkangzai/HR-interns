@@ -448,8 +448,8 @@ class CandidateResource extends Resource
                                 Placeholder::make('range')
                                     ->label('From - To')
                                     ->visibleOn(['view', 'edit'])
-                                    ->content(fn (Get $get): string => $get('start_date') !== null && $get('end_date') !== null
-                                        ? Carbon::parse($get('start_date'))->diffForHumans(Carbon::parse($get('end_date')), [
+                                    ->content(fn (Get $get): string => $get('start_date') !== null
+                                        ? Carbon::parse($get('start_date'))->diffForHumans(Carbon::parse($get('end_date') ?? now()), [
                                             'syntax' => CarbonInterface::DIFF_ABSOLUTE,
                                             'parts' => 2,
                                             'join' => ' and ',
