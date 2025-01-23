@@ -432,6 +432,7 @@ class CandidateResource extends Resource
                         Textarea::make('responsibilities')
                             ->columnSpanFull()
                             ->rows(3)
+                            ->autosize()
                             ->placeholder('Describe your key responsibilities and achievements'),
 
                         Fieldset::make('duration')
