@@ -22,6 +22,7 @@ use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\TimePicker;
+use Filament\Forms\Components\Toggle;
 use Filament\Forms\Get;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ViewRecord;
@@ -109,6 +110,10 @@ class ViewCandidate extends ViewRecord
                                     return $availableAttachments;
                                 }),
                         ]),
+
+                    Toggle::make('mark_as_contacted')
+                        ->default(true)
+                        ->visible(fn () => $this->record->status == CandidateStatus::PENDING),
                 ])
                 ->action(function (array $data, ViewCandidate $livewire) {
                     if (count($data['attachments']) === 0) {
@@ -142,6 +147,10 @@ class ViewCandidate extends ViewRecord
 
                     Mail::to($this->record->email)
                         ->queue($mail);
+
+                    if ($data['mark_as_contacted']) {
+                        $this->record->update(['status' => CandidateStatus::CONTACTED]);
+                    }
 
                     Notification::make()
                         ->title('Email Sent')
