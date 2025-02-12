@@ -100,16 +100,15 @@ class EditEmail extends EditRecord
                         'phone_number' => '+60123456789',
                     ]);
                     if (count($data['attachments']) === 0) {
-                        $mail = new DefaultMail($candidate, Email::find($data['mail']));
+                        $mail = new DefaultMail($candidate, $this->record);
                     } else {
                         $attachments = collect($data['attachments'])
-                            ->map(function (string $attachment) use ($data) {
+                            ->map(function (string $attachment) {
                                 [$type, $id] = explode('_', $attachment, 2);
 
                                 return match ($type) {
-                                    'record' => $this->record->getFirstMedia($id),
                                     'position' => $this->record->position->getMedia('documents')->firstWhere('id', $id),
-                                    'email' => Email::find($data['mail'])->getMedia('documents')->firstWhere('id', $id),
+                                    'email' => $this->record->getMedia('documents')->firstWhere('id', $id),
                                     default => null,
                                 };
                             })
@@ -117,7 +116,7 @@ class EditEmail extends EditRecord
 
                         $mail = new DefaultMail(
                             candidate: $candidate,
-                            email: Email::find($data['mail']),
+                            email: Email::find($this->record),
                             medias: $attachments
                         );
                     }
