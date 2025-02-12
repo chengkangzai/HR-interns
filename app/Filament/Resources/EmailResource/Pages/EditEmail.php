@@ -57,7 +57,7 @@ class EditEmail extends EditRecord
                                     }
 
                                     $email = $this->record;
-                                    if ($email && $email->hasMedia('documents')) {
+                                    if ($email->hasMedia('documents')) {
                                         foreach ($email->getMedia('documents') as $document) {
                                             /** @var Media $document */
                                             $availableAttachments["email_{$document->id}"] = "[Email] {$document->name}";
