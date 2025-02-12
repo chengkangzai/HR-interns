@@ -95,13 +95,13 @@ class EditEmail extends EditRecord
 
                         $mail = new DefaultMail(
                             candidate: $candidate,
-                            email: Email::find($this->record),
+                            email: $this->record,
                             medias: $attachments
                         );
                     }
 
-                    Mail::to($mail)
-                        ->send(new DefaultMail($candidate, $this->record));
+                    Mail::to($candidate)
+                        ->send($mail);
 
                     $candidate->delete();
                     Notification::make()
