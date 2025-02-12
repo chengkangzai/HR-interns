@@ -2,17 +2,23 @@
 
 namespace App\Filament\Resources\EmailResource\Pages;
 
+use App\Enums\CandidateStatus;
 use App\Filament\Resources\EmailResource;
 use App\Mail\DefaultMail;
 use App\Models\Candidate;
 use App\Models\Email;
 use Filament\Actions\Action;
 use Filament\Actions\DeleteAction;
+use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
+use Filament\Forms\Get;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\EditRecord;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Mail;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class EditEmail extends EditRecord
 {
@@ -33,6 +39,59 @@ class EditEmail extends EditRecord
                         ->email()
                         ->default(auth()->user()->email)
                         ->required(),
+
+                    Section::make('Attachments')
+                        ->schema([
+                            Select::make('attachments')
+                                ->reactive()
+                                ->columnSpanFull()
+                                ->multiple()
+                                ->options(function (Get $get) {
+                                    $availableAttachments = [];
+
+                                    // Candidate attachments
+                                    $recordAttachments = [
+                                        'offer_letters' => 'Offer Letter',
+                                        'wfh_letter' => 'WFH Letter',
+                                        'completion_letter' => 'Completion Letter',
+                                        'attendance_report' => 'Attendance Report',
+                                        'completion_cert' => 'Completion Cert',
+                                    ];
+
+                                    foreach ($recordAttachments as $key => $label) {
+                                        if ($this->record->hasMedia($key)) {
+                                            $availableAttachments["record_{$key}"] = "[Candidate] {$label}";
+                                        }
+                                    }
+
+                                    // Position attachments
+                                    $position = $this->record->position;
+                                    if ($position && $position->hasMedia('documents')) {
+                                        foreach ($position->getMedia('documents') as $document) {
+                                            /** @var Media $document */
+                                            $availableAttachments["position_{$document->id}"] = "[Position] {$document->name}";
+                                        }
+                                    }
+
+                                    // Email template attachments
+                                    $emailId = $get('mail');
+                                    if ($emailId) {
+                                        $email = Email::find($emailId);
+                                        if ($email && $email->hasMedia('documents')) {
+                                            foreach ($email->getMedia('documents') as $document) {
+                                                /** @var Media $document */
+                                                $availableAttachments["email_{$document->id}"] = "[Email] {$document->name}";
+                                            }
+                                        }
+                                    }
+
+                                    return $availableAttachments;
+                                }),
+                        ]),
+
+                    Toggle::make('mark_as_contacted')
+                        ->default(true)
+                        ->visible(fn () => $this->record->status == CandidateStatus::PENDING),
                 ])
                 ->action(function (array $data) {
                     $candidate = Candidate::firstOrCreate([
