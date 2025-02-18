@@ -98,7 +98,8 @@ class EmailResource extends Resource
                 ->limit(50)
                 ->sortable(),
 
-            TextColumn::make('position.title'),
+            TextColumn::make('position.title')
+                ->hidden(fn ($livewire) => $livewire instanceof ViewPositionEmail),
         ])
             ->filtersFormColumns(2)
             ->filters([
