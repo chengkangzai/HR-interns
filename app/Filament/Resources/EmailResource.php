@@ -115,7 +115,8 @@ class EmailResource extends Resource
                     ->label('Position'),
             ])
             ->actions([
-                EditAction::make(),
+                EditAction::make()
+                    ->url(fn (Email $record) => EmailResource::getUrl('edit', ['record' => $record->id])),
                 ReplicateAction::make()
                     ->form([
                         Select::make('position_id')
