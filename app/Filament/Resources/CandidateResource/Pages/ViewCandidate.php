@@ -148,7 +148,7 @@ class ViewCandidate extends ViewRecord
                     Mail::to($this->record->email)
                         ->queue($mail);
 
-                    if ($data['mark_as_contacted']) {
+                    if (data_get($data, 'mark_as_contacted')) {
                         $this->record->update(['status' => CandidateStatus::CONTACTED]);
                     }
 
