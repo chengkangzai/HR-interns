@@ -32,6 +32,7 @@ class ViewPositionCandidate extends ManageRelatedRecords
     public function table(Table $table): Table
     {
         return CandidateResource::table($table)
+            ->defaultGroup('status')
             ->filters([
                 SelectFilter::make('status')
                     ->options(CandidateStatus::class)
