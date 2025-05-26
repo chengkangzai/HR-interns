@@ -2,7 +2,6 @@
 
 namespace App\Filament\Resources;
 
-use App\Enums\PositionStatus;
 use App\Filament\Resources\EmailResource\Pages;
 use App\Filament\Resources\PositionResource\Pages\ViewPositionEmail;
 use App\Models\Email;
@@ -115,16 +114,8 @@ class EmailResource extends Resource
                     ->searchable()
                     ->preload()
                     ->hidden(fn ($livewire) => $livewire instanceof ViewPositionEmail)
-                    ->options(function () {
-                        return Position::query()
-                            ->whereHas('candidates')
-                            ->where('status', PositionStatus::OPEN)
-                            ->get()
-                            ->pluck('title', 'id')
-                            ->map(function ($positions) {
-                                return $positions->pluck('title', 'id');
-                            })
-                            ->toArray();
+                    ->relationship('openPosition', 'title', function ($query) {
+                        $query->whereHas('candidates');
                     })
                     ->label('Position'),
             ])
