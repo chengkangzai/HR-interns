@@ -39,7 +39,7 @@ class Email extends Model implements HasMedia
 
     public function openPosition(): BelongsTo
     {
-        return $this->belongsTo(Position::class)
+        return $this->position()
             ->where('status', PositionStatus::OPEN);
     }
 
