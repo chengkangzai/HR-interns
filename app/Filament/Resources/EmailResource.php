@@ -102,7 +102,7 @@ class EmailResource extends Resource
 
             TextColumn::make('position.title')
                 ->badge()
-                ->hidden(fn ($livewire) => $livewire instanceof ViewPositionEmail),
+                ->hidden(fn ($livewire) => $livewire instanceof ViewPositionEmail || $livewire->tableGrouping == 'position.title'),
         ])
             ->filtersFormColumns(2)
             ->filters([
