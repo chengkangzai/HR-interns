@@ -124,6 +124,9 @@ class EmailResource extends Resource
                             ->relationship('position', 'title'),
                     ]),
             ])
+            ->groups([
+                'position.title',
+            ])
             ->defaultSort('sort')
             ->reorderable(function ($livewire) {
                 if ($livewire instanceof ViewPositionEmail) {
