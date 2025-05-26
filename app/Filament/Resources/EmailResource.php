@@ -33,7 +33,7 @@ class EmailResource extends Resource
 
     public static function form(Form $form): Form
     {
-        return $form->schema(components: [
+        return $form->schema([
             TextInput::make('name')
                 ->required(),
 
