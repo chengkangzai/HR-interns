@@ -14,6 +14,7 @@ use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
+use Filament\Tables\Actions\DeleteBulkAction;
 use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Actions\ReplicateAction;
 use Filament\Tables\Columns\TextColumn;
@@ -126,6 +127,9 @@ class EmailResource extends Resource
             ])
             ->groups([
                 'position.title',
+            ])
+            ->bulkActions([
+                DeleteBulkAction::make(),
             ])
             ->defaultSort('sort')
             ->reorderable(function ($livewire) {
