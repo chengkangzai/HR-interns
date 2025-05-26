@@ -91,15 +91,17 @@ class EmailResource extends Resource
     {
         return $table->columns([
             TextColumn::make('name')
+                ->limit(40)
                 ->searchable()
                 ->sortable(),
 
             TextColumn::make('title')
                 ->searchable()
-                ->limit(50)
+                ->limit(40)
                 ->sortable(),
 
             TextColumn::make('position.title')
+                ->badge()
                 ->hidden(fn ($livewire) => $livewire instanceof ViewPositionEmail),
         ])
             ->filtersFormColumns(2)
