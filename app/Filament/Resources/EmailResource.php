@@ -2,9 +2,11 @@
 
 namespace App\Filament\Resources;
 
+use App\Enums\PositionStatus;
 use App\Filament\Resources\EmailResource\Pages;
 use App\Filament\Resources\PositionResource\Pages\ViewPositionEmail;
 use App\Models\Email;
+use App\Models\Position;
 use Filament\Forms\Components\Actions\Action as FormAction;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\RichEditor;
@@ -113,8 +115,16 @@ class EmailResource extends Resource
                     ->searchable()
                     ->preload()
                     ->hidden(fn ($livewire) => $livewire instanceof ViewPositionEmail)
-                    ->relationship('openPosition', 'title', function ($query) {
-                        $query->whereHas('candidates');
+                    ->options(function () {
+                        return Position::query()
+                            ->whereHas('candidates')
+                            ->where('status', PositionStatus::OPEN)
+                            ->get()
+                            ->pluck('title', 'id')
+                            ->map(function ($positions) {
+                                return $positions->pluck('title', 'id');
+                            })
+                            ->toArray();
                     })
                     ->label('Position'),
             ])
@@ -124,7 +134,15 @@ class EmailResource extends Resource
                 ReplicateAction::make()
                     ->form([
                         Select::make('position_id')
-                            ->relationship('position', 'title'),
+                            ->options(function () {
+                                return Position::query()
+                                    ->get()
+                                    ->groupBy('type')
+                                    ->map(function ($positions) {
+                                        return $positions->pluck('title', 'id');
+                                    })
+                                    ->toArray();
+                            }),
                     ]),
             ])
             ->groups([
