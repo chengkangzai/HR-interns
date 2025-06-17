@@ -47,10 +47,21 @@ class User extends Authenticatable implements FilamentUser
 
     public function canAccessPanel(Panel $panel): bool
     {
+        // Always require email verification and domain check
+        $hasValidEmail = str_ends_with($this->email, '@pixalink.io') && $this->hasVerifiedEmail();
+
+        // In local environment, allow access but still log for audit
         if (app()->isLocal()) {
-            return true;
+            if (! $hasValidEmail) {
+                \Log::warning('Local environment: User accessed panel without proper domain email', [
+                    'user_id' => $this->id,
+                    'email' => $this->email,
+                ]);
+            }
+
+            return $hasValidEmail;
         }
 
-        return str_ends_with($this->email, '@pixalink.io') && $this->hasVerifiedEmail();
+        return $hasValidEmail;
     }
 }
