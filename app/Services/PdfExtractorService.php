@@ -169,24 +169,10 @@ EOT
             return $result;
 
         } catch (\Exception $e) {
-            // Log detailed error for debugging (not shown to user)
-            Log::error('Groq extraction failed', [
-                'error' => $e->getMessage(),
-                'file' => $e->getFile(),
-                'line' => $e->getLine(),
-                'pdf_path' => basename($pdfPath), // Only log filename, not full path
-            ]);
+            Log::error('Groq extraction failed: '.$e->getMessage());
 
-            // Show sanitized error message to user
-            $userMessage = 'PDF extraction failed. Please try again or contact support if the issue persists.';
-
-            // Only show detailed error in development environment
-            if (app()->environment('local', 'development')) {
-                $userMessage .= ' Error: '.$e->getMessage();
-            }
-
-            Notification::make('PDF extraction failed')
-                ->body($userMessage)
+            Notification::make('Groq extraction failed: '.$e->getMessage())
+                ->body($e->getMessage())
                 ->danger()
                 ->send();
 
