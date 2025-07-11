@@ -11,6 +11,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - `php artisan queue:work` - Start queue worker for background jobs
 - `php artisan tinker` - Interactive PHP/Laravel shell
 - `php artisan test` - Run PHPUnit tests
+- `php artisan test --filter TestClassName` - Run specific test class
+- `php artisan test tests/Feature/ExampleTest.php` - Run specific test file
 - `composer install` - Install PHP dependencies
 - `composer dump-autoload` - Regenerate autoloader files
 
@@ -101,4 +103,10 @@ Migration files show the evolution:
 ### Testing
 - PHPUnit configuration in `phpunit.xml`
 - Test files in `tests/Feature/` and `tests/Unit/`
-- Uses SQLite in-memory database for testing environment
+- Testing environment uses array drivers for cache, mail, queue, and session
+- Database configuration for testing can be enabled by uncommenting SQLite lines in `phpunit.xml`
+
+### Environment Setup
+- Copy `.env.example` to `.env` and configure database settings
+- Run `php artisan key:generate` to generate application key
+- Ensure required services (database, queue) are running for full functionality
