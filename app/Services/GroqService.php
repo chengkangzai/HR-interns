@@ -25,7 +25,7 @@ class GroqService
             'Authorization' => 'Bearer '.$this->apiKey,
             'Content-Type' => 'application/json',
         ])->post($this->baseUrl, array_merge([
-            'model' => 'llama3-8b-8192',  // or 'llama2-70b-4096'
+            'model' => 'llama-3.3-70b-versatile',
             'messages' => $messages,
             'temperature' => 0.1,
         ], $options));
