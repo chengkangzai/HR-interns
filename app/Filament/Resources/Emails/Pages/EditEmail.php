@@ -2,7 +2,6 @@
 
 namespace App\Filament\Resources\Emails\Pages;
 
-use Filament\Schemas\Components\Section;
 use App\Enums\CandidateStatus;
 use App\Filament\Resources\Emails\EmailResource;
 use App\Mail\DefaultMail;
@@ -15,6 +14,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\EditRecord;
+use Filament\Schemas\Components\Section;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Mail;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;

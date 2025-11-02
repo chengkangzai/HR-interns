@@ -2,12 +2,12 @@
 
 namespace App\Filament\Resources\Candidates\Pages;
 
-use Filament\Schemas\Components\Tabs\Tab;
 use App\Enums\CandidateStatus;
 use App\Filament\Resources\Candidates\CandidateResource;
 use App\Models\Candidate;
 use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
+use Filament\Schemas\Components\Tabs\Tab;
 use Illuminate\Database\Eloquent\Builder;
 
 class ListCandidates extends ListRecords

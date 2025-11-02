@@ -2,10 +2,6 @@
 
 namespace App\Filament\Resources\Candidates\Pages;
 
-use App\Filament\Resources\Candidates\Pages\ViewCandidate;
-use Filament\Schemas\Components\Utilities\Get;
-use Filament\Schemas\Components\Section;
-use Filament\Support\Enums\Width;
 use App\Enums\CandidateStatus;
 use App\Filament\Resources\Candidates\CandidateResource;
 use App\Filament\Resources\Emails\EmailResource;
@@ -27,6 +23,9 @@ use Filament\Forms\Components\TimePicker;
 use Filament\Forms\Components\Toggle;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ViewRecord;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Support\Enums\Width;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Mail;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
