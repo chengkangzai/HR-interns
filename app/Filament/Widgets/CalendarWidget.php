@@ -3,7 +3,7 @@
 namespace App\Filament\Widgets;
 
 use App\Enums\CandidateStatus;
-use App\Filament\Resources\CandidateResource;
+use App\Filament\Resources\Candidates\CandidateResource;
 use App\Models\Candidate;
 use Saade\FilamentFullCalendar\Widgets\FullCalendarWidget;
 
