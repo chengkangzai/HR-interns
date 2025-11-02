@@ -4,10 +4,8 @@ namespace App\Filament\Resources\CandidateResource\Pages;
 
 use App\Filament\Resources\CandidateResource;
 use App\Models\Candidate;
-use Closure;
 use Filament\Resources\Pages\Page;
 use Filament\Resources\RelationManagers\RelationManager;
-use Filament\Tables\Actions\Action;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Tables\Contracts\HasTable;
@@ -16,7 +14,6 @@ use Illuminate\Database\Eloquent\Relations\Relation;
 use Livewire\Component;
 use ReflectionClass;
 use Spatie\Activitylog\Models\Activity;
-use Z3d0X\FilamentLogger\Resources\ActivityResource;
 
 class AuditCandidate extends Page implements HasTable
 {
@@ -31,16 +28,8 @@ class AuditCandidate extends Page implements HasTable
     protected function getTableActions(): array
     {
         return [
-            Action::make('View')
-                ->icon('heroicon-o-eye')
-                ->color('gray')
-                ->url(fn (Activity $record) => ActivityResource::getUrl('view', ['record' => $record])),
-        ];
-    }
 
-    protected function getTableRecordUrlUsing(): ?Closure
-    {
-        return fn (Activity $record) => ActivityResource::getUrl('view', ['record' => $record]);
+        ];
     }
 
     public static function getTableColumns(): array
