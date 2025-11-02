@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\EmailResource\Pages;
 
+use Filament\Schemas\Components\Section;
 use App\Enums\CandidateStatus;
 use App\Filament\Resources\EmailResource;
 use App\Mail\DefaultMail;
@@ -9,7 +10,6 @@ use App\Models\Candidate;
 use App\Models\Email;
 use Filament\Actions\Action;
 use Filament\Actions\DeleteAction;
-use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
@@ -33,7 +33,7 @@ class EditEmail extends EditRecord
         return [
             Action::make('Send Preview Email')
                 ->icon('heroicon-o-eye')
-                ->form([
+                ->schema([
                     TextInput::make('email')
                         ->email()
                         ->default(auth()->user()->email)

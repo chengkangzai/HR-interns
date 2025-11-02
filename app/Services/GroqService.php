@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use Exception;
 use Illuminate\Support\Facades\Http;
 
 class GroqService
@@ -31,7 +32,7 @@ class GroqService
         ], $options));
 
         if (! $response->successful()) {
-            throw new \Exception('Groq API error: '.$response->body());
+            throw new Exception('Groq API error: '.$response->body());
         }
 
         return $response->json();

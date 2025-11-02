@@ -2,12 +2,12 @@
 
 namespace App\Filament\Resources\PositionResource\Pages;
 
+use Filament\Schemas\Schema;
+use Filament\Actions\CreateAction;
 use App\Enums\CandidateStatus;
 use App\Filament\Resources\CandidateResource;
 use App\Filament\Resources\PositionResource;
-use Filament\Forms\Form;
 use Filament\Resources\Pages\ManageRelatedRecords;
-use Filament\Tables\Actions\CreateAction;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 
@@ -17,16 +17,16 @@ class ViewPositionCandidate extends ManageRelatedRecords
 
     protected static string $relationship = 'candidates';
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-rectangle-stack';
 
     public static function getNavigationLabel(): string
     {
         return 'Candidates';
     }
 
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
-        return CandidateResource::form($form);
+        return CandidateResource::form($schema);
     }
 
     public function table(Table $table): Table

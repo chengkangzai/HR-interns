@@ -11,22 +11,22 @@
         "php": "^8.4",
         "barryvdh/laravel-dompdf": "^2.2.0",
         "chengkangzai/laravel-office-holidays": "^0.0.1",
-        "croustibat/filament-jobs-monitor": "^2.6.2",
-        "filament/filament": "^3.3.37",
-        "filament/spatie-laravel-media-library-plugin": "^3.3.37",
-        "filament/spatie-laravel-tags-plugin": "^3.3.37",
+        "filament/filament": "^4.0",
+        "filament/spatie-laravel-media-library-plugin": "^4.0",
+        "filament/spatie-laravel-tags-plugin": "^4.0",
         "guzzlehttp/guzzle": "^7.10.0",
         "laravel/framework": "^11.45.2",
         "laravel/sanctum": "^4.2.0",
         "laravel/tinker": "^2.10.1",
         "league/flysystem-aws-s3-v3": "^3.29",
-        "saade/filament-fullcalendar": "^3.2.4",
+        "saade/filament-fullcalendar": "^4.0",
         "spatie/laravel-activitylog": "^4.10.2",
         "spatie/pdf-to-text": "^1.54.1",
-        "ysfkaya/filament-phone-input": "^2.3.8"
+        "ysfkaya/filament-phone-input": "^4.0"
     },
     "require-dev": {
         "fakerphp/faker": "^1.24.1",
+        "filament/upgrade": "^4.0",
         "laravel/pint": "^1.24.0",
         "laravel/sail": "^1.45.0",
         "mockery/mockery": "^1.6.12",
@@ -76,6 +76,6 @@
             "php-http/discovery": true
         }
     },
-    "minimum-stability": "stable",
+    "minimum-stability": "dev",
     "prefer-stable": true
 }

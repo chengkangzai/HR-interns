@@ -2,6 +2,9 @@
 
 namespace App\Filament\Resources\CandidateResource\Pages;
 
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Components\Section;
+use Filament\Support\Enums\Width;
 use App\Enums\CandidateStatus;
 use App\Filament\Resources\CandidateResource;
 use App\Filament\Resources\EmailResource;
@@ -16,17 +19,13 @@ use App\Models\Email;
 use Filament\Actions\Action;
 use Filament\Actions\ActionGroup;
 use Filament\Actions\EditAction;
-use Filament\Forms\Components\Actions\Action as FormAction;
 use Filament\Forms\Components\Placeholder;
-use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\TimePicker;
 use Filament\Forms\Components\Toggle;
-use Filament\Forms\Get;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ViewRecord;
-use Filament\Support\Enums\MaxWidth;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Mail;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
@@ -47,7 +46,7 @@ class ViewCandidate extends ViewRecord
             Action::make('send')
                 ->icon('heroicon-o-paper-airplane')
                 ->label('Send')
-                ->form([
+                ->schema([
                     Select::make('mail')
                         ->required()
                         ->reactive()
@@ -56,7 +55,7 @@ class ViewCandidate extends ViewRecord
                                 ->orderBy('sort')
                                 ->pluck('name', 'id');
                         })
-                        ->suffixAction(fn (Get $get) => $get('mail') !== null ? FormAction::make('view_email')
+                        ->suffixAction(fn (Get $get) => $get('mail') !== null ? Action::make('view_email')
                             ->icon('heroicon-o-eye')
                             ->url(fn () => EmailResource::getUrl('edit', ['record' => $get('mail')]), true)
                             : null
@@ -163,7 +162,7 @@ class ViewCandidate extends ViewRecord
                 Action::make('generate_offer_letter')
                     ->icon('heroicon-o-document')
                     ->label('Generate Offer Letter')
-                    ->form(self::getOfferLetterForm())
+                    ->schema(self::getOfferLetterForm())
                     ->visible(fn (Candidate $record) => $record->status === CandidateStatus::INTERVIEW)
                     ->disabled(fn (Candidate $record) => $record->position_id == null)
                     ->action(function (Candidate $record, array $data) {
@@ -234,7 +233,7 @@ class ViewCandidate extends ViewRecord
                             ->send();
                     }),
             ])
-                ->dropdownWidth(MaxWidth::ExtraSmall->value),
+                ->dropdownWidth(Width::ExtraSmall->value),
         ];
     }
 

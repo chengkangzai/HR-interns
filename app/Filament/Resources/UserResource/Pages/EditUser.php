@@ -25,7 +25,7 @@ class EditUser extends EditRecord
                 ->requiresConfirmation()
                 ->modalHeading('Reset Password')
                 ->modalDescription('Please understand the consequences of this action')
-                ->form([
+                ->schema([
                     TextInput::make('password')
                         ->label('New Password')
                         ->confirmed()

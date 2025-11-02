@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use Exception;
 use Filament\Notifications\Notification;
 use Illuminate\Support\Facades\Log;
 use Spatie\PdfToText\Pdf;
@@ -168,7 +169,7 @@ EOT
 
             return $result;
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             Log::error('Groq extraction failed: '.$e->getMessage());
 
             Notification::make('Groq extraction failed: '.$e->getMessage())

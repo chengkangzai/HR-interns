@@ -2,6 +2,24 @@
 
 namespace App\Filament\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Utilities\Set;
+use Filament\Actions\Action;
+use Filament\Schemas\Components\Utilities\Get;
+use Exception;
+use App\Filament\Resources\CandidateResource\Pages\ViewCandidate;
+use Filament\Schemas\Components\Fieldset;
+use Filament\Forms\Components\Builder\Block;
+use Filament\Actions\EditAction;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\BulkAction;
+use App\Filament\Resources\CandidateResource\Pages\ListCandidates;
+use Filament\Actions\DeleteBulkAction;
+use App\Filament\Resources\CandidateResource\Pages\CreateCandidate;
+use App\Filament\Resources\CandidateResource\Pages\EditCandidate;
+use App\Filament\Resources\CandidateResource\Pages\AuditCandidate;
 use App\Enums\CandidateStatus;
 use App\Enums\PositionStatus;
 use App\Enums\PositionType;
@@ -18,33 +36,21 @@ use App\Models\Email;
 use App\Models\Position;
 use App\Services\PdfExtractorService;
 use Carbon\CarbonInterface;
-use Filament\Forms\Components\Actions\Action as FormAction;
 use Filament\Forms\Components\Builder;
 use Filament\Forms\Components\DatePicker;
-use Filament\Forms\Components\Fieldset;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\RichEditor;
-use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\SpatieTagsInput;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
-use Filament\Forms\Form;
-use Filament\Forms\Get;
-use Filament\Forms\Set;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
 use Filament\Resources\Resource;
 use Filament\Support\Colors\Color;
 use Filament\Support\Enums\FontFamily;
-use Filament\Tables\Actions\Action;
-use Filament\Tables\Actions\BulkAction;
-use Filament\Tables\Actions\BulkActionGroup;
-use Filament\Tables\Actions\DeleteAction;
-use Filament\Tables\Actions\DeleteBulkAction;
-use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Columns\SpatieTagsColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
@@ -71,11 +77,11 @@ class CandidateResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'name';
 
-    protected static ?string $navigationIcon = 'heroicon-o-user-group';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-user-group';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form->schema([
+        return $schema->components([
             Section::make([
                 TextInput::make('name')
                     ->live(onBlur: true)
@@ -87,7 +93,7 @@ class CandidateResource extends Resource
                     ->afterStateUpdated(function (string $state, Set $set) {
                         $set('email', str($state)->remove(' ')->remove('`'));
                     })
-                    ->suffixAction(fn (?string $state) => FormAction::make('Email')
+                    ->suffixAction(fn (?string $state) => Action::make('Email')
                         ->icon('heroicon-o-envelope-open')
                         ->tooltip('Send Email')
                         ->url('mailto:'.$state, true)
@@ -95,7 +101,7 @@ class CandidateResource extends Resource
                     ->required(),
 
                 PhoneInput::make('phone_number')
-                    ->suffixAction(fn (?string $state) => FormAction::make('WhatsApp')
+                    ->suffixAction(fn (?string $state) => Action::make('WhatsApp')
                         ->icon('heroicon-o-phone-arrow-up-right')
                         ->tooltip('Send WhatsApp Message')
                         ->url('https://wa.me/'.str_replace(['+', ' ', '(', ')', '-'], '', $state), true)
@@ -120,7 +126,7 @@ class CandidateResource extends Resource
                             return null;
                         }
 
-                        return FormAction::make('view_position')
+                        return Action::make('view_position')
                             ->icon('heroicon-o-eye')
                             ->url(PositionResource::getUrl('view', ['record' => $record->position_id]), true);
                     })
@@ -166,7 +172,7 @@ class CandidateResource extends Resource
             Section::make([
                 SpatieMediaLibraryFileUpload::make('resume')
                     ->hintActions([
-                        FormAction::make('Auto-Fill from Resume')
+                        Action::make('Auto-Fill from Resume')
                             ->icon('heroicon-o-pencil-square')
                             ->visible(fn (?Candidate $record, string $context) => $context == 'edit' && $record->getFirstMedia('resumes') !== null)
                             ->action(function (Candidate $record, Set $set, Get $get) {
@@ -187,7 +193,7 @@ class CandidateResource extends Resource
                                             ->success()
                                             ->send();
                                     }
-                                } catch (\Exception $e) {
+                                } catch (Exception $e) {
                                     Notification::make()
                                         ->title('Error Occurred')
                                         ->body('Failed to extract resume information: '.$e->getMessage())
@@ -195,18 +201,18 @@ class CandidateResource extends Resource
                                         ->send();
                                 }
                             }),
-                        FormAction::make('extract-text')
+                        Action::make('extract-text')
                             ->icon('heroicon-o-document-text')
                             ->visible(fn (?Candidate $record, string $context) => $context == 'edit' && $record->getFirstMedia('resumes') !== null)
                             ->modalSubmitAction(
-                                \Filament\Actions\Action::make('Copy Text_Close')
+                                Action::make('Copy Text_Close')
                                     ->label('Copy Text & Close')
                                     ->extraAttributes([
                                         'x-on:click' => new HtmlString('navigator.clipboard.writeText(document.getElementById(\'pdf-content\').innerText) && new FilamentNotification().success().title(\'Copied !\').send() && close'),
                                     ])
                             )
                             ->modalCancelAction(false)
-                            ->form([
+                            ->schema([
                                 Placeholder::make('text')
                                     ->content(function (Candidate $record): HtmlString {// Get temporary S3 URL valid for 5 minutes
                                         $s3Url = $record->getFirstMedia('resumes')->getTemporaryUrl(now()->addMinutes(5));
@@ -248,7 +254,7 @@ class CandidateResource extends Resource
                                     ->success()
                                     ->send();
                             }
-                        } catch (\Exception $e) {
+                        } catch (Exception $e) {
                             info($e);
                             Notification::make()
                                 ->title('Error Occurred')
@@ -263,10 +269,10 @@ class CandidateResource extends Resource
 
                 SpatieMediaLibraryFileUpload::make('offer_letter')
                     ->hintActions([
-                        FormAction::make('generate_offer_letter')
+                        Action::make('generate_offer_letter')
                             ->icon('heroicon-o-document')
                             ->label('Generate')
-                            ->form(Pages\ViewCandidate::getOfferLetterForm())
+                            ->schema(ViewCandidate::getOfferLetterForm())
                             ->visible(fn (?Candidate $record) => $record->status === CandidateStatus::INTERVIEW)
                             ->action(function (?Candidate $record, array $data) {
                                 dispatch_sync(new GenerateOfferLetterJob($record, $data['pay'], $data['working_from'], $data['working_to']));
@@ -291,7 +297,7 @@ class CandidateResource extends Resource
                 Section::make([
                     SpatieMediaLibraryFileUpload::make('wfh_letter')
                         ->hintActions([
-                            FormAction::make('generate_wfh')
+                            Action::make('generate_wfh')
                                 ->icon('heroicon-o-document')
                                 ->visible(fn (?Candidate $record) => $record->getFirstMedia('wfh_letter') !== null)
                                 ->label('Generate')
@@ -311,7 +317,7 @@ class CandidateResource extends Resource
 
                     SpatieMediaLibraryFileUpload::make('completion_letter')
                         ->hintActions([
-                            FormAction::make('generate_completion_letter')
+                            Action::make('generate_completion_letter')
                                 ->icon('heroicon-o-document')
                                 ->label('Generate')
                                 ->visible(fn (?Candidate $record) => $record->getFirstMedia('completion_letter') == null)
@@ -331,7 +337,7 @@ class CandidateResource extends Resource
 
                     SpatieMediaLibraryFileUpload::make('completion_cert')
                         ->hintActions([
-                            FormAction::make('generate_completion_cert')
+                            Action::make('generate_completion_cert')
                                 ->icon('heroicon-o-document')
                                 ->label('Generate')
                                 ->visible(fn (?Candidate $record) => $record->getFirstMedia('completion_cert') == null)
@@ -355,7 +361,7 @@ class CandidateResource extends Resource
                         ->hiddenOn('create')
                         ->multiple()
                         ->hintActions([
-                            FormAction::make('generate_attendance_report')
+                            Action::make('generate_attendance_report')
                                 ->icon('heroicon-o-document')
                                 ->label('Generate')
                                 ->visible(fn (?Candidate $record) => $record->status === CandidateStatus::COMPLETED && $record->getFirstMedia('attendance_report') == null)
@@ -398,7 +404,7 @@ class CandidateResource extends Resource
                                 }
                             })
                             ->suffixActions([
-                                FormAction::make('google_company')
+                                Action::make('google_company')
                                     ->icon('heroicon-o-magnifying-glass')
                                     ->url(fn ($state) => 'https://www.google.com/search?q='.urlencode($state), true),
                             ])
@@ -472,7 +478,7 @@ class CandidateResource extends Resource
                 Builder::make('additional_info')
                     ->label('Additional Information')
                     ->blocks([
-                        Builder\Block::make('source')
+                        Block::make('source')
                             ->icon('heroicon-o-link')
                             ->schema([
                                 Select::make('source')
@@ -492,7 +498,7 @@ class CandidateResource extends Resource
                             ])
                             ->columns(2),
 
-                        Builder\Block::make('qualification')
+                        Block::make('qualification')
                             ->icon('heroicon-o-academic-cap')
                             ->schema([
                                 Select::make('qualification')
@@ -536,7 +542,7 @@ class CandidateResource extends Resource
                             ])
                             ->columns(2),
 
-                        Builder\Block::make('social_media')
+                        Block::make('social_media')
                             ->icon('heroicon-o-globe-alt')
                             ->schema([
                                 Select::make('social_media')
@@ -591,7 +597,7 @@ class CandidateResource extends Resource
 
                                             })
                                             ->suffixAction(
-                                                FormAction::make('view')
+                                                Action::make('view')
                                                     ->icon('heroicon-o-eye')
                                                     ->url(fn (?string $state) => $state, true)
                                             ),
@@ -744,11 +750,11 @@ class CandidateResource extends Resource
                 TrashedFilter::make(),
             ])
             ->recordUrl(fn (Candidate $record) => CandidateResource::getUrl('view', ['record' => $record]))
-            ->actions([
+            ->recordActions([
                 Action::make('status')
                     ->color(Color::Blue)
                     ->icon('heroicon-s-check-circle')
-                    ->form([
+                    ->schema([
                         Select::make('status')
                             ->options(CandidateStatus::class),
                     ])
@@ -756,7 +762,7 @@ class CandidateResource extends Resource
                 EditAction::make(),
                 DeleteAction::make(),
             ])
-            ->bulkActions([
+            ->toolbarActions([
                 BulkActionGroup::make([
                     self::getAddTagsBulkAction(),
 
@@ -779,7 +785,7 @@ class CandidateResource extends Resource
                             ]));
                         }),
                     BulkAction::make('change_position')
-                        ->visible(fn (Page $livewire) => $livewire instanceof Pages\ListCandidates)
+                        ->visible(fn (Page $livewire) => $livewire instanceof ListCandidates)
                         ->icon('heroicon-s-check-circle')
                         ->form([
                             Select::make('position')
@@ -812,7 +818,7 @@ class CandidateResource extends Resource
                                     ->orderBy('sort')
                                     ->pluck('name', 'id');
                             })
-                            ->suffixAction(fn (Get $get) => $get('email') !== null ? FormAction::make('view_email')
+                            ->suffixAction(fn (Get $get) => $get('email') !== null ? Action::make('view_email')
                                 ->icon('heroicon-o-eye')
                                 ->url(fn () => EmailResource::getUrl('edit', ['record' => $get('email')]), true)
                                 : null
@@ -898,7 +904,7 @@ class CandidateResource extends Resource
                 BulkAction::make('generate_offer_letter')
                     ->icon('heroicon-o-document')
                     ->deselectRecordsAfterCompletion()
-                    ->form(Pages\ViewCandidate::getOfferLetterForm())
+                    ->form(ViewCandidate::getOfferLetterForm())
                     ->action(function (Collection $records, array $data) {
                         $candidates = $records
                             ->reject(fn (Candidate $record) => $record->status === CandidateStatus::INTERVIEW);
@@ -931,11 +937,11 @@ class CandidateResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListCandidates::route('/'),
-            'create' => Pages\CreateCandidate::route('/create'),
-            'view' => Pages\ViewCandidate::route('/{record}/'),
-            'edit' => Pages\EditCandidate::route('/{record}/edit'),
-            'audit' => Pages\AuditCandidate::route('/{record}/audit'),
+            'index' => ListCandidates::route('/'),
+            'create' => CreateCandidate::route('/create'),
+            'view' => ViewCandidate::route('/{record}/'),
+            'edit' => EditCandidate::route('/{record}/edit'),
+            'audit' => AuditCandidate::route('/{record}/audit'),
         ];
     }
 

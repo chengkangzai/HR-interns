@@ -2,6 +2,22 @@
 
 namespace App\Filament\Resources;
 
+use Filament\Pages\Enums\SubNavigationPosition;
+use Filament\Schemas\Schema;
+use Filament\Forms\Components\Repeater;
+use Filament\Actions\Action;
+use Filament\Schemas\Components\Utilities\Set;
+use Filament\Schemas\Components\Section;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
+use Filament\Actions\ViewAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\DeleteAction;
+use App\Filament\Resources\PositionResource\Pages\ListPositions;
+use App\Filament\Resources\PositionResource\Pages\CreatePosition;
+use App\Filament\Resources\PositionResource\Pages\ViewPosition;
+use App\Filament\Resources\PositionResource\Pages\EditPosition;
+use App\Filament\Resources\PositionResource\Pages\ViewPositionCandidate;
+use App\Filament\Resources\PositionResource\Pages\ViewPositionEmail;
 use App\Enums\PositionStatus;
 use App\Enums\PositionType;
 use App\Enums\PositionUrlSource;
@@ -10,18 +26,10 @@ use App\Models\Position;
 use Filament\Forms;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\RichEditor;
-use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
-use Filament\Forms\Set;
-use Filament\Pages\SubNavigationPosition;
 use Filament\Resources\Pages\Page;
 use Filament\Resources\Resource;
-use Filament\Tables\Actions\Action;
-use Filament\Tables\Actions\DeleteAction;
-use Filament\Tables\Actions\EditAction;
-use Filament\Tables\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
@@ -34,13 +42,13 @@ class PositionResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'title';
 
-    protected static ?string $navigationIcon = 'heroicon-o-briefcase';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-briefcase';
 
-    protected static SubNavigationPosition $subNavigationPosition = SubNavigationPosition::Top;
+    protected static ?\Filament\Pages\Enums\SubNavigationPosition $subNavigationPosition = SubNavigationPosition::Top;
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form->schema([
+        return $schema->components([
             TextInput::make('title')
                 ->required(),
 
@@ -53,7 +61,7 @@ class PositionResource extends Resource
                 ->options(PositionType::class)
                 ->required(),
 
-            Forms\Components\Repeater::make('urls')
+            Repeater::make('urls')
                 ->schema([
                     Select::make('source')
                         ->required()
@@ -61,7 +69,7 @@ class PositionResource extends Resource
 
                     TextInput::make('url')
                         ->suffixAction(fn (?string $state) => $state
-                            ? Forms\Components\Actions\Action::make('view')
+                            ? Action::make('view')
                                 ->label('View')
                                 ->icon('heroicon-o-arrow-top-right-on-square')
                                 ->url($state, true)
@@ -98,7 +106,7 @@ class PositionResource extends Resource
                         ->columnSpanFull(),
                 ]),
 
-            Forms\Components\SpatieMediaLibraryFileUpload::make('documents')
+            SpatieMediaLibraryFileUpload::make('documents')
                 ->preserveFilenames()
                 ->acceptedFileTypes(['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'])
                 ->collection('documents'),
@@ -153,12 +161,12 @@ class PositionResource extends Resource
                     ->multiple()
                     ->label('Type'),
             ])
-            ->actions([
+            ->recordActions([
                 ViewAction::make(),
                 EditAction::make(),
                 DeleteAction::make(),
                 Action::make('view_external')
-                    ->form([
+                    ->schema([
                         Select::make('url')
                             ->options(function (Position $record) {
                                 $option = [];
@@ -195,21 +203,21 @@ class PositionResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListPositions::route('/'),
-            'create' => Pages\CreatePosition::route('/create'),
-            'view' => Pages\ViewPosition::route('/{record}'),
-            'edit' => Pages\EditPosition::route('/{record}/edit'),
-            'candidates' => Pages\ViewPositionCandidate::route('/{record}/candidates'),
-            'emails' => Pages\ViewPositionEmail::route('/{record}/emails'),
+            'index' => ListPositions::route('/'),
+            'create' => CreatePosition::route('/create'),
+            'view' => ViewPosition::route('/{record}'),
+            'edit' => EditPosition::route('/{record}/edit'),
+            'candidates' => ViewPositionCandidate::route('/{record}/candidates'),
+            'emails' => ViewPositionEmail::route('/{record}/emails'),
         ];
     }
 
     public static function getRecordSubNavigation(Page $page): array
     {
         return $page->generateNavigationItems([
-            Pages\EditPosition::class,
-            Pages\ViewPositionCandidate::class,
-            Pages\ViewPositionEmail::class,
+            EditPosition::class,
+            ViewPositionCandidate::class,
+            ViewPositionEmail::class,
         ]);
     }
 

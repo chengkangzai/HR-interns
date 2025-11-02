@@ -2,11 +2,11 @@
 
 namespace App\Filament\Resources\PositionResource\Pages;
 
+use Filament\Schemas\Schema;
+use Filament\Actions\CreateAction;
 use App\Filament\Resources\EmailResource;
 use App\Filament\Resources\PositionResource;
-use Filament\Forms\Form;
 use Filament\Resources\Pages\ManageRelatedRecords;
-use Filament\Tables\Actions\CreateAction;
 use Filament\Tables\Table;
 
 class ViewPositionEmail extends ManageRelatedRecords
@@ -15,16 +15,16 @@ class ViewPositionEmail extends ManageRelatedRecords
 
     protected static string $relationship = 'emails';
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-rectangle-stack';
 
     public static function getNavigationLabel(): string
     {
         return 'Emails';
     }
 
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
-        return EmailResource::form($form);
+        return EmailResource::form($schema);
     }
 
     public function table(Table $table): Table

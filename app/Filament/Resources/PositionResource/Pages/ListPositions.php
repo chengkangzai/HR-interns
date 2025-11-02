@@ -2,12 +2,12 @@
 
 namespace App\Filament\Resources\PositionResource\Pages;
 
+use Filament\Schemas\Components\Tabs\Tab;
 use App\Enums\PositionStatus;
 use App\Enums\PositionType;
 use App\Filament\Resources\PositionResource;
 use App\Models\Position;
 use Filament\Actions\CreateAction;
-use Filament\Resources\Components\Tab;
 use Filament\Resources\Pages\ListRecords;
 use Illuminate\Database\Eloquent\Builder;
 

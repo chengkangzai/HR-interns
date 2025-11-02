@@ -2,22 +2,25 @@
 
 namespace App\Filament\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Actions\Action;
+use Filament\Actions\EditAction;
+use Filament\Actions\ReplicateAction;
+use Filament\Actions\DeleteBulkAction;
+use App\Filament\Resources\EmailResource\Pages\ListEmails;
+use App\Filament\Resources\EmailResource\Pages\CreateEmail;
+use App\Filament\Resources\EmailResource\Pages\EditEmail;
 use App\Filament\Resources\EmailResource\Pages;
 use App\Filament\Resources\PositionResource\Pages\ViewPositionEmail;
 use App\Models\Email;
 use App\Models\Position;
-use Filament\Forms\Components\Actions\Action as FormAction;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Tables\Actions\DeleteBulkAction;
-use Filament\Tables\Actions\EditAction;
-use Filament\Tables\Actions\ReplicateAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TrashedFilter;
@@ -31,11 +34,11 @@ class EmailResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'name';
 
-    protected static ?string $navigationIcon = 'heroicon-o-envelope-open';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-envelope-open';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form->schema([
+        return $schema->components([
             TextInput::make('name')
                 ->required(),
 
@@ -59,7 +62,7 @@ class EmailResource extends Resource
                         return null;
                     }
 
-                    return FormAction::make('view_position')
+                    return Action::make('view_position')
                         ->icon('heroicon-o-eye')
                         ->url(PositionResource::getUrl('view', ['record' => $record->position_id]), true);
                 }),
@@ -119,11 +122,11 @@ class EmailResource extends Resource
                     })
                     ->label('Position'),
             ])
-            ->actions([
+            ->recordActions([
                 EditAction::make()
                     ->url(fn (Email $record) => EmailResource::getUrl('edit', ['record' => $record->id])),
                 ReplicateAction::make()
-                    ->form([
+                    ->schema([
                         Select::make('position_id')
                             ->options(function () {
                                 return Position::query()
@@ -139,7 +142,7 @@ class EmailResource extends Resource
             ->groups([
                 'position.title',
             ])
-            ->bulkActions([
+            ->toolbarActions([
                 DeleteBulkAction::make(),
             ])
             ->defaultSort('sort')
@@ -155,9 +158,9 @@ class EmailResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListEmails::route('/'),
-            'create' => Pages\CreateEmail::route('/create'),
-            'edit' => Pages\EditEmail::route('/{record}/edit'),
+            'index' => ListEmails::route('/'),
+            'create' => CreateEmail::route('/create'),
+            'edit' => EditEmail::route('/{record}/edit'),
         ];
     }
 

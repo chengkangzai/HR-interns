@@ -2,11 +2,11 @@
 
 namespace App\Filament\Resources\CandidateResource\Pages;
 
+use Filament\Schemas\Components\Tabs\Tab;
 use App\Enums\CandidateStatus;
 use App\Filament\Resources\CandidateResource;
 use App\Models\Candidate;
 use Filament\Actions\CreateAction;
-use Filament\Resources\Components\Tab;
 use Filament\Resources\Pages\ListRecords;
 use Illuminate\Database\Eloquent\Builder;
 

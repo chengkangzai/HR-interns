@@ -23,7 +23,7 @@ class AuditCandidate extends Page implements HasTable
 
     protected static string $resource = CandidateResource::class;
 
-    protected static string $view = 'filament.resources.candidate-resource.pages.audit-candidate';
+    protected string $view = 'filament.resources.candidate-resource.pages.audit-candidate';
 
     protected function getTableActions(): array
     {

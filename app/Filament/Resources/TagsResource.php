@@ -2,15 +2,17 @@
 
 namespace App\Filament\Resources;
 
+use Filament\Schemas\Schema;
+use DB;
+use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use App\Filament\Resources\TagsResource\Pages\ListTags;
 use App\Filament\Resources\TagsResource\Pages;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Tables\Actions\BulkActionGroup;
-use Filament\Tables\Actions\DeleteAction;
-use Filament\Tables\Actions\DeleteBulkAction;
-use Filament\Tables\Actions\EditAction;
-use Filament\Tables\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
@@ -22,12 +24,12 @@ class TagsResource extends Resource
 
     protected static ?string $slug = 'tags';
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 TextInput::make('name.en')
                     ->label('Name'),
 
@@ -51,19 +53,19 @@ class TagsResource extends Resource
 
                 TextColumn::make('Usage Count')
                     ->sortable()
-                    ->getStateUsing(fn (Tag $record) => \DB::table('taggables')
+                    ->getStateUsing(fn (Tag $record) => DB::table('taggables')
                         ->where('tag_id', $record->getKey())
                         ->count()),
             ])
             ->filters([
                 SelectFilter::make('type'),
             ])
-            ->actions([
+            ->recordActions([
                 EditAction::make(),
                 ViewAction::make(),
                 DeleteAction::make(),
             ])
-            ->bulkActions([
+            ->toolbarActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),
                 ]),
@@ -73,7 +75,7 @@ class TagsResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListTags::route('/'),
+            'index' => ListTags::route('/'),
         ];
     }
 }
