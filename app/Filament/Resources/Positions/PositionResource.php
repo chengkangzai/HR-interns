@@ -2,34 +2,32 @@
 
 namespace App\Filament\Resources\Positions;
 
-use Filament\Pages\Enums\SubNavigationPosition;
-use Filament\Schemas\Schema;
-use Filament\Forms\Components\Repeater;
-use Filament\Actions\Action;
-use Filament\Schemas\Components\Utilities\Set;
-use Filament\Schemas\Components\Section;
-use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
-use Filament\Actions\ViewAction;
-use Filament\Actions\EditAction;
-use Filament\Actions\DeleteAction;
-use App\Filament\Resources\Positions\Pages\ListPositions;
-use App\Filament\Resources\Positions\Pages\CreatePosition;
-use App\Filament\Resources\Positions\Pages\ViewPosition;
-use App\Filament\Resources\Positions\Pages\EditPosition;
-use App\Filament\Resources\Positions\Pages\ViewPositionCandidate;
-use App\Filament\Resources\Positions\Pages\ViewPositionEmail;
 use App\Enums\PositionStatus;
 use App\Enums\PositionType;
 use App\Enums\PositionUrlSource;
-use App\Filament\Resources\PositionResource\Pages;
+use App\Filament\Resources\Positions\Pages\CreatePosition;
+use App\Filament\Resources\Positions\Pages\EditPosition;
+use App\Filament\Resources\Positions\Pages\ListPositions;
+use App\Filament\Resources\Positions\Pages\ViewPosition;
+use App\Filament\Resources\Positions\Pages\ViewPositionCandidate;
+use App\Filament\Resources\Positions\Pages\ViewPositionEmail;
 use App\Models\Position;
-use Filament\Forms;
+use Filament\Actions\Action;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
 use Filament\Forms\Components\Placeholder;
+use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\TextInput;
+use Filament\Pages\Enums\SubNavigationPosition;
 use Filament\Resources\Pages\Page;
 use Filament\Resources\Resource;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Utilities\Set;
+use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
@@ -42,7 +40,7 @@ class PositionResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'title';
 
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-briefcase';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-briefcase';
 
     protected static ?\Filament\Pages\Enums\SubNavigationPosition $subNavigationPosition = SubNavigationPosition::Top;
 

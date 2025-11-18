@@ -2,11 +2,11 @@
 
 namespace App\Filament\Resources\Positions\Pages;
 
-use Filament\Schemas\Schema;
-use Filament\Actions\CreateAction;
 use App\Filament\Resources\Emails\EmailResource;
 use App\Filament\Resources\Positions\PositionResource;
+use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ManageRelatedRecords;
+use Filament\Schemas\Schema;
 use Filament\Tables\Table;
 
 class ViewPositionEmail extends ManageRelatedRecords
@@ -15,7 +15,7 @@ class ViewPositionEmail extends ManageRelatedRecords
 
     protected static string $relationship = 'emails';
 
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-rectangle-stack';
 
     public static function getNavigationLabel(): string
     {

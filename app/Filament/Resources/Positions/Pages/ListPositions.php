@@ -2,13 +2,13 @@
 
 namespace App\Filament\Resources\Positions\Pages;
 
-use Filament\Schemas\Components\Tabs\Tab;
 use App\Enums\PositionStatus;
 use App\Enums\PositionType;
 use App\Filament\Resources\Positions\PositionResource;
 use App\Models\Position;
 use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
+use Filament\Schemas\Components\Tabs\Tab;
 use Illuminate\Database\Eloquent\Builder;
 
 class ListPositions extends ListRecords
