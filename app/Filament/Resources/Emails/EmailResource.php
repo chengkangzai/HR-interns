@@ -2,19 +2,17 @@
 
 namespace App\Filament\Resources\Emails;
 
-use App\Filament\Resources\Emails\EmailResource;
-use Filament\Schemas\Schema;
-use Filament\Actions\Action;
-use Filament\Actions\EditAction;
-use Filament\Actions\ReplicateAction;
-use Filament\Actions\DeleteBulkAction;
-use App\Filament\Resources\Emails\Pages\ListEmails;
 use App\Filament\Resources\Emails\Pages\CreateEmail;
 use App\Filament\Resources\Emails\Pages\EditEmail;
-use App\Filament\Resources\EmailResource\Pages;
+use App\Filament\Resources\Emails\Pages\ListEmails;
 use App\Filament\Resources\Positions\Pages\ViewPositionEmail;
+use App\Filament\Resources\Positions\PositionResource;
 use App\Models\Email;
 use App\Models\Position;
+use Filament\Actions\Action;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\ReplicateAction;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
@@ -22,6 +20,7 @@ use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
+use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TrashedFilter;
@@ -35,7 +34,7 @@ class EmailResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'name';
 
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-envelope-open';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-envelope-open';
 
     public static function form(Schema $schema): Schema
     {

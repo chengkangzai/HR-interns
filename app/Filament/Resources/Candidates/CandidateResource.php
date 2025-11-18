@@ -2,30 +2,17 @@
 
 namespace App\Filament\Resources\Candidates;
 
-use App\Filament\Resources\Candidates\CandidateResource;
-use Filament\Schemas\Schema;
-use Filament\Schemas\Components\Section;
-use Filament\Schemas\Components\Utilities\Set;
-use Filament\Actions\Action;
-use Filament\Schemas\Components\Utilities\Get;
-use Exception;
-use App\Filament\Resources\Candidates\Pages\ViewCandidate;
-use Filament\Schemas\Components\Fieldset;
-use Filament\Forms\Components\Builder\Block;
-use Filament\Actions\EditAction;
-use Filament\Actions\DeleteAction;
-use Filament\Actions\BulkActionGroup;
-use Filament\Actions\BulkAction;
-use App\Filament\Resources\Candidates\Pages\ListCandidates;
-use Filament\Actions\DeleteBulkAction;
-use App\Filament\Resources\Candidates\Pages\CreateCandidate;
-use App\Filament\Resources\Candidates\Pages\EditCandidate;
-use App\Filament\Resources\Candidates\Pages\AuditCandidate;
 use App\Enums\CandidateStatus;
 use App\Enums\PositionStatus;
 use App\Enums\PositionType;
-use App\Filament\Resources\CandidateResource\Pages;
+use App\Filament\Resources\Candidates\Pages\AuditCandidate;
+use App\Filament\Resources\Candidates\Pages\CreateCandidate;
+use App\Filament\Resources\Candidates\Pages\EditCandidate;
+use App\Filament\Resources\Candidates\Pages\ListCandidates;
+use App\Filament\Resources\Candidates\Pages\ViewCandidate;
+use App\Filament\Resources\Emails\EmailResource;
 use App\Filament\Resources\Positions\Pages\ViewPositionCandidate;
+use App\Filament\Resources\Positions\PositionResource;
 use App\Jobs\GenerateAttendanceReportJob;
 use App\Jobs\GenerateCompletionCertJob;
 use App\Jobs\GenerateCompletionLetterJob;
@@ -37,7 +24,15 @@ use App\Models\Email;
 use App\Models\Position;
 use App\Services\PdfExtractorService;
 use Carbon\CarbonInterface;
+use Exception;
+use Filament\Actions\Action;
+use Filament\Actions\BulkAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
 use Filament\Forms\Components\Builder;
+use Filament\Forms\Components\Builder\Block;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Repeater;
@@ -50,6 +45,11 @@ use Filament\Forms\Components\Toggle;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
 use Filament\Resources\Resource;
+use Filament\Schemas\Components\Fieldset;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Components\Utilities\Set;
+use Filament\Schemas\Schema;
 use Filament\Support\Colors\Color;
 use Filament\Support\Enums\FontFamily;
 use Filament\Tables\Columns\SpatieTagsColumn;
@@ -78,11 +78,11 @@ class CandidateResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'name';
 
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-user-group';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-user-group';
 
     public static function form(Schema $schema): Schema
     {
-        return $schema->components([
+        return $schema->columns(1)->components([
             Section::make([
                 TextInput::make('name')
                     ->live(onBlur: true)
@@ -833,7 +833,6 @@ class CandidateResource extends Resource
                                     ->reactive()
                                     ->options(function (Get $get) use ($records) {
                                         $availableAttachments = [];
-
                                         $position = $records->first()->position;
                                         $emailId = $get('email');
                                         $email = Email::find($emailId);

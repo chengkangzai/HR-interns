@@ -2,7 +2,6 @@
 
 namespace App\Providers;
 
-use Filament\Schemas\Components\Section;
 use Filament\Forms\Components\Builder;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\DateTimePicker;
@@ -11,6 +10,7 @@ use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\Textarea;
+use Filament\Schemas\Components\Section;
 use Illuminate\Support\ServiceProvider;
 use Ysfkaya\FilamentPhoneInput\Forms\PhoneInput;
 
@@ -48,7 +48,7 @@ class AppServiceProvider extends ServiceProvider
 
         PhoneInput::configureUsing(function (PhoneInput $phoneInput) {
             $phoneInput
-                ->preferredCountries(['MY'])
+                ->countryOrder(['MY'])
                 ->defaultCountry('MY')
                 ->initialCountry('MY');
         });
