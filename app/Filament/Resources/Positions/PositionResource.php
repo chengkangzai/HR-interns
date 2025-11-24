@@ -16,12 +16,12 @@ use Filament\Actions\Action;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
-use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\TextInput;
+use Filament\Infolists\Components\TextEntry;
 use Filament\Pages\Enums\SubNavigationPosition;
 use Filament\Resources\Pages\Page;
 use Filament\Resources\Resource;
@@ -110,13 +110,13 @@ class PositionResource extends Resource
                 ->collection('documents'),
 
             Section::make([
-                Placeholder::make('created_at')
+                TextEntry::make('created_at')
                     ->label('Created Date')
-                    ->content(fn (?Position $record): string => $record?->created_at?->diffForHumans() ?? '-'),
+                    ->state(fn (?Position $record): string => $record?->created_at?->diffForHumans() ?? '-'),
 
-                Placeholder::make('updated_at')
+                TextEntry::make('updated_at')
                     ->label('Last Modified Date')
-                    ->content(fn (?Position $record): string => $record?->updated_at?->diffForHumans() ?? '-'),
+                    ->state(fn (?Position $record): string => $record?->updated_at?->diffForHumans() ?? '-'),
             ]),
         ]);
     }

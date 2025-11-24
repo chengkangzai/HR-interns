@@ -13,12 +13,12 @@ use Filament\Actions\Action;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ReplicateAction;
-use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\TextInput;
+use Filament\Infolists\Components\TextEntry;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
@@ -81,13 +81,13 @@ class EmailResource extends Resource
                 ->acceptedFileTypes(['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'])
                 ->collection('documents'),
 
-            Placeholder::make('created_at')
+            TextEntry::make('created_at')
                 ->label('Created Date')
-                ->content(fn (?Email $record): string => $record?->created_at?->diffForHumans() ?? '-'),
+                ->state(fn (?Email $record): string => $record?->created_at?->diffForHumans() ?? '-'),
 
-            Placeholder::make('updated_at')
+            TextEntry::make('updated_at')
                 ->label('Last Modified Date')
-                ->content(fn (?Email $record): string => $record?->updated_at?->diffForHumans() ?? '-'),
+                ->state(fn (?Email $record): string => $record?->updated_at?->diffForHumans() ?? '-'),
         ]);
     }
 

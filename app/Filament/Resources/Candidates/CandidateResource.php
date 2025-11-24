@@ -34,7 +34,6 @@ use Filament\Actions\EditAction;
 use Filament\Forms\Components\Builder;
 use Filament\Forms\Components\Builder\Block;
 use Filament\Forms\Components\DatePicker;
-use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
@@ -42,6 +41,7 @@ use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\SpatieTagsInput;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
+use Filament\Infolists\Components\TextEntry;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
 use Filament\Resources\Resource;
@@ -159,10 +159,10 @@ class CandidateResource extends Resource
                     DatePicker::make('to')
                         ->live(onBlur: true),
 
-                    Placeholder::make('range')
+                    TextEntry::make('range')
                         ->label('From - To')
                         ->visibleOn(['view', 'edit'])
-                        ->content(fn (Get $get): string => $get('from') !== null && $get('to') !== null
+                        ->state(fn (Get $get): string => $get('from') !== null && $get('to') !== null
                             ? ceil(Carbon::parse($get('from'))->floatDiffInWeeks(Carbon::parse($get('to')))).' weeks'
                             : 'N/A'
                         ),
@@ -214,8 +214,8 @@ class CandidateResource extends Resource
                             )
                             ->modalCancelAction(false)
                             ->schema([
-                                Placeholder::make('text')
-                                    ->content(function (Candidate $record): HtmlString {// Get temporary S3 URL valid for 5 minutes
+                                TextEntry::make('text')
+                                    ->state(function (Candidate $record): HtmlString {// Get temporary S3 URL valid for 5 minutes
                                         $s3Url = $record->getFirstMedia('resumes')->getTemporaryUrl(now()->addMinutes(5));
 
                                         // Create temp file path
@@ -449,10 +449,10 @@ class CandidateResource extends Resource
                                 DatePicker::make('end_date')
                                     ->prefix('to'),
 
-                                Placeholder::make('range')
+                                TextEntry::make('range')
                                     ->label('From - To')
                                     ->visibleOn(['view', 'edit'])
-                                    ->content(fn (Get $get): string => $get('start_date') !== null
+                                    ->state(fn (Get $get): string => $get('start_date') !== null
                                         ? Carbon::parse($get('start_date'))->diffForHumans(Carbon::parse($get('end_date') ?? now()), [
                                             'syntax' => CarbonInterface::DIFF_ABSOLUTE,
                                             'parts' => 2,
@@ -626,13 +626,13 @@ class CandidateResource extends Resource
             RichEditor::make('notes')
                 ->columnSpanFull(),
 
-            Placeholder::make('created_at')
+            TextEntry::make('created_at')
                 ->label('Created Date')
-                ->content(fn (?Candidate $record): string => $record?->created_at?->diffForHumans() ?? '-'),
+                ->state(fn (?Candidate $record): string => $record?->created_at?->diffForHumans() ?? '-'),
 
-            Placeholder::make('updated_at')
+            TextEntry::make('updated_at')
                 ->label('Last Modified Date')
-                ->content(fn (?Candidate $record): string => $record?->updated_at?->diffForHumans() ?? '-'),
+                ->state(fn (?Candidate $record): string => $record?->updated_at?->diffForHumans() ?? '-'),
 
         ]);
     }

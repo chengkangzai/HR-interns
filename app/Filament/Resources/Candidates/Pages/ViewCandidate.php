@@ -16,11 +16,11 @@ use App\Models\Email;
 use Filament\Actions\Action;
 use Filament\Actions\ActionGroup;
 use Filament\Actions\EditAction;
-use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\TimePicker;
 use Filament\Forms\Components\Toggle;
+use Filament\Infolists\Components\TextEntry;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ViewRecord;
 use Filament\Schemas\Components\Section;
@@ -259,10 +259,10 @@ class ViewCandidate extends ViewRecord
                     ->seconds(false)
                     ->default('18:00'),
 
-                Placeholder::make('working_hours')
+                TextEntry::make('working_hours')
                     ->label('Working Hours')
                     ->columnSpanFull()
-                    ->content(function (Get $get) {
+                    ->state(function (Get $get) {
                         $from = Carbon::parse($get('working_from'));
                         $to = Carbon::parse($get('working_to'));
                         $diff = $from->addHour()->diff($to);
