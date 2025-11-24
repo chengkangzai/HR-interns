@@ -22,7 +22,7 @@ describe('Candidate Model Tests', function () {
     it('can create a candidate with required fields', function () {
         $position = Position::factory()->create([
             'status' => 'open',
-            'type' => 'intern'
+            'type' => 'intern',
         ]);
 
         $candidate = Candidate::factory()->create([
@@ -90,7 +90,7 @@ describe('Candidate Model Tests', function () {
     it('has working position relationship', function () {
         $position = Position::factory()->create([
             'title' => 'Software Engineer Intern',
-            'status' => 'open'
+            'status' => 'open',
         ]);
         $candidate = Candidate::factory()->create(['position_id' => $position->id]);
 
@@ -123,14 +123,14 @@ describe('Candidate Model Tests', function () {
                 'company' => 'Tech Corp',
                 'position' => 'Junior Developer',
                 'duration' => '6 months',
-                'description' => 'Worked on web applications'
+                'description' => 'Worked on web applications',
             ],
             [
                 'company' => 'StartupXYZ',
                 'position' => 'Intern',
                 'duration' => '3 months',
-                'description' => 'Mobile app development'
-            ]
+                'description' => 'Mobile app development',
+            ],
         ];
 
         $candidate = Candidate::factory()->create([
@@ -205,7 +205,7 @@ describe('Candidate Media Collection Tests', function () {
             'wfh_letter',
             'completion_letter',
             'attendance_report',
-            'completion_cert'
+            'completion_cert',
         ];
 
         foreach ($expectedCollections as $collection) {

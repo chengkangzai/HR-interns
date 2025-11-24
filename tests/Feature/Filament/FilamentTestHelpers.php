@@ -5,7 +5,6 @@ namespace Tests\Feature\Filament;
 use App\Models\Candidate;
 use App\Models\Email;
 use App\Models\Position;
-use App\Models\User;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\Facades\Storage;
@@ -53,7 +52,7 @@ trait FilamentTestHelpers
      */
     protected function createTestCandidate(array $overrides = [], ?Position $position = null): Candidate
     {
-        if (!$position) {
+        if (! $position) {
             $position = $this->createTestPosition();
         }
 
@@ -70,7 +69,7 @@ trait FilamentTestHelpers
      */
     protected function createTestEmail(array $overrides = [], ?Position $position = null): Email
     {
-        if (!$position) {
+        if (! $position) {
             $position = $this->createTestPosition();
         }
 
@@ -86,7 +85,7 @@ trait FilamentTestHelpers
      */
     protected function createTestCandidates(int $count = 3, array $overrides = [], ?Position $position = null): \Illuminate\Database\Eloquent\Collection
     {
-        if (!$position) {
+        if (! $position) {
             $position = $this->createTestPosition();
         }
 

@@ -42,6 +42,7 @@ abstract class FilamentTestCase extends TestCase
     protected function actingAsNewUser(): static
     {
         $user = User::factory()->create();
+
         return $this->actingAs($user);
     }
 

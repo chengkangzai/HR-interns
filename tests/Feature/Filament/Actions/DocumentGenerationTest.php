@@ -1,11 +1,11 @@
 <?php
 
 use App\Enums\CandidateStatus;
-use App\Jobs\GenerateOfferLetterJob;
+use App\Jobs\GenerateAttendanceReportJob;
 use App\Jobs\GenerateCompletionCertJob;
 use App\Jobs\GenerateCompletionLetterJob;
+use App\Jobs\GenerateOfferLetterJob;
 use App\Jobs\GenerateWFHLetterJob;
-use App\Jobs\GenerateAttendanceReportJob;
 use App\Models\Candidate;
 use App\Models\Position;
 use App\Models\User;

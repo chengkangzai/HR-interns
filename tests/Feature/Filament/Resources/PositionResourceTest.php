@@ -52,7 +52,7 @@ describe('Position Model Tests', function () {
         $urls = [
             'https://jobs.example.com/position/123',
             'https://linkedin.com/jobs/456',
-            'https://indeed.com/viewjob?jk=789'
+            'https://indeed.com/viewjob?jk=789',
         ];
 
         $position = Position::factory()->create([

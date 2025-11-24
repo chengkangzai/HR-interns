@@ -51,7 +51,7 @@ describe('Email Model Tests', function () {
         $ccRecipients = [
             'hr@company.com',
             'manager@company.com',
-            'team-lead@company.com'
+            'team-lead@company.com',
         ];
 
         $email = Email::factory()->create([
@@ -108,7 +108,7 @@ describe('Email Relationships Tests', function () {
     it('has working position relationship', function () {
         $position = Position::factory()->create([
             'status' => 'open',
-            'title' => 'Software Engineer'
+            'title' => 'Software Engineer',
         ]);
         $email = Email::factory()->create(['position_id' => $position->id]);
 
@@ -213,12 +213,12 @@ describe('Email Resource Filament Tests', function () {
 
         Email::factory()->create([
             'position_id' => $position1->id,
-            'name' => 'Backend Welcome'
+            'name' => 'Backend Welcome',
         ]);
 
         Email::factory()->create([
             'position_id' => $position2->id,
-            'name' => 'Frontend Welcome'
+            'name' => 'Frontend Welcome',
         ]);
 
         Livewire::test(ListEmails::class)
@@ -249,19 +249,19 @@ describe('Email Business Logic Tests', function () {
         $email1 = Email::factory()->create([
             'position_id' => $position->id,
             'sort' => 3,
-            'name' => 'Third Email'
+            'name' => 'Third Email',
         ]);
 
         $email2 = Email::factory()->create([
             'position_id' => $position->id,
             'sort' => 1,
-            'name' => 'First Email'
+            'name' => 'First Email',
         ]);
 
         $email3 = Email::factory()->create([
             'position_id' => $position->id,
             'sort' => 2,
-            'name' => 'Second Email'
+            'name' => 'Second Email',
         ]);
 
         $sortedEmails = Email::where('position_id', $position->id)
