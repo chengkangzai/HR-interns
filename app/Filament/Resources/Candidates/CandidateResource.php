@@ -209,6 +209,7 @@ class CandidateResource extends Resource
                                 if ($livewire instanceof ViewPositionCandidate) {
                                     return false;
                                 }
+
                                 return $context == 'edit' && $record?->getFirstMedia('resumes') !== null;
                             })
                             ->modalSubmitAction(
@@ -311,6 +312,7 @@ class CandidateResource extends Resource
                                     if ($livewire instanceof ViewPositionCandidate) {
                                         return false;
                                     }
+
                                     return $record?->getFirstMedia('wfh_letter') !== null;
                                 })
                                 ->label('Generate')
@@ -342,6 +344,7 @@ class CandidateResource extends Resource
                                     if ($livewire instanceof ViewPositionCandidate) {
                                         return false;
                                     }
+
                                     return $record?->getFirstMedia('completion_letter') == null;
                                 })
                                 ->action(function (?Candidate $record, $livewire) {
@@ -372,6 +375,7 @@ class CandidateResource extends Resource
                                     if ($livewire instanceof ViewPositionCandidate) {
                                         return false;
                                     }
+
                                     return $record?->getFirstMedia('completion_cert') == null;
                                 })
                                 ->action(function (?Candidate $record, $livewire) {
@@ -406,6 +410,7 @@ class CandidateResource extends Resource
                                     if ($livewire instanceof ViewPositionCandidate) {
                                         return false;
                                     }
+
                                     return $record?->status === CandidateStatus::COMPLETED && $record?->getFirstMedia('attendance_report') == null;
                                 })
                                 ->action(function (?Candidate $record, $livewire) {
