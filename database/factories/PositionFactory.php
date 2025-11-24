@@ -13,9 +13,10 @@ class PositionFactory extends Factory
     public function definition(): array
     {
         return [
-            'title' => $this->faker->word(),
-            'description' => $this->faker->text(),
-            'status' => $this->faker->word(),
+            'title' => $this->faker->jobTitle(),
+            'description' => $this->faker->paragraph(),
+            'status' => $this->faker->randomElement(['open', 'closed']),
+            'type' => $this->faker->randomElement(['intern', 'contract', 'full_time', 'part_time']),
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
         ];
