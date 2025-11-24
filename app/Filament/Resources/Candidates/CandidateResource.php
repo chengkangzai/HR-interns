@@ -204,7 +204,13 @@ class CandidateResource extends Resource
                             }),
                         Action::make('extract-text')
                             ->icon('heroicon-o-document-text')
-                            ->visible(fn (?Candidate $record, string $context) => $context == 'edit' && $record->getFirstMedia('resumes') !== null)
+                            ->visible(function (?Candidate $record, string $context, $livewire) {
+                                // Hide in Position context
+                                if ($livewire instanceof ViewPositionCandidate) {
+                                    return false;
+                                }
+                                return $context == 'edit' && $record?->getFirstMedia('resumes') !== null;
+                            })
                             ->modalSubmitAction(
                                 Action::make('Copy Text_Close')
                                     ->label('Copy Text & Close')
@@ -300,9 +306,19 @@ class CandidateResource extends Resource
                         ->hintActions([
                             Action::make('generate_wfh')
                                 ->icon('heroicon-o-document')
-                                ->visible(fn (?Candidate $record) => $record->getFirstMedia('wfh_letter') !== null)
+                                ->visible(function (?Candidate $record, $livewire) {
+                                    // Hide in Position context
+                                    if ($livewire instanceof ViewPositionCandidate) {
+                                        return false;
+                                    }
+                                    return $record?->getFirstMedia('wfh_letter') !== null;
+                                })
                                 ->label('Generate')
-                                ->action(function (?Candidate $record) {
+                                ->action(function (?Candidate $record, $livewire) {
+                                    // Skip action in Position context
+                                    if ($livewire instanceof ViewPositionCandidate) {
+                                        return;
+                                    }
                                     dispatch_sync(new GenerateWFHLetterJob($record));
                                     Notification::make('generated')
                                         ->title('Generating')
@@ -321,8 +337,18 @@ class CandidateResource extends Resource
                             Action::make('generate_completion_letter')
                                 ->icon('heroicon-o-document')
                                 ->label('Generate')
-                                ->visible(fn (?Candidate $record) => $record->getFirstMedia('completion_letter') == null)
-                                ->action(function (?Candidate $record) {
+                                ->visible(function (?Candidate $record, $livewire) {
+                                    // Hide in Position context
+                                    if ($livewire instanceof ViewPositionCandidate) {
+                                        return false;
+                                    }
+                                    return $record?->getFirstMedia('completion_letter') == null;
+                                })
+                                ->action(function (?Candidate $record, $livewire) {
+                                    // Skip action in Position context
+                                    if ($livewire instanceof ViewPositionCandidate) {
+                                        return;
+                                    }
                                     dispatch_sync(new GenerateCompletionLetterJob($record));
                                     Notification::make('generated')
                                         ->title('Generating')
@@ -341,8 +367,18 @@ class CandidateResource extends Resource
                             Action::make('generate_completion_cert')
                                 ->icon('heroicon-o-document')
                                 ->label('Generate')
-                                ->visible(fn (?Candidate $record) => $record->getFirstMedia('completion_cert') == null)
-                                ->action(function (?Candidate $record) {
+                                ->visible(function (?Candidate $record, $livewire) {
+                                    // Hide in Position context
+                                    if ($livewire instanceof ViewPositionCandidate) {
+                                        return false;
+                                    }
+                                    return $record?->getFirstMedia('completion_cert') == null;
+                                })
+                                ->action(function (?Candidate $record, $livewire) {
+                                    // Skip action in Position context
+                                    if ($livewire instanceof ViewPositionCandidate) {
+                                        return;
+                                    }
                                     dispatch_sync(new GenerateCompletionCertJob($record));
                                     Notification::make('generated')
                                         ->title('Generating')
@@ -365,8 +401,18 @@ class CandidateResource extends Resource
                             Action::make('generate_attendance_report')
                                 ->icon('heroicon-o-document')
                                 ->label('Generate')
-                                ->visible(fn (?Candidate $record) => $record->status === CandidateStatus::COMPLETED && $record->getFirstMedia('attendance_report') == null)
-                                ->action(function (?Candidate $record) {
+                                ->visible(function (?Candidate $record, $livewire) {
+                                    // Hide in Position context
+                                    if ($livewire instanceof ViewPositionCandidate) {
+                                        return false;
+                                    }
+                                    return $record?->status === CandidateStatus::COMPLETED && $record?->getFirstMedia('attendance_report') == null;
+                                })
+                                ->action(function (?Candidate $record, $livewire) {
+                                    // Skip action in Position context
+                                    if ($livewire instanceof ViewPositionCandidate) {
+                                        return;
+                                    }
                                     dispatch_sync(new GenerateAttendanceReportJob($record));
                                     Notification::make('generated')
                                         ->title('Generating')
