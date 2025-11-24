@@ -375,7 +375,7 @@ class CandidateResource extends Resource
                                         ->send();
                                 }),
                         ]),
-                ])->heading('Interns Documents')->collapsed(true)->visible(fn (?Candidate $record) => $record?->position?->type == PositionType::INTERN),
+                ])->heading('Interns Documents')->columnSpanFull()->collapsed(true)->visible(fn (?Candidate $record) => $record?->position?->type == PositionType::INTERN),
             ])->heading('Attachments')->collapsible(),
 
             Section::make([
