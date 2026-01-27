@@ -19,6 +19,7 @@
         "laravel/sanctum": "^4.2.3",
         "laravel/tinker": "^2.11.0",
         "league/flysystem-aws-s3-v3": "^3.30.1",
+        "prism-php/prism": "^0.99.17",
         "saade/filament-fullcalendar": "^4.0",
         "spatie/laravel-activitylog": "^4.10.2",
         "spatie/pdf-to-text": "^1.55.0",

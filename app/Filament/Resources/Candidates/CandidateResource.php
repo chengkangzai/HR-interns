@@ -1060,12 +1060,12 @@ class CandidateResource extends Resource
             $personalInfo = $extractor['personal_info'];
 
             if (! empty($personalInfo['name']) && str($get('name'))->isEmpty()) {
-                $set('name', str($personalInfo['name'])->title());
+                $set('name', str($personalInfo['name'])->title()->toString());
                 $extractedInfo[] = 'name';
             }
 
             if (! empty($personalInfo['email']) && str($get('email'))->isEmpty()) {
-                $set('email', str($personalInfo['email'])->remove(' ')->remove('`'));
+                $set('email', str($personalInfo['email'])->remove(' ')->remove('`')->toString());
                 $extractedInfo[] = 'email';
             }
 
@@ -1103,8 +1103,8 @@ class CandidateResource extends Resource
                     'type' => 'qualification',
                     'data' => [
                         'qualification' => $qualification['qualification'] ?? null,
-                        'major' => str($qualification['major'] ?? '')->title(),
-                        'university' => str($qualification['university'] ?? '')->trim(),
+                        'major' => str($qualification['major'] ?? '')->title()->toString(),
+                        'university' => str($qualification['university'] ?? '')->trim()->toString(),
                         'gpa' => $qualification['gpa'] ?? null,
                         'from' => $qualification['from'] ?? null,
                         'to' => $qualification['to'] ?? null,
@@ -1142,14 +1142,14 @@ class CandidateResource extends Resource
             $workExperiences = [];
             foreach ($extractor['work_experience'] as $experience) {
                 $workExperiences[] = [
-                    'company' => str($experience['company'] ?? '')->trim(),
-                    'position' => str($experience['position'] ?? '')->trim(),
+                    'company' => str($experience['company'] ?? '')->trim()->toString(),
+                    'position' => str($experience['position'] ?? '')->trim()->toString(),
                     'employment_type' => $experience['employment_type'] ?? 'Other',
-                    'location' => str($experience['location'] ?? '')->trim()->title(),
+                    'location' => str($experience['location'] ?? '')->trim()->title()->toString(),
                     'start_date' => $experience['start_date'] ?? null,
                     'end_date' => $experience['end_date'] ?? null,
                     'is_current' => $experience['is_current'] ?? false,
-                    'responsibilities' => str($experience['responsibilities'] ?? '')->trim(),
+                    'responsibilities' => str($experience['responsibilities'] ?? '')->trim()->toString(),
                 ];
             }
 

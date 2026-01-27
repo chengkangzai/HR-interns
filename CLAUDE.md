@@ -68,8 +68,7 @@ Located in `app/Jobs/`:
 - `SendEmailJob` - Email dispatch handling
 
 ### Services Architecture
-- **GroqService** (`app/Services/GroqService.php`) - AI integration using Groq API for LLM functionality
-- **PdfExtractorService** (`app/Services/PdfExtractorService.php`) - Resume parsing using Spatie PDF-to-text + AI analysis
+- **PdfExtractorService** (`app/Services/PdfExtractorService.php`) - Resume parsing using Spatie PDF-to-text + AI analysis via Prism PHP with OpenAI
 
 ### Filament Admin Structure
 - **Resources**: `app/Filament/Resources/` - Main CRUD interfaces for Candidates, Positions, Emails, Tags, Users
@@ -79,7 +78,7 @@ Located in `app/Jobs/`:
 
 ### Key Features
 - **Document Management**: Resume uploads, offer letter generation, completion certificates via Spatie Media Library
-- **AI Integration**: Resume parsing and candidate information extraction using Groq LLM API
+- **AI Integration**: Resume parsing and candidate information extraction using Prism PHP with OpenAI API
 - **Activity Logging**: Full audit trail on all model changes using Spatie Activity Log
 - **Tag System**: Skill tagging via Spatie Tags for candidate categorization
 - **Queue-based PDF Generation**: Background job processing for document creation using DomPDF

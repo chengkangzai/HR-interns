@@ -151,8 +151,7 @@ PENDING → CONTACTED → TECHNICAL_TEST → INTERVIEW → OFFER_ACCEPTED → HI
 
 ### Key Services
 
-- **GroqService**: AI integration for resume parsing and candidate data extraction
-- **PdfExtractorService**: Resume parsing using Spatie PDF-to-text + AI analysis
+- **PdfExtractorService**: Resume parsing using Spatie PDF-to-text + AI analysis via Prism PHP with OpenAI
 
 ## Filament Admin Panel
 
