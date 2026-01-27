@@ -1149,7 +1149,7 @@ class CandidateResource extends Resource
                     'start_date' => $experience['start_date'] ?? null,
                     'end_date' => $experience['end_date'] ?? null,
                     'is_current' => $experience['is_current'] ?? false,
-                    'responsibilities' => $experience['responsibilities'] ?? null,
+                    'responsibilities' => str($experience['responsibilities'] ?? '')->trim()->toString(),
                 ];
             }
 
