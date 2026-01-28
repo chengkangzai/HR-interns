@@ -42,8 +42,33 @@ class Candidate extends Model implements HasMedia
         'to' => 'datetime',
         'status' => CandidateStatus::class,
         'additional_info' => 'collection',
-        'working_experiences' => 'collection',
     ];
+
+    protected function workingExperiences(): \Illuminate\Database\Eloquent\Casts\Attribute
+    {
+        return \Illuminate\Database\Eloquent\Casts\Attribute::make(
+            get: function ($value) {
+                $experiences = is_string($value) ? json_decode($value, true) : $value;
+
+                if (! is_array($experiences)) {
+                    return collect([]);
+                }
+
+                // Convert any string responsibilities to TipTap JSON format
+                foreach ($experiences as &$experience) {
+                    if (isset($experience['responsibilities']) && is_string($experience['responsibilities']) && ! empty($experience['responsibilities'])) {
+                        $editor = new \Tiptap\Editor;
+                        $experience['responsibilities'] = $editor
+                            ->setContent($experience['responsibilities'])
+                            ->getDocument();
+                    }
+                }
+
+                return collect($experiences);
+            },
+            set: fn ($value) => json_encode($value),
+        );
+    }
 
     public function position(): BelongsTo
     {
