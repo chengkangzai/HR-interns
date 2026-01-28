@@ -489,7 +489,14 @@ class CandidateResource extends Resource
                         RichEditor::make('responsibilities')
                             ->json()
                             ->columnSpanFull()
-                            ->placeholder('Describe your key responsibilities and achievements'),
+                            ->placeholder('Describe your key responsibilities and achievements')
+                            ->afterStateHydrated(function ($component, $state) {
+                                // If state is a string (from AI extraction), convert to TipTap JSON
+                                if (is_string($state) && ! empty($state)) {
+                                    $editor = new \Tiptap\Editor;
+                                    $component->state($editor->setContent($state)->getDocument());
+                                }
+                            }),
 
                         Fieldset::make('duration')
                             ->inlineLabel()
@@ -1142,15 +1149,6 @@ class CandidateResource extends Resource
         if (isset($extractor['work_experience']) && is_array($extractor['work_experience'])) {
             $workExperiences = [];
             foreach ($extractor['work_experience'] as $experience) {
-                // Convert responsibilities to TipTap JSON format for RichEditor with json()
-                $responsibilities = null;
-                if (! empty($experience['responsibilities'])) {
-                    $editor = new \Tiptap\Editor;
-                    $responsibilities = $editor
-                        ->setContent($experience['responsibilities'])
-                        ->getDocument();
-                }
-
                 $workExperiences[] = [
                     'company' => str($experience['company'] ?? '')->trim()->toString(),
                     'position' => str($experience['position'] ?? '')->trim()->toString(),
@@ -1159,7 +1157,7 @@ class CandidateResource extends Resource
                     'start_date' => $experience['start_date'] ?? null,
                     'end_date' => $experience['end_date'] ?? null,
                     'is_current' => $experience['is_current'] ?? false,
-                    'responsibilities' => $responsibilities,
+                    'responsibilities' => $experience['responsibilities'] ?? null,
                 ];
             }
 
