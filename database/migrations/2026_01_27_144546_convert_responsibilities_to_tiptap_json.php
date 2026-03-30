@@ -33,7 +33,7 @@ return new class extends Migration
                             ->setContent($experience['responsibilities'])
                             ->getDocument();
                         $modified = true;
-                    } catch (\Exception $e) {
+                    } catch (Exception $e) {
                         // If conversion fails, set to null
                         $experience['responsibilities'] = null;
                         $modified = true;

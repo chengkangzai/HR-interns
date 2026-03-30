@@ -3,6 +3,7 @@
 use App\Filament\Resources\Users\Pages\ListUsers;
 use App\Models\User;
 use Filament\Facades\Filament;
+use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
 use Livewire\Livewire;
@@ -58,7 +59,7 @@ describe('User Model Tests', function () {
 
         expect(function () {
             User::factory()->create(['email' => 'test@example.com']);
-        })->toThrow(\Illuminate\Database\QueryException::class);
+        })->toThrow(QueryException::class);
     });
 
     it('hashes passwords automatically', function () {
