@@ -6,6 +6,7 @@ use App\Models\Position;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Storage;
 
 uses(RefreshDatabase::class);
@@ -111,7 +112,7 @@ describe('Candidate Model Tests', function () {
             'additional_info' => $additionalInfo,
         ]);
 
-        expect($candidate->additional_info)->toBeInstanceOf(\Illuminate\Support\Collection::class);
+        expect($candidate->additional_info)->toBeInstanceOf(Collection::class);
         expect($candidate->additional_info->count())->toBe(2);
         expect($candidate->additional_info->first()['type'])->toBe('education');
     });
@@ -138,7 +139,7 @@ describe('Candidate Model Tests', function () {
             'working_experiences' => $workingExperiences,
         ]);
 
-        expect($candidate->working_experiences)->toBeInstanceOf(\Illuminate\Support\Collection::class);
+        expect($candidate->working_experiences)->toBeInstanceOf(Collection::class);
         expect($candidate->working_experiences->count())->toBe(2);
         expect($candidate->working_experiences->first()['company'])->toBe('Tech Corp');
     });

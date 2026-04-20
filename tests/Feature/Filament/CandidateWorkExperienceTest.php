@@ -7,6 +7,7 @@ use App\Models\Position;
 use App\Models\User;
 use Filament\Facades\Filament;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Collection;
 use Livewire\Livewire;
 use Tiptap\Editor;
 
@@ -56,7 +57,7 @@ describe('Candidate Work Experience with RichEditor', function () {
 
         $candidate = Candidate::first();
         expect($candidate)->not->toBeNull()
-            ->and($candidate->working_experiences)->toBeInstanceOf(\Illuminate\Support\Collection::class)
+            ->and($candidate->working_experiences)->toBeInstanceOf(Collection::class)
             ->and($candidate->working_experiences)->toHaveCount(1);
 
         $experience = $candidate->working_experiences->first();

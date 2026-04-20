@@ -5,6 +5,7 @@ namespace Tests\Feature\Filament;
 use App\Models\Candidate;
 use App\Models\Email;
 use App\Models\Position;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\Facades\Storage;
@@ -83,7 +84,7 @@ trait FilamentTestHelpers
     /**
      * Create multiple test candidates
      */
-    protected function createTestCandidates(int $count = 3, array $overrides = [], ?Position $position = null): \Illuminate\Database\Eloquent\Collection
+    protected function createTestCandidates(int $count = 3, array $overrides = [], ?Position $position = null): Collection
     {
         if (! $position) {
             $position = $this->createTestPosition();
