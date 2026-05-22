@@ -68,6 +68,7 @@ use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Spatie\PdfToText\Pdf;
 use Spatie\Tags\Tag;
+use Tiptap\Editor;
 use Ysfkaya\FilamentPhoneInput\Forms\PhoneInput;
 
 class CandidateResource extends Resource
@@ -1145,7 +1146,7 @@ class CandidateResource extends Resource
                 // Convert responsibilities string to TipTap JSON for RichEditor with json()
                 $responsibilities = null;
                 if (! empty($experience['responsibilities'])) {
-                    $editor = new \Tiptap\Editor;
+                    $editor = new Editor;
                     $responsibilities = $editor
                         ->setContent($experience['responsibilities'])
                         ->getDocument();
