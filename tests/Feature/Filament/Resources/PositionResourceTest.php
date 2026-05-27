@@ -99,7 +99,7 @@ describe('Position Model Tests', function () {
 
         $position->update(['title' => 'Updated Position Title']);
 
-        expect($position->activities()->count())->toBeGreaterThan(0);
+        expect($position->activitiesAsSubject()->count())->toBeGreaterThan(0);
     });
 
 });

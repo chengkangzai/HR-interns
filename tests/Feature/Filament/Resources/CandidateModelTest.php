@@ -150,7 +150,7 @@ describe('Candidate Model Tests', function () {
 
         $candidate->update(['name' => 'Updated Name']);
 
-        expect($candidate->activities()->count())->toBeGreaterThan(0);
+        expect($candidate->activitiesAsSubject()->count())->toBeGreaterThan(0);
     });
 
 });
