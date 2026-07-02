@@ -81,7 +81,7 @@ describe('Email Model Tests', function () {
 
         $email->update(['title' => 'Updated Email Title']);
 
-        expect($email->activities()->count())->toBeGreaterThan(0);
+        expect($email->activitiesAsSubject()->count())->toBeGreaterThan(0);
     });
 
     it('can store sort order', function () {
