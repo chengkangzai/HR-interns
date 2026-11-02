@@ -59,6 +59,7 @@ use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Mail;
@@ -248,13 +249,16 @@ class CandidateResource extends Resource
                                     }),
                             ]),
                     ])
-                    ->afterStateUpdated(function (TemporaryUploadedFile $state, Set $set, Get $get, string $context) {
-                        if ($context !== 'create') {
+                    ->afterStateUpdated(function (mixed $state, Set $set, Get $get, string $context) {
+                        $upload = collect(Arr::wrap($state))
+                            ->first(fn (mixed $file): bool => $file instanceof TemporaryUploadedFile);
+
+                        if ($context !== 'create' || $upload === null) {
                             return;
                         }
 
                         try {
-                            $extractedInfo = CandidateResource::extractAndFillResumeInformation($state->path(), $set, $get);
+                            $extractedInfo = CandidateResource::extractAndFillResumeInformation($upload->path(), $set, $get);
 
                             if (! empty($extractedInfo)) {
                                 Notification::make()
@@ -1105,8 +1109,8 @@ class CandidateResource extends Resource
                     'type' => 'qualification',
                     'data' => [
                         'qualification' => $qualification['qualification'] ?? null,
-                        'major' => str($qualification['major'] ?? '')->title()->toString(),
-                        'university' => str($qualification['university'] ?? '')->trim()->toString(),
+                        'major' => filled($qualification['major'] ?? null) ? str($qualification['major'])->title()->toString() : null,
+                        'university' => $qualification['university'] ?? null,
                         'gpa' => $qualification['gpa'] ?? null,
                         'from' => $qualification['from'] ?? null,
                         'to' => $qualification['to'] ?? null,
@@ -1153,10 +1157,10 @@ class CandidateResource extends Resource
                 }
 
                 $workExperiences[] = [
-                    'company' => str($experience['company'] ?? '')->trim()->toString(),
-                    'position' => str($experience['position'] ?? '')->trim()->toString(),
+                    'company' => $experience['company'] ?? null,
+                    'position' => $experience['position'] ?? null,
                     'employment_type' => $experience['employment_type'] ?? 'Other',
-                    'location' => str($experience['location'] ?? '')->trim()->title()->toString(),
+                    'location' => filled($experience['location'] ?? null) ? str($experience['location'])->title()->toString() : null,
                     'start_date' => $experience['start_date'] ?? null,
                     'end_date' => $experience['end_date'] ?? null,
                     'is_current' => $experience['is_current'] ?? false,
