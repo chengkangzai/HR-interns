@@ -5,13 +5,17 @@ namespace App\Filament\Widgets;
 use App\Enums\CandidateStatus;
 use App\Filament\Resources\Candidates\CandidateResource;
 use App\Models\Candidate;
+use Saade\FilamentFullCalendar\Data\FetchInfo;
 use Saade\FilamentFullCalendar\Widgets\FullCalendarWidget;
 
 class CalendarWidget extends FullCalendarWidget
 {
-    public function fetchEvents(array $info): array
+    /**
+     * @return array<int, array{title: string, start: mixed, end: mixed, url: string, shouldOpenUrlInNewTab: bool}>
+     */
+    public function fetchEvents(FetchInfo $info): array
     {
-        return Candidate::query()
+        return $info->overlapping(Candidate::query(), 'from', 'to')
             ->with('position')
             ->whereIn('status', [
                 CandidateStatus::COMPLETED,
@@ -22,7 +26,7 @@ class CalendarWidget extends FullCalendarWidget
             ->whereNotNull(['from', 'to'])
             ->get()
             ->map(
-                fn (Candidate $event) => [
+                fn (Candidate $event): array => [
                     'title' => $event->name.' - '.$event->position->title,
                     'start' => $event->from,
                     'end' => $event->to->endOfDay(),
